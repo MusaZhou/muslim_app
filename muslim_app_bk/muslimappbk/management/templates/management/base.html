@@ -1,15 +1,69 @@
+{% load static %}
 <!doctype html>
 <html>
 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <title></title>
-  <link href="style.css" rel="stylesheet">
+  <title>{% block title %}Muslim App Backend{% endblock %}</title>
+  {% block stylesheet %}
+  <style>
+    #loader {
+      transition: all .3s ease-in-out;
+      opacity: 1;
+      visibility: visible;
+      position: fixed;
+      height: 100vh;
+      width: 100%;
+      background: #fff;
+      z-index: 90000
+    }
+
+    #loader.fadeOut {
+      opacity: 0;
+      visibility: hidden
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      top: calc(50% - 20px);
+      left: calc(50% - 20px);
+      background-color: #333;
+      border-radius: 100%;
+      -webkit-animation: sk-scaleout 1s infinite ease-in-out;
+      animation: sk-scaleout 1s infinite ease-in-out
+    }
+
+    @-webkit-keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0)
+      }
+      100% {
+        -webkit-transform: scale(1);
+        opacity: 0
+      }
+    }
+
+    @keyframes sk-scaleout {
+      0% {
+        -webkit-transform: scale(0);
+        transform: scale(0)
+      }
+      100% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+        opacity: 0
+      }
+    }
+  </style>
+  <link href="{% static "management/style.css" %}" rel="stylesheet">
+  {% endblock %}
 </head>
 
 <body class="app">
-  <div id="loader" class="pos-f h-100vh w-100 bgc-deep-purple-50 z-9">
+  <div id="loader">
     <div class="spinner"></div>
   </div>
   <script>
@@ -17,7 +71,7 @@
       const loader = document.getElementById('loader');
       setTimeout(() => {
         loader.classList.add('fadeOut');
-      }, 3000);
+      }, 300);
     });
   </script>
   <div>
@@ -29,7 +83,7 @@
               <a class="sidebar-link td-n" href="index.html">
                 <div class="peers ai-c fxw-nw">
                   <div class="peer">
-                    <div class="logo"><img src="assets/static/images/logo.png" alt=""></div>
+                    <div class="logo"><img src="{% static "management/images/logo.png" %}" alt=""></div>
                   </div>
                   <div class="peer peer-greed">
                     <h5 class="lh-1 mB-0 logo-text">Adminator</h5></div>
@@ -200,13 +254,19 @@
         </div>
       </div>
       <main class="main-content bgc-grey-100">
-        <div id="mainContent"></div>
+        <div id="mainContent">
+          {% block mainContent %}
+          <div class="full-container"></div>
+          {% endblock %}
+        </div>
       </main>
       <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600"><span>Copyright © 2017 Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a>. All rights reserved.</span></footer>
     </div>
   </div>
-  <script type="text/javascript" src="vendor.js"></script>
-  <script type="text/javascript" src="bundle.js"></script>
+  {% block javascript %}
+  <script type="text/javascript" src="{% static "management/vendor.js" %}"></script>
+  <script type="text/javascript" src="{% static "management/bundle.js" %}"></script>
+  {% endblock %}
 </body>
 
 </html>
