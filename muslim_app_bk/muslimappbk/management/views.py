@@ -20,6 +20,9 @@ def signin(request):
 def signup(request):
     return render(request, 'management/signup.html')
 
+def index(request):
+    return render(request, 'management/index.html')
+
 def others(request, characters):
     # print('what is requesting is :' + characters)
     return redirect(settings.STATIC_URL + request.resolver_match.namespace + '/' + characters)
