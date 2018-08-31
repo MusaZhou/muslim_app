@@ -13,9 +13,9 @@ def addMobileApp(request):
         addAppVertionModelForm = AddAppModelForm(request.POST)
         imageInlineFormset = ImageInlineFormset(request.POST, request.FILES)
 
-        if addAppModelForm.is_valid()
-            and addAppVersionModelForm.is_valid()
-            and imageInlineFormset.is_valid():
+        if addAppModelForm.is_valid()\
+        and addAppVersionModelForm.is_valid()\
+        and imageInlineFormset.is_valid():
 
             newApp = addAppModelForm.save(commit=False)
             newApp.upload_by = request.user
@@ -33,7 +33,7 @@ def addMobileApp(request):
                 image.save()
 
             return HttpResponse('success')
-    else
+    else:
         imageInlineFormset = ImageInlineFormset()
         return render(request, 'add_app.html', {'addAppModelForm': addAppModelForm,
                                                 'addAppVertionModelForm': addAppVertionModelForm,
