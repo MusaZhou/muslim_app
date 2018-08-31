@@ -41,7 +41,7 @@ class Image(models.Model):
     #id, content_type, object_id, content_object, url
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey()
     picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",
                                 height_field=200,
                                 width_field=50,
@@ -107,10 +107,10 @@ class AppVersion(models.Model):
                                     on_delete=models.CASCADE,
                                     null=True)
     approved_time = models.DateTimeField(null=True)
-    mobileapp = models.ForeignKey(MobileApp, on_delete=models.CASCADE)
+    mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE)
     active_status = models.CharField(max_length=10,
                                      choices=ACTIVE_CHOICES,
-                                     default='active')
+                                     default='inactive')
 
     def __str__(self):
         return self.version_number

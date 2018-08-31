@@ -1,28 +1,40 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
+from management.forms import AddAppModelForm, AddAppVersionModelForm
+from django.contrib.contenttypes.forms import generic_inlineformset_factory
+from management.models import Image
+from django.http import HttpResponse
 
 # Create your views here.
-def page_404(request):
-    return render(request, 'management/404.html')
+def addMobileApp(request):
+    ImageInlineFormset = generic_inlineformset_factory(Image, fields=('picture',))
+    if request.method == 'POST':
+        addAppModelForm = AddAppModelForm(request.POST)
+        addAppVertionModelForm = AddAppModelForm(request.POST)
+        imageInlineFormset = ImageInlineFormset(request.POST, request.FILES)
 
-def page_500(request):
-    return render(request, 'management/500.html')
+        if addAppModelForm.is_valid()
+            and addAppVersionModelForm.is_valid()
+            and imageInlineFormset.is_valid():
 
-def datatable(request):
-    return render(request, 'management/datatable.html')
+            newApp = addAppModelForm.save(commit=False)
+            newApp.upload_by = request.user
+            newApp.save()
+            addAppModelForm.save_m2m()
 
-def forms(request):
-    return render(request, 'management/forms.html')
+            newAppVersion = addAppVersionModelForm.save(commit=False)
+            newAppVersion.upload_by = request.user
+            newAppVersion.mobile_app = newApp
+            newAppVersion.save()
 
-def signin(request):
-    return render(request, 'management/signin.html')
+            images = imageInlineFormset.save(commit=False)
+            for image in images:
+                image.content_object = newApp
+                image.save()
 
-def signup(request):
-    return render(request, 'management/signup.html')
-
-def index(request):
-    return render(request, 'management/index.html')
-
-def others(request, characters):
-    # print('what is requesting is :' + characters)
-    return redirect(settings.STATIC_URL + request.resolver_match.namespace + '/' + characters)
+            return HttpResponse('success')
+    else
+        imageInlineFormset = ImageInlineFormset()
+        return render(request, 'add_app.html', {'addAppModelForm': addAppModelForm,
+                                                'addAppVertionModelForm': addAppVertionModelForm,
+                                                'imageInlineFormset': imageInlineFormset})
