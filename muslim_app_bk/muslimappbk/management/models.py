@@ -3,6 +3,7 @@ from django.conf import settings
 from slugify import slugify
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
+from django.core import validators
 
 # Create your models here.
 class Profile(models.Model):
@@ -49,6 +50,12 @@ class Image(models.Model):
     def __str__(self):
         return self.content_object
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 class AppCategory(models.Model):
     name = models.CharField(max_length=100)
 
@@ -71,6 +78,7 @@ class MobileApp(models.Model):
     download_count = models.PositiveIntegerField(null=True)
     slug = models.SlugField(unique=True)
     images = GenericRelation(Image, related_query_name='appImages')
+    tags = models.ManyToManyField(Tag)
 
     def slugDefault(self):
         return slugify(self.name)
@@ -89,7 +97,8 @@ class AppVersion(models.Model):
                        ('rejected', 'rejected'))
     ACTIVE_CHOICES = (('active', 'active'), ('inactive', 'inactive'))
 
-    version_number = models.CharField(max_length=10)
+    version_number = models.CharField(max_length=10,
+                                      validators=[validators.RegexValidator("*[a-zA-Z0-9\.]")])
     created_time = models.DateTimeField(auto_now_add=True)
     approve_status = models.CharField(max_length=10,
                                       choices=APPROVE_CHOICES,
