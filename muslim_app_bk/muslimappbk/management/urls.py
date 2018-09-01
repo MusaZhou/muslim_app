@@ -12,5 +12,6 @@ urlpatterns = [
     path('signin', basic_views.signin, name='signin'),
     path('signup', basic_views.signup, name='signup'),
     path('index', basic_views.index, name='index'),
+    path('add_mobile_app', views.add_mobile_app, name='add_mobile_app'),
     path('<str:characters>', basic_views.others, name='others')
 ]

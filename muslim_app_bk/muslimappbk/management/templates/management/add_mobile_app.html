@@ -1,0 +1,76 @@
+{% extends "management/index.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Add Application{% endblock %}
+{% block mainContent %}
+          <form method="POST" action="{% url '/management/add_mobile_app'}">
+          <div class="row gap-20 pos-r">
+            <div class="col-md-6">
+              <div class="bgc-white p-20 bd">
+                <h6 class="c-grey-900">Add Appliction</h6>
+                <div class="mT-30">
+                    <div class="form-group">
+                      <label>{{ addAppModelForm.name.label }}</label>
+                      {% render_field addAppModelForm.name class="form-control" placeholder=addAppModelForm.name.name %}
+                    </div>
+                    <div class="form-group">
+                      <label>{{ addAppModelForm.description.label }}</label>
+                      {% render_field addAppModelForm.description class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      <label>{{ addAppVertionModelForm.version_number.label }}</label>
+                      {% render_field addAppModelForm.version_number class="form-control" %}
+                    </div>
+                    <div class="form-group">
+                      <label>{{ addAppModelForm.category.label }}</label>
+                      {% render_field addAppModelForm.category class="form-control" %}
+                      <!-- <select id="appCategory" class="form-control">
+                        <option selected="selected">Choose...</option>
+                        <option>cate1</option>
+                        <option>cate2</option>
+                      </select> -->
+                    </div>
+                    <div class="form-group">
+                      <label for="appTags">{{ addAppModelForm.tags.label }}</label>
+                      {% render_field addAppModelForm.tags class="form-control" %}
+                      <!-- <select id="appTags" class="form-control">
+                        <option selected="selected" multiple="multiple">Choose...</option>
+                        <option>tag1</option>
+                        <option>tag2</option>
+                        <option>tag3</option>
+                        <option>tag4</option>
+                      </select> -->
+                    </div>
+                    <button class="button btn-primary btn cur-p" style="margin-bottom: 5px">Select Images +</button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="bgc-white p-20 bd">
+                <div class="mT-30">
+                    <div class="form-group">
+                      <label>{{ addAppModelForm.video_url.label}}</label>
+                      {% render_field addAppModelForm.video_url class="form-control" placeholder="http://www.example.com"%}
+                      <!-- <input type="url" class="form-control" id="appVideo" aria-describedby="appVideo" placeholder="http://www.example.com"> -->
+                    </div>
+                    <button class="button btn-primary btn cur-p" style="margin-bottom: 5px">Play</button>
+                    <video width="100%" height="300" controls></video>
+                </div>
+              </div>
+            </div>
+            {{ imageInlineFormset.management_form }}
+            {% for imageForm in imageInlineFormset %}
+            <div>
+              <div class="bgc-white p-20 bd">
+                <div class="mT-30">
+                  {{ imageForm.picture}}
+                  <!-- <img src="{% static 'management/images/mobile.png' %}" width="auto" height="200px" class="rounded"> -->
+                  <button class="btn cur-p btn-secondary" style="display:block;margin-left:auto;margin-right:auto;">x</button>
+                  {{ imageForm.ORDER }}
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </form>
+{% endblock %}

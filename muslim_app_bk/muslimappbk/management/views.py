@@ -6,11 +6,14 @@ from management.models import Image
 from django.http import HttpResponse
 
 # Create your views here.
-def addMobileApp(request):
-    ImageInlineFormset = generic_inlineformset_factory(Image, fields=('picture',))
+def add_mobile_app(request):
+    ImageInlineFormset = generic_inlineformset_factory(Image,
+                                                       fields=('picture',),
+                                                       can_order=True,
+                                                       can_delete=True)
     if request.method == 'POST':
         addAppModelForm = AddAppModelForm(request.POST)
-        addAppVertionModelForm = AddAppModelForm(request.POST)
+        addAppVersionModelForm = AddAppVersionModelForm(request.POST)
         imageInlineFormset = ImageInlineFormset(request.POST, request.FILES)
 
         if addAppModelForm.is_valid()\
@@ -34,7 +37,11 @@ def addMobileApp(request):
 
             return HttpResponse('success')
     else:
+        addAppModelForm = AddAppModelForm()
+        addAppVersionModelForm = AddAppVersionModelForm()
         imageInlineFormset = ImageInlineFormset()
-        return render(request, 'add_app.html', {'addAppModelForm': addAppModelForm,
-                                                'addAppVertionModelForm': addAppVertionModelForm,
-                                                'imageInlineFormset': imageInlineFormset})
+        return render(request,
+                      'management/add_mobile_app.html',
+                        {'addAppModelForm': addAppModelForm,
+                        'addAppVersionModelForm': addAppVersionModelForm,
+                        'imageInlineFormset': imageInlineFormset})
