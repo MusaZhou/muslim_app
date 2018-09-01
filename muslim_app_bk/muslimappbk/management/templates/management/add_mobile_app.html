@@ -3,74 +3,136 @@
 {% load widget_tweaks %}
 {% block title %}Add Application{% endblock %}
 {% block mainContent %}
-          <form method="POST" action="{% url '/management/add_mobile_app'}">
-          <div class="row gap-20 pos-r">
-            <div class="col-md-6">
-              <div class="bgc-white p-20 bd">
-                <h6 class="c-grey-900">Add Appliction</h6>
-                <div class="mT-30">
-                    <div class="form-group">
-                      <label>{{ addAppModelForm.name.label }}</label>
-                      {% render_field addAppModelForm.name class="form-control" placeholder=addAppModelForm.name.name %}
-                    </div>
-                    <div class="form-group">
-                      <label>{{ addAppModelForm.description.label }}</label>
-                      {% render_field addAppModelForm.description class="form-control" %}
-                    </div>
-                    <div class="form-group">
-                      <label>{{ addAppVertionModelForm.version_number.label }}</label>
-                      {% render_field addAppModelForm.version_number class="form-control" %}
-                    </div>
-                    <div class="form-group">
-                      <label>{{ addAppModelForm.category.label }}</label>
-                      {% render_field addAppModelForm.category class="form-control" %}
-                      <!-- <select id="appCategory" class="form-control">
-                        <option selected="selected">Choose...</option>
-                        <option>cate1</option>
-                        <option>cate2</option>
-                      </select> -->
-                    </div>
-                    <div class="form-group">
-                      <label for="appTags">{{ addAppModelForm.tags.label }}</label>
-                      {% render_field addAppModelForm.tags class="form-control" %}
-                      <!-- <select id="appTags" class="form-control">
-                        <option selected="selected" multiple="multiple">Choose...</option>
-                        <option>tag1</option>
-                        <option>tag2</option>
-                        <option>tag3</option>
-                        <option>tag4</option>
-                      </select> -->
-                    </div>
-                    <button class="button btn-primary btn cur-p" style="margin-bottom: 5px">Select Images +</button>
+          <form method="POST" action="{% url 'management:add_mobile_app' %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row gap-20 pos-r">
+              <div class="col-md-6">
+                <div class="bgc-white p-20 bd">
+                  <h6 class="c-grey-900">Add Appliction</h6>
+                  <div class="mT-30">
+                      <div class="form-group">
+                        <label>{{ addAppModelForm.name.label }}</label>
+                        {% render_field addAppModelForm.name class="form-control" placeholder=addAppModelForm.name.name %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ addAppModelForm.description.label }}</label>
+                        {% render_field addAppModelForm.description class="form-control" %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ addAppVersionModelForm.version_number.label }}</label>
+                        {% render_field addAppVersionModelForm.version_number class="form-control" %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ addAppModelForm.category.label }}</label>
+                        {% render_field addAppModelForm.category class="form-control" %}
+                      </div>
+                      <div class="form-group">
+                        <label for="appTags">{{ addAppModelForm.tags.label }}</label>
+                        {% render_field addAppModelForm.tags class="form-control" %}
+                      </div>
+                      <button id="imgCtrBtn" type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Select Images +</button>
+                      <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-6">
-              <div class="bgc-white p-20 bd">
-                <div class="mT-30">
-                    <div class="form-group">
-                      <label>{{ addAppModelForm.video_url.label}}</label>
-                      {% render_field addAppModelForm.video_url class="form-control" placeholder="http://www.example.com"%}
-                      <!-- <input type="url" class="form-control" id="appVideo" aria-describedby="appVideo" placeholder="http://www.example.com"> -->
+              <div class="col-md-6">
+                <div class="bgc-white p-20 bd">
+                  <div class="mT-30">
+                      <div class="form-group">
+                        <label>{{ addAppModelForm.video_url.label}}</label>
+                        {% render_field addAppModelForm.video_url class="form-control" placeholder="http://www.example.com"%}
+                        <!-- <input type="url" class="form-control" id="appVideo" aria-describedby="appVideo" placeholder="http://www.example.com"> -->
+                      </div>
+                      <button type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Play</button>
+                      <video width="100%" height="300" controls></video>
+                  </div>
+                </div>
+              </div>
+                <div class="divSplitter" style="display:none"></div>
+                <div class="imgDivTop">
+                  <div class="bgc-white p-20 bd">
+                    <div class="mT-30">
+                      {% render_field imageForm.picture style="display:none" %}
+                      <!-- <img src="{% static 'management/images/mobile.png' %}" width="auto" height="200px" class="rounded"> -->
+                      <button class="btn cur-p btn-secondary delImgBtn" style="display:block;margin-left:auto;margin-right:auto;">x</button>
+                      {% render_field imageForm.DELETE style="display:none" class="delImgCheckbox"%}
+                      {{ imageForm.ORDER }}
                     </div>
-                    <button class="button btn-primary btn cur-p" style="margin-bottom: 5px">Play</button>
-                    <video width="100%" height="300" controls></video>
+                  </div>
                 </div>
-              </div>
             </div>
-            {{ imageInlineFormset.management_form }}
-            {% for imageForm in imageInlineFormset %}
-            <div>
-              <div class="bgc-white p-20 bd">
-                <div class="mT-30">
-                  {{ imageForm.picture}}
-                  <!-- <img src="{% static 'management/images/mobile.png' %}" width="auto" height="200px" class="rounded"> -->
-                  <button class="btn cur-p btn-secondary" style="display:block;margin-left:auto;margin-right:auto;">x</button>
-                  {{ imageForm.ORDER }}
-                </div>
-              </div>
-            </div>
-            {% endfor %}
-          </div>
-        </form>
+          </form>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  <script>
+  var imageDivTemplate = '<div class="imgDivTop">'+
+                        '<div class="bgc-white p-20 bd">'+
+                        '<div class="mT-30">'+
+                        '{{ imageInlineFormset.empty_form.picture }}'+
+                        '<button class="btn cur-p btn-secondary delImgBtn" style="display:block;margin-left:auto;margin-right:auto;">x</button>'+
+                        '{% render_field imageInlineFormset.empty_form.DELETE style="display:none" class="delImgCheckbox"%}'+
+                        '{{ imageForm.ORDER }}'+
+                        '</div></div></div>';
+  $(function(){
+    // alert(imageDivTemplate);
+
+    $('#imgCtrBtn').click(function(){
+      $('#imgCtr').click();
+    });
+
+    $('#imgCtr').change(function(){
+      var files = this.files;
+      // var fileList
+      if(files !== null){
+        var formData = new FormData();
+        $.each(files, function(i, file){
+          formData.append('images', file)
+        });
+
+        $.ajax({
+            url: "{% url 'management:add_app_images' %}",
+            type: 'POST',
+            data: formData,
+            cache: false,
+            dataType: 'json',
+            processData: false, // Don't process the files
+            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+            success: function(data, textStatus, jqXHR)
+            {
+
+                if(typeof data.error === 'undefined')
+                {
+                    // Success so call function to process the form
+                    console.log('response: ' + data.response);
+                }
+                else
+                {
+                    // Handle errors here
+                    console.log('ERRORS: ' + data.error);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown)
+            {
+                // Handle errors here
+                console.log('ERRORS: ' + textStatus);
+                // STOP LOADING SPINNER
+            }
+        });
+        // files.forEach(function(file){
+          // var currentImgCount = $('.imgDivTop').length;
+          // var newImgDiv = $(imageDivTemplate.repeat(1).replace('__prefix__', ''+currentImgCount));
+          // newImgDiv.find('input[type="file"]').files = [file];
+          // currentImgCount > 0 ? $('.imgDivTop').last().after(newImgDiv) : $('.divSplitter').after(newImgDiv);
+        // });
+      }
+    });
+
+    $('.delImgBtn').click(function(){
+      $(this).siblings('.delImgCheckbox').prop('checked', true);
+      alert('test');
+      $(this).parents('.imgDivTop').hide();
+    })
+  })
+  </script>
 {% endblock %}

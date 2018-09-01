@@ -3,22 +3,18 @@ from django.conf import settings
 from management.forms import AddAppModelForm, AddAppVersionModelForm
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from management.models import Image
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.views.generic import View
+from datetime import date
 
 # Create your views here.
 def add_mobile_app(request):
-    ImageInlineFormset = generic_inlineformset_factory(Image,
-                                                       fields=('picture',),
-                                                       can_order=True,
-                                                       can_delete=True)
     if request.method == 'POST':
         addAppModelForm = AddAppModelForm(request.POST)
         addAppVersionModelForm = AddAppVersionModelForm(request.POST)
-        imageInlineFormset = ImageInlineFormset(request.POST, request.FILES)
 
         if addAppModelForm.is_valid()\
-        and addAppVersionModelForm.is_valid()\
-        and imageInlineFormset.is_valid():
+        and addAppVersionModelForm.is_valid():
 
             newApp = addAppModelForm.save(commit=False)
             newApp.upload_by = request.user
@@ -30,18 +26,23 @@ def add_mobile_app(request):
             newAppVersion.mobile_app = newApp
             newAppVersion.save()
 
-            images = imageInlineFormset.save(commit=False)
-            for image in images:
-                image.content_object = newApp
-                image.save()
-
             return HttpResponse('success')
     else:
         addAppModelForm = AddAppModelForm()
         addAppVersionModelForm = AddAppVersionModelForm()
-        imageInlineFormset = ImageInlineFormset()
         return render(request,
                       'management/add_mobile_app.html',
                         {'addAppModelForm': addAppModelForm,
-                        'addAppVersionModelForm': addAppVersionModelForm,
-                        'imageInlineFormset': imageInlineFormset})
+                        'addAppVersionModelForm': addAppVersionModelForm})
+
+class ImageFieldView(View):
+    def post(seft, request):
+        if request.is_ajax():
+            files = request.FILES.getlist('images');
+            print('file count:'+ ',' + str(len(files)))
+            imageIds = []
+            for file in files:
+                image = Image(picture=file)
+                image.save()
+                imageIds.append(image.id)
+            return JsonResponse(imageIds, safe=False)
