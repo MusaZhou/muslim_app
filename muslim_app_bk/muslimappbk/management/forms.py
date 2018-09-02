@@ -5,6 +5,7 @@ from management.models import MobileApp, AppVersion
 from django.core import validators
 
 class AddAppModelForm(ModelForm):
+    imgIds = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'imgIds'}))
     class Meta:
         model = MobileApp
         fields = ['name', 'description', 'video_url', 'category', 'tags']

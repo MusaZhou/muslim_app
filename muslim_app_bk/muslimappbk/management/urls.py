@@ -1,7 +1,7 @@
 from django.urls import path, include
 from django.conf import settings
 from . import views, basic_views
-from .views import ImageFieldView
+from .views import ImageFieldView, UpdateMobileAppView
 
 app_name = 'management'
 
@@ -15,5 +15,6 @@ urlpatterns = [
     path('index', basic_views.index, name='index'),
     path('add_mobile_app', views.add_mobile_app, name='add_mobile_app'),
     path('add_app_images', ImageFieldView.as_view(), name='add_app_images'),
-    path('<str:characters>', basic_views.others, name='others')
+    path('update_mobile_app', UpdateMobileAppView.as_view(), name='update_mobile_app'),
+    path('<str:characters>', basic_views.others, name='others'),
 ]

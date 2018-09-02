@@ -100,7 +100,7 @@ class AppVersion(models.Model):
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     on_delete=models.CASCADE,
                                     null=True, blank=True)
-    approved_time = models.DateTimeField(null=True)
+    approved_time = models.DateTimeField(null=True, blank=True)
     mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, null=True)
     active_status = models.CharField(max_length=10,
                                      choices=ACTIVE_CHOICES,

@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from management.forms import AddAppModelForm, AddAppVersionModelForm
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
-from management.models import Image
+from management.models import Image, MobileApp
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from datetime import date
@@ -32,7 +32,8 @@ def add_mobile_app(request):
             newAppVersion.full_clean()
             newAppVersion.save()
 
-            imgIds = request.POST['img_ids_input'];
+            imgIds = addAppModelForm.cleaned_data['imgIds'];
+            print('imgIds:' + imgIds)
             if imgIds:
                 imgIds = imgIds.split(',')
                 for img in Image.objects.filter(id__in=imgIds):
@@ -49,7 +50,7 @@ def add_mobile_app(request):
                     'addAppVersionModelForm': addAppVersionModelForm})
 
 class ImageFieldView(View):
-    def post(seft, request):
+    def post(self, request):
         if request.is_ajax():
             files = request.FILES.getlist('images');
             # print('file count:'+ ',' + str(len(files)))
@@ -59,3 +60,12 @@ class ImageFieldView(View):
                 image.save()
                 imageIds.append(image.id)
             return JsonResponse(imageIds, safe=False)
+
+class UpdateMobileAppView(View):
+    def get(self, request, *args, **kwargs):
+        mobile_app = MobileApp.object.get(slug=kwargs['slug']);
+        app_version = AppVersion.objects.filter(mobile_app=mobile_app).latest('-approved_time')
+        addAppModelForm = AddAppModelForm(instance=mobile_app)
+        addAppVersionModelForm = AddAppVersionModelForm(instance=addAppModelForm)
+        appImages = mobile_app.images
+        return render(request, 'management/update_mobile_app.html', {'form': form, 'app_images': appImages})
