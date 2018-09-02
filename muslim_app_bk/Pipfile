@@ -11,6 +11,7 @@ django-model-utils = "*"
 pillow = "*"
 python-slugify = "*"
 django-widget-tweaks = "*"
+django-debug-toolbar = "*"
 
 [dev-packages]
 

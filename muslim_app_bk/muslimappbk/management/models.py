@@ -13,10 +13,7 @@ class Profile(models.Model):
                              choices=GENDER_CHOICES,
                              default='male')
     date_of_birth = models.DateField(blank=True, null=True)
-    avatar = models.ImageField(upload_to="avatar/%Y/%m/%d/",
-                               height_field=50,
-                               width_field=50,
-                               blank=True)
+    avatar = models.ImageField(upload_to="avatar/%Y/%m/%d/",blank=True)
     wechatid = models.CharField(max_length=100,
                                 blank=True,
                                 db_index=True)
@@ -39,13 +36,10 @@ class Profile(models.Model):
 
 class Image(models.Model):
     #id, content_type, object_id, content_object, url
-    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    object_id = models.PositiveIntegerField()
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
-    picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",
-                                height_field=200,
-                                width_field=50,
-                                blank=True)
+    picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True)
 
     def __str__(self):
         return self.content_object
@@ -98,22 +92,27 @@ class AppVersion(models.Model):
     ACTIVE_CHOICES = (('active', 'active'), ('inactive', 'inactive'))
 
     version_number = models.CharField(max_length=10,
-                                      validators=[validators.RegexValidator("*[a-zA-Z0-9\.]")])
+                                      validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")])
     created_time = models.DateTimeField(auto_now_add=True)
     approve_status = models.CharField(max_length=10,
                                       choices=APPROVE_CHOICES,
                                       default='new')
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     on_delete=models.CASCADE,
-                                    null=True)
+                                    null=True, blank=True)
     approved_time = models.DateTimeField(null=True)
-    mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE)
+    mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, null=True)
     active_status = models.CharField(max_length=10,
                                      choices=ACTIVE_CHOICES,
                                      default='inactive')
 
     def __str__(self):
         return self.version_number
+
+    def clean(self):
+        if self.mobile_app is not None:
+            if AppVersion.objects.filter(mobile_app=self.mobile_app, version_number=self.version_number).exists():
+                raise ValidationError({'version_number': 'Version number is duplicated on this application.'})
 
 class Evaluation(models.Model):
     APPROVE_CHOICES = (('new', 'new'),
