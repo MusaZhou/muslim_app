@@ -70,8 +70,8 @@ class MobileApp(models.Model):
                                    null=True)
     comment_count = models.PositiveIntegerField(null=True)
     download_count = models.PositiveIntegerField(null=True)
-    slug = models.SlugField(unique=True)
-    images = GenericRelation(Image, related_query_name='appImages')
+    slug = models.SlugField(unique=True, null=True, blank=True)
+    images = GenericRelation(Image, related_query_name='imaged_app')
     tags = models.ManyToManyField(Tag)
 
     def slugDefault(self):

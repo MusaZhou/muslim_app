@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.http import HttpResponse, JsonResponse
+import logging
+
+logger = logging.getLogger(__name__)
 
 # Create your views here.
 def page_404(request):
@@ -23,6 +27,10 @@ def signup(request):
 def index(request):
     return render(request, 'management/index.html')
 
-def others(request, characters):
+def others(request, file):
     # print('what is requesting is :' + characters)
-    return redirect(settings.STATIC_URL + request.resolver_match.namespace + '/' + characters)
+    return redirect(settings.STATIC_URL + request.resolver_match.namespace + '/' + file)
+
+def customLogger(request):
+    logger.debug('test logger')
+    return HttpResponse(__name__)

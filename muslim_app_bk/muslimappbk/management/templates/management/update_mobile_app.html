@@ -1,7 +1,7 @@
 {% extends "management/index.html" %}
 {% load static %}
 {% load widget_tweaks %}
-{% block title %}Add Application{% endblock %}
+{% block title %}Update Application{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
   <style>
@@ -19,56 +19,27 @@
       left: 50%;
       transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
     }
-
-    /* .invalid-feedback {
-      display: none;
-      width: 100%;
-      margin-top: 4px;
-      margin-top: .25rem;
-      font-size: 80%;
-      color: #f44336;
-    } */
   </style>
 {% endblock %}
 {% block mainContent %}
-          <form id="add_app_form" method="POST" action="{% url 'management:add_mobile_app' %}" enctype="multipart/form-data">
+          <form id="update_app_form" method="POST" action="{% url 'management:update_mobile_app' updateAppModelForm.slug.value %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row gap-20 pos-r">
               <div class="col-md-6">
                 <div class="bgc-white p-20 bd">
-                  <h6 class="c-grey-900">Add Appliction</h6>
+                  <h6 class="c-grey-900">{{ updateAppModelForm.name.value|add:' Version '|add:updateAppVersionModelForm.version_number.value}} </h6>
                   <div class="mT-30">
                       <div class="form-group">
-                        <label>{{ addAppModelForm.name.label }}</label>
-                        {% render_field addAppModelForm.name class="form-control" placeholder=addAppModelForm.name.name %}
-                        {% if addAppModelForm.name.errors %}
-                          <div class="invalid-feedback d-block">
-                            {% for error in addAppModelForm.name.errors %}
-                              {{ error }}
-                            {% endfor %}
-                          </div>
-                        {% endif %}
+                        <label>{{ updateAppModelForm.description.label }}</label>
+                        {% render_field updateAppModelForm.description class="form-control" %}
                       </div>
                       <div class="form-group">
-                        <label>{{ addAppModelForm.description.label }}</label>
-                        {% render_field addAppModelForm.description class="form-control" %}
+                        <label>{{ updateAppModelForm.category.label }}</label>
+                        {% render_field updateAppModelForm.category class="form-control" %}
                       </div>
                       <div class="form-group">
-                        <label>{{ addAppVersionModelForm.version_number.label }}</label>
-                        {% render_field addAppVersionModelForm.version_number class="form-control" %}
-                        {% if addAppVersionModelForm.version_number.errors %}
-                          <div class="invalid-feedback d-block">
-                            {{ addAppVersionModelForm.version_number.errors }}
-                          </div>
-                        {% endif %}
-                      </div>
-                      <div class="form-group">
-                        <label>{{ addAppModelForm.category.label }}</label>
-                        {% render_field addAppModelForm.category class="form-control" %}
-                      </div>
-                      <div class="form-group">
-                        <label for="appTags">{{ addAppModelForm.tags.label }}</label>
-                        {% render_field addAppModelForm.tags class="form-control" %}
+                        <label for="appTags">{{ updateAppModelForm.tags.label }}</label>
+                        {% render_field updateAppModelForm.tags class="form-control" %}
                       </div>
                       <button id="imgCtrBtn" type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Select Images +</button>
                       <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
@@ -78,14 +49,14 @@
               <div class="col-md-6">
                 <div class="bgc-white p-20 bd">
                   <div class="mT-30">
-                      {% if addAppModelForm.non_field_errors %}
+                      {% if updateAppModelForm.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
-                          {% for error in addAppModelForm.non_field_errors %}
+                          {% for error in updateAppModelForm.non_field_errors %}
                             {{ error }}
                           {% endfor %}
                         </div>
                       {% endif %}
-                      {% for hidden_field in addAppModelForm.hidden_fields %}
+                      {% for hidden_field in updateAppModelForm.hidden_fields %}
                        {% if hidden_field.errors %}
                          <div class="alert alert-danger" role="alert">
                            {% for error in hidden_field.errors %}
@@ -94,9 +65,12 @@
                          </div>
                        {% endif %}
                       {% endfor %}
+                      {% render_field updateAppModelForm.name type="hidden" %}
+                      {% render_field updateAppModelForm.slug type="hidden" %}
+
                       <div class="form-group">
-                        <label>{{ addAppModelForm.video_url.label}}</label>
-                        {% render_field addAppModelForm.video_url class="form-control" placeholder="http://www.example.com"%}
+                        <label>{{ updateAppModelForm.video_url.label}}</label>
+                        {% render_field updateAppModelForm.video_url class="form-control" placeholder="http://www.example.com"%}
                       </div>
                       <button type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Play</button>
                       <video width="100%" height="300" controls></video>
@@ -105,22 +79,16 @@
                 </div>
               </div>
                 <div class="divSplitter" style="display:none"></div>
-                  <!-- <div class="bgc-white bd imgDivTop">
-                      <img src="/static/management/images/mobile.png" width="auto" height="200px" class="appImg rounded">
+                {% for imgUrl in imgUrls %}
+                  <div class="bgc-white bd imgDivTop">
+                      <img src="{{ imgUrl }}" width="auto" height="200px" class="appImg rounded">
                       <button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>
                       <input type="checkbox" class="delImgCheckbox" style="display:none">
                       <input type="number" class="orderImg" style="display:none">
                   </div>
-                  <div class="bgc-white bd imgDivTop">
-                      <img src="/static/management/images/mobile.png" width="auto" height="200px" class="appImg rounded">
-                      <button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>
-                      <input type="checkbox" class="delImgCheckbox" style="display:none">
-                      <input type="number" class="orderImg" style="display:none">
-                  </div> -->
+                {% endfor %}
             </div>
-            {{ addAppModelForm.imgIds }}
-            <!-- <input name="img_ids_input" id="img_ids_input" type="hidden"> -->
-            <!-- <input name="imgIds" id="imgIds" type="hidden"> -->
+            {{ updateAppModelForm.imgIds }}
 
           </form>
 {% endblock %}
@@ -134,7 +102,12 @@
                         '<input type="number" class="orderImg" style="display:none">'+
                         '</div>';
 
+  {% if updateAppModelForm.imgIds.value is not None %}
+  var imgIds = [{{ updateAppModelForm.imgIds.value }}];
+  {% else %}
   var imgIds = [];
+  {% endif %}
+
   $(function(){
 
     $('#imgCtrBtn').click(function(){
@@ -170,7 +143,7 @@
       }
     });
 
-    $('#add_app_form').submit(function(){
+    $('#update_app_form').submit(function(){
       $('#imgIds').val(imgIds);
       $(this).submit();
     });
@@ -200,7 +173,7 @@
       var index = $(this).parents('.imgDivTop').index('.imgDivTop');
       imgIds.splice(index, 1);
       $(this).siblings('.delImgCheckbox').prop('checked', true);
-      $(this).parents('.imgDivTop').hide();
+      $(this).parents('.imgDivTop').remove();
     });
   }
   </script>

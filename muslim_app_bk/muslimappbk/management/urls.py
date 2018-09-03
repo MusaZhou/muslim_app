@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from . import views, basic_views
 from .views import ImageFieldView, UpdateMobileAppView
@@ -14,7 +14,8 @@ urlpatterns = [
     path('signup', basic_views.signup, name='signup'),
     path('index', basic_views.index, name='index'),
     path('add_mobile_app', views.add_mobile_app, name='add_mobile_app'),
+    path('logger', basic_views.customLogger, name='logger'),
     path('add_app_images', ImageFieldView.as_view(), name='add_app_images'),
-    path('update_mobile_app', UpdateMobileAppView.as_view(), name='update_mobile_app'),
-    path('<str:characters>', basic_views.others, name='others'),
+    path('update_mobile_app/<slug:slug>', UpdateMobileAppView.as_view(), name='update_mobile_app'),
+    re_path(r'(?P<file>(\w*\.(eot|svg|woff|woff2|ttf))$)', basic_views.others, name='others')
 ]
