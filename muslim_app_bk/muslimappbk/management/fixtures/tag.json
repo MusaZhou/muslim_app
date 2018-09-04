@@ -1,0 +1,30 @@
+[
+  {
+    "model": "management.tag",
+    "pk": 1,
+    "fields":{
+        "name": "Makka"
+    }
+   },
+  {
+    "model": "management.tag",
+    "pk": 2,
+    "fields":{
+        "name": "Azhar"
+    }
+   },
+  {
+    "model": "management.tag",
+    "pk": 3,
+    "fields":{
+        "name": "Buhari"
+    }
+   },
+   {
+    "model": "management.tag",
+    "pk": 4,
+    "fields":{
+        "name": "Madina"
+    }
+   }
+]

@@ -5,6 +5,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
 from django.core.exceptions import ValidationError
+from unittest.util import _MAX_LENGTH
 
 # Create your models here.
 class Profile(models.Model):
@@ -33,7 +34,7 @@ class Profile(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.user.user_name)
-            super(Profile, self).save(*args, **kwargs)
+        super(Profile, self).save(*args, **kwargs)
 
 class Image(models.Model):
     #id, content_type, object_id, content_object, url
@@ -41,6 +42,7 @@ class Image(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
     picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True)
+    test = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.content_object

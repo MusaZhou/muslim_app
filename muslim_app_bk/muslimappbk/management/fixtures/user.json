@@ -1,0 +1,15 @@
+[
+  {
+      "model": "auth.user",
+      "pk": 1,
+      "fields": {
+        "password": "pbkdf2_sha256$120000$Slrl5D209j3A$GAmKq531+DxPSISKmIjQwq2nb7AEkwJsIah+a33uUCY=",
+        "is_super_user": 1,
+        "user_name": "admin",
+        "email": "musazhou@gmail.com",
+        "is_staff": 1,
+        "is_active": 1,
+        "date_joined": "2018-09-04 06:40:11.666600"
+      }
+  }
+]

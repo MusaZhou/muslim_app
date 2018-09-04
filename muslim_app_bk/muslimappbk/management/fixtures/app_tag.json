@@ -1,0 +1,162 @@
+[
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 1,
+    "fields": {
+      "mobileapp_id": "1",
+      "tag_id": "1"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 2,
+    "fields": {
+      "mobileapp_id": "2",
+      "tag_id": "2"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 3,
+    "fields": {
+      "mobileapp_id": "3",
+      "tag_id": "3"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 4,
+    "fields": {
+      "mobileapp_id": "4",
+      "tag_id": "4"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 5,
+    "fields": {
+      "mobileapp_id": "5",
+      "tag_id": "1"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 6,
+    "fields": {
+      "mobileapp_id": "6",
+      "tag_id": "2"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 7,
+    "fields": {
+      "mobileapp_id": "7",
+      "tag_id": "3"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 8,
+    "fields": {
+      "mobileapp_id": "8",
+      "tag_id": "4"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 9,
+    "fields": {
+      "mobileapp_id": "9",
+      "tag_id": "1"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 10,
+    "fields": {
+      "mobileapp_id": "10",
+      "tag_id": "2"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 11,
+    "fields": {
+      "mobileapp_id": "1",
+      "tag_id": "3"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 12,
+    "fields": {
+      "mobileapp_id": "2",
+      "tag_id": "4"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 13,
+    "fields": {
+      "mobileapp_id": "3",
+      "tag_id": "1"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 14,
+    "fields": {
+      "mobileapp_id": "4",
+      "tag_id": "2"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 15,
+    "fields": {
+      "mobileapp_id": "5",
+      "tag_id": "3"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 16,
+    "fields": {
+      "mobileapp_id": "6",
+      "tag_id": "4"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 17,
+    "fields": {
+      "mobileapp_id": "7",
+      "tag_id": "1"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 18,
+    "fields": {
+      "mobileapp_id": "8",
+      "tag_id": "2"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 19,
+    "fields": {
+      "mobileapp_id": "9",
+      "tag_id": "3"
+    }
+  },
+  {
+    "model": "management.mobileapp_tags",
+    "pk": 20,
+    "fields": {
+      "mobileapp_id": "10",
+      "tag_id": "4"
+    }
+  }
+]

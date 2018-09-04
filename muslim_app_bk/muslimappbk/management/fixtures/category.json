@@ -1,0 +1,23 @@
+[
+  {
+    "model": "management.AppCategory",
+    "pk": 1,
+    "fields":{
+        "name": "Quran"
+    }
+   },
+  {
+    "model": "management.AppCategory",
+    "pk": 2,
+    "fields":{
+        "name": "Hadith"
+    }
+   },
+  {
+    "model": "management.AppCategory",
+    "pk": 3,
+    "fields":{
+        "name": "Arabic"
+    }
+   }
+]

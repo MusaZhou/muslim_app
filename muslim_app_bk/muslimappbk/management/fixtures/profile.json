@@ -1,0 +1,14 @@
+[
+  {
+      "model": "management.profile",
+      "pk": 1,
+      "fields": {
+        "name": "Musa Zhou",
+        "gender": "male",
+        "avatar": "musazhou@gmail.com",
+        "slug": "admin",
+        "user_id": 1,
+        "date_of_birth": "2018-09-04"
+      }
+  }
+]
