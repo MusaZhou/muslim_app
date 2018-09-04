@@ -1,0 +1,110 @@
+{% extends "management/index.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Applications Table{% endblock %}
+{% block stylesheet %}
+  {{ block.super }}
+{% endblock %}
+{% block mainContent %}
+          <div class="container-fluid">
+            <h4 class="c-grey-900 mT-10 mB-30">Applications</h4>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                  <h4 class="c-grey-900 mB-20">All</h4>
+<!--                  <p>Use <code class="highlighter-rouge">.table-striped</code> to add zebra-striping to any table row within the <code class="highlighter-rouge">&lt;tbody&gt;</code>.</p>-->
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Latest Version</th>
+                        <th scope="col">Category</th>
+                        <th scope="col">upload time</th>
+                        <th scope="col">upload by</th>
+                        <th scope="col">avg rate</th>
+                        <th scope="col">comment count</th>
+                        <th scope="col">download count</th>
+                      </tr>
+                    </thead>
+                    {% if page_apps|length == 0 %}
+                        We don't have data at this moment
+                    {% else %}
+                        <tbody>
+                        {% for mobile_app in page_apps %}
+                        <tr>
+                            <th scope="row" class="app_order"></th>
+                            <td>{{ mobile_app.name }}</td>
+                            <td>{{ mobile_app.description }}</td>
+                            <td>{{ mobile_app.latest_version.version_number }}</td>
+                            <td>{{ mobile_app.category }}</td>
+                            <td>{{ mobile_app.upload_date }}</td>
+                            <td>{{ mobile_app.upload_by }}</td>
+                            <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
+                            <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
+                            <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
+                          </tr>
+                        {% endfor %}
+                    {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+                <nav>
+                  <ul class="pagination justify-content-end">
+                    <li class="page-item">
+                      <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    {% if not page_apps.has_previous %}
+                    <li class="page-item disabled">
+                      <span class="page-link">Previous</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_apps.previous_page_number }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    {% for page_index in page_apps.paginator.page_range %}
+                      {% if page_index == page_apps.number %}
+                      <li class="page-item active">
+                          <span class="page-link">
+                            {{ page_apps.number }}
+                          </span>
+                        </li>
+                      {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_index }}">{{ page_index }}</a>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                    {% if not page_apps.has_next %}
+                    <li class="page-item disabled">
+                      <span class="page-link">Next</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_apps.next_page_number }}">Next</a>
+                    </li>
+                    {% endif %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_apps.paginator.num_pages }}">Last</a>
+                    </li>
+                  </ul>
+                </nav>  
+              </div>
+            </div>
+          </div>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+<script>
+    var page_start_index = {{ page_apps.start_index|default:0 }};
+    $(function(){
+        $('.app_order').each(function(index, element){
+            var row_index = $(this).parents('tr').index();
+            $(this).text(page_start_index + row_index);
+        });
+    })
+</script>
+{% endblock %}
+

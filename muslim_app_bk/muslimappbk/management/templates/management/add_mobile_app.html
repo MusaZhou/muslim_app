@@ -132,6 +132,11 @@
 
     $('#imgCtr').change(function(){
       var files = this.files;
+      if(imgIds.length + files.length > 10){
+        alert('maximum 10 images allowed');
+        return;
+      }
+      
       // var fileList
       if(files !== null){
         var formData = new FormData();

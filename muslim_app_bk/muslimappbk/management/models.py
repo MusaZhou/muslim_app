@@ -87,6 +87,9 @@ class MobileApp(models.Model):
         if not self.slug:
             self.slug = slugify(self.name)
         super(MobileApp, self).save(*args, **kwargs)
+    
+    def latest_version(self):
+        return AppVersion.objects.filter(mobile_app=self).latest('created_time')
 
 class AppVersion(models.Model):
     APPROVE_CHOICES = (('new', 'new'),

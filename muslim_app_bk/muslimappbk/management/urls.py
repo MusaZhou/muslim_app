@@ -1,7 +1,7 @@
 from django.urls import path, include, re_path
 from django.conf import settings
 from . import views, basic_views
-from .views import ImageFieldView, UpdateMobileAppView
+from .views import ImageFieldView, UpdateMobileAppView, AppTableBasicView
 
 app_name = 'management'
 
@@ -17,5 +17,6 @@ urlpatterns = [
     path('logger', basic_views.customLogger, name='logger'),
     path('add_app_images', ImageFieldView.as_view(), name='add_app_images'),
     path('update_mobile_app/<slug:slug>', UpdateMobileAppView.as_view(), name='update_mobile_app'),
+    path('app_table_basic', AppTableBasicView.as_view(), name='app_table_basic'),
     re_path(r'(?P<file>(\w*\.(eot|svg|woff|woff2|ttf))$)', basic_views.others, name='others')
 ]

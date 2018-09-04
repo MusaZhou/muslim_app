@@ -5,6 +5,7 @@ from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from management.models import Image, MobileApp, AppVersion
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
+from django.core.paginator import Paginator, Page
 from datetime import date
 import logging
 
@@ -108,3 +109,12 @@ class UpdateMobileAppView(View):
                         img.save()
 
         return redirect('management:update_mobile_app', slug=kwargs['slug'])
+    
+class AppTableBasicView(View):
+    def get(self, request, *args, **kwargs):
+        all_apps = MobileApp.objects.all()
+        paginator = Paginator(all_apps, 5)
+        page = request.GET.get('page')
+        page_apps = paginator.get_page(page)
+        
+        return render(request, 'management/app_table_basic.html', {'page_apps': page_apps})
