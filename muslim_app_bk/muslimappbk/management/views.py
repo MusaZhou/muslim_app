@@ -89,35 +89,7 @@ class UpdateMobileAppView(View):
         updateAppModelForm = AddAppModelForm(request.POST, instance=mobile_app, initial={'imgIds': imgIds})
 
         if updateAppModelForm.is_valid():
-            logger.debug('before form save')
             updateAppModelForm.save()
-            logger.debug('after form save')
-            working_o = updateAppModelForm.instance
-            logger.debug('instance id:' + str(working_o.id))
-            logger.debug('instance name:' + working_o.name)
-            logger.debug('instance description:' + working_o.description)
-            logger.debug('instance category:' + str(working_o.category))
-            logger.debug('instance upload_by:' + str(working_o.upload_by))
-            logger.debug('instance upload_date:' + str(working_o.upload_date))
-            logger.debug('instance slug:' + working_o.slug)
-
-            logger.debug('before instance save')
-            working_o.save()
-            logger.debug('after instance save')
-            logger.debug('before test save')
-            test_app = MobileApp.objects.get(id=9)
-            test_app.description = 'af11111'
-            test_app.save()
-            logger.debug('after test save')
-
-            logger.debug('form is bound:'+str(updateAppModelForm.is_bound))
-            logger.debug('form has changed:'+str(updateAppModelForm.has_changed()))
-            logger.debug('changed data:'+' '.join(updateAppModelForm.changed_data))
-            logger.debug('field description(cleaned):'+updateAppModelForm.cleaned_data['description'])
-            logger.debug('field category(cleaned):'+ str(updateAppModelForm.cleaned_data['category']))
-            logger.debug('field video_url(cleaned):'+updateAppModelForm.cleaned_data['video_url'])
-
-            # updateAppModelForm.instance.save()
 
             imgIds = updateAppModelForm.cleaned_data['imgIds']
             logger.debug('new imgIds:' + imgIds)
@@ -134,7 +106,5 @@ class UpdateMobileAppView(View):
                     if not img.content_object:
                         img.content_object = mobile_app;
                         img.save()
-
-            return HttpResponse('ok')
 
         return redirect('management:update_mobile_app', slug=kwargs['slug'])

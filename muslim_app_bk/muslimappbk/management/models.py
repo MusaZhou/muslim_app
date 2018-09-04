@@ -4,6 +4,7 @@ from slugify import slugify
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Profile(models.Model):
@@ -83,7 +84,7 @@ class MobileApp(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
-            super(MobileApp, self).save(*args, **kwargs)
+        super(MobileApp, self).save(*args, **kwargs)
 
 class AppVersion(models.Model):
     APPROVE_CHOICES = (('new', 'new'),
