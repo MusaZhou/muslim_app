@@ -15,4 +15,4 @@ class AddAppVersionModelForm(ModelForm):
 
     class Meta:
         model = AppVersion
-        fields = ['version_number']
+        fields = ['version_number', 'whats_new', 'apk']

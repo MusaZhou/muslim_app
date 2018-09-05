@@ -34,3 +34,6 @@ def others(request, file):
 def customLogger(request):
     logger.debug('test logger')
     return HttpResponse(__name__)
+
+def ui(request):
+    return render(request, 'management/ui.html')

@@ -5,7 +5,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
 from django.core.exceptions import ValidationError
-from unittest.util import _MAX_LENGTH
 
 # Create your models here.
 class Profile(models.Model):
@@ -63,9 +62,9 @@ class MobileApp(models.Model):
     name = models.CharField(max_length=100,
                             unique=True,
                             db_index=True)
-    description = models.TextField()
+    description = models.TextField(blank=True, null=True)
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    video_url = models.URLField(null=True)
+    video_url = models.URLField(blank=True, null=True)
     upload_date = models.DateTimeField(auto_now_add=True)
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
     avg_rate = models.DecimalField(max_digits=2,
@@ -107,10 +106,12 @@ class AppVersion(models.Model):
                                     on_delete=models.CASCADE,
                                     null=True, blank=True)
     approved_time = models.DateTimeField(null=True, blank=True)
-    mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, null=True)
+    mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, blank=True, null=True)
     active_status = models.CharField(max_length=10,
                                      choices=ACTIVE_CHOICES,
                                      default='inactive')
+    whats_new = models.TextField(blank=True, null=True, verbose_name="What's New")
+    apk = models.FileField(upload_to='apk', verbose_name="APK File")
 
     def __str__(self):
         return self.version_number

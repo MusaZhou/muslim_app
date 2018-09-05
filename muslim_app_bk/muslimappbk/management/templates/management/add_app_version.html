@@ -22,24 +22,50 @@
   </style>
 {% endblock %}
 {% block mainContent %}
-          <form id="update_app_form" method="POST" action="{% url 'management:update_mobile_app' updateAppModelForm.slug.value %}" enctype="multipart/form-data">
+          <form id="add_version_form" method="POST" action="{% url 'management:add_app_version' updateAppModelForm.slug.value %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row gap-20 pos-r">
               <div class="col-md-6">
                 <div class="bgc-white p-20 bd">
-                  <h6 class="c-grey-900">{{ updateAppModelForm.name.value|add:' Version '|add:updateAppModelForm.instance }} </h6>
+                  <h6 class="c-grey-900">
+                      {{ updateAppModelForm.name.value|add:' Current Version  ' }}
+                      {{ updateAppModelForm.instance.latest_version }}
+                  </h6>
                   <div class="mT-30">
                       <div class="form-group">
-                        <label>{{ updateAppModelForm.description.label }}</label>
-                        {% render_field updateAppModelForm.description class="form-control" %}
+                        <label>{{ addAppVersionModelForm.version_number.label }}</label>
+                        {% render_field addAppVersionModelForm.version_number class="form-control" %}
+                        {% if addAppVersionModelForm.version_number.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ addAppVersionModelForm.version_number.errors }}
+                          </div>
+                        {% endif %}
                       </div>
                       <div class="form-group">
-                        <label>{{ updateAppModelForm.category.label }}</label>
-                        {% render_field updateAppModelForm.category class="form-control" %}
+                        <label>{{ addAppVersionModelForm.whats_new.label }}</label>
+                        {% render_field addAppVersionModelForm.whats_new class="form-control" %}
                       </div>
                       <div class="form-group">
                         <label for="appTags">{{ updateAppModelForm.tags.label }}</label>
                         {% render_field updateAppModelForm.tags class="form-control" %}
+                        {% if updateAppModelForm.tags.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ updateAppModelForm.tags.errors }}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                          <div class="input-group">
+                              <div class="custom-file">
+                                {% render_field addAppVersionModelForm.apk class="custom-file-input" id="apk_file_input"%}
+                                <label class="custom-file-label" for="apk_file_input">Choose APK file</label>
+                              </div>
+                          </div>
+                          {% if addAppVersionModelForm.apk.errors %}
+                              <div class="invalid-feedback d-block">
+                                {{ addAppVersionModelForm.apk.errors }}
+                              </div>
+                          {% endif %}
                       </div>
                       <button id="imgCtrBtn" type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Select Images +</button>
                       <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
@@ -56,6 +82,13 @@
                           {% endfor %}
                         </div>
                       {% endif %}
+                      {% if addAppVersionModelForm.errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {% for error in addAppVersionModelForm.errors %}
+                            {{ error }}
+                          {% endfor %}
+                        </div>
+                      {% endif %}
                       {% if updateAppModelForm.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
                           {% for error in updateAppModelForm.non_field_errors %}
@@ -63,7 +96,26 @@
                           {% endfor %}
                         </div>
                       {% endif %}
+                      
+                      {% if addAppVersionModelForm.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {% for error in addAppVersionModelForm.non_field_errors %}
+                            {{ error }}
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                      
                       {% for hidden_field in updateAppModelForm.hidden_fields %}
+                       {% if hidden_field.errors %}
+                         <div class="alert alert-danger" role="alert">
+                           {% for error in hidden_field.errors %}
+                             {{ hidden_field.name }}: {{ error }}
+                           {% endfor %}
+                         </div>
+                       {% endif %}
+                      {% endfor %}
+                      
+                      {% for hidden_field in addAppVersionModelForm.hidden_fields %}
                        {% if hidden_field.errors %}
                          <div class="alert alert-danger" role="alert">
                            {% for error in hidden_field.errors %}
@@ -75,13 +127,16 @@
                       
                       {% render_field updateAppModelForm.name type="hidden" %}
                       {% render_field updateAppModelForm.slug type="hidden" %}
+                      {% render_field updateAppModelForm.description style="display:none" %}
+                      {% render_field updateAppModelForm.category style="display:none" %}
+
                       <div class="form-group">
                         <label>{{ updateAppModelForm.video_url.label}}</label>
                         {% render_field updateAppModelForm.video_url class="form-control" placeholder="http://www.example.com"%}
                       </div>
                       <button type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Play</button>
                       <video width="100%" height="300" controls></video>
-                      <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >Add New Application</button>
+                      <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >Add New Version</button>
                   </div>
                 </div>
               </div>
@@ -154,7 +209,7 @@
       }
     });
 
-    $('#update_app_form').submit(function(){
+    $('#add_version_form').submit(function(){
       $('#imgIds').val(imgIds);
       $(this).submit();
     });

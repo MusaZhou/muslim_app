@@ -26,6 +26,7 @@
                         <th scope="col">avg rate</th>
                         <th scope="col">comment count</th>
                         <th scope="col">download count</th>
+                        <th scope="col">edit</th>
                       </tr>
                     </thead>
                     {% if page_apps|length == 0 %}
@@ -44,6 +45,9 @@
                             <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
                             <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
                             <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
+                            <td>
+                                <a class="button btn-primary btn cur-p" href='{% url "management:update_mobile_app" mobile_app.slug %}'>Edit</a>
+                            </td>
                           </tr>
                         {% endfor %}
                     {% endif %}
@@ -104,7 +108,7 @@
             var row_index = $(this).parents('tr').index();
             $(this).text(page_start_index + row_index);
         });
-    })
+    });
 </script>
 {% endblock %}
 
