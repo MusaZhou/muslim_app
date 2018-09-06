@@ -1,7 +1,7 @@
 {% extends "management/index.html" %}
 {% load static %}
 {% load widget_tweaks %}
-{% block title %}Update Application{% endblock %}
+{% block title %}Add New Version{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
   <style>
@@ -57,7 +57,7 @@
                       <div class="form-group">
                           <div class="input-group">
                               <div class="custom-file">
-                                {% render_field addAppVersionModelForm.apk class="custom-file-input" id="apk_file_input"%}
+                                {% render_field addAppVersionModelForm.apk class="custom-file-input" id="apk_file_input" accept=".apk"%}
                                 <label class="custom-file-label" for="apk_file_input">Choose APK file</label>
                               </div>
                           </div>

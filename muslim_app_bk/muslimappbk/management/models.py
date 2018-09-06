@@ -89,7 +89,7 @@ class MobileApp(models.Model):
     
     def latest_version(self):
         return AppVersion.objects.filter(mobile_app=self).latest('created_time')
-
+    
 class AppVersion(models.Model):
     APPROVE_CHOICES = (('new', 'new'),
                        ('approved', 'approved'),
@@ -111,7 +111,7 @@ class AppVersion(models.Model):
                                      choices=ACTIVE_CHOICES,
                                      default='inactive')
     whats_new = models.TextField(blank=True, null=True, verbose_name="What's New")
-    apk = models.FileField(upload_to='apk', verbose_name="APK File")
+    apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk'])])
 
     def __str__(self):
         return self.version_number
@@ -174,3 +174,4 @@ class Download(models.Model):
     app = models.ForeignKey(MobileApp,
                             on_delete=models.CASCADE,
                             null=True)
+

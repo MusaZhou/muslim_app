@@ -1,0 +1,59 @@
+{% extends "management/index.html" %}
+{% block title %}Application Table{% endblock %}
+{% block stylesheet %}
+    {{ block.super }}
+    <style>
+        .add-new-version {
+            height: 60%;
+        }
+    </style>
+    
+{% endblock %}
+{% block mainContent %}
+    <div class="container-fluid">
+            <h4 class="c-grey-900 mT-10 mB-30">Application Tables</h4>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                  <div class="row">
+                    <h4 class="c-grey-900 mB-20 app-name col-md-10">{{ mobile_app.name }}</h4>
+                    <a class=" btn btn-primary cur-p add-new-version" href="{% url 'management:add_app_version' mobile_app.slug %}">
+                        Add New Version
+                    </a>
+                  </div>
+                  <table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                      <tr>
+                        <th>Version Number</th>
+                        <th>Time</th>
+                        <th>Approve</th>
+                        <th>Active</th>
+                        <th>What's New</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <th>Version Number</th>
+                        <th>Time</th>
+                        <th>Approve</th>
+                        <th>Active</th>
+                        <th>What's New</th>
+                      </tr>
+                    </tfoot>
+                    <tbody>
+                      {% for app_version in app_version_list %}
+                      <tr>
+                        <td>{{ app_version.version_number }}</td>
+                        <td>{{ app_version.created_time }}</td>
+                        <td>{{ app_version.approve_status }}</td>
+                        <td>{{ app_version.active_status }}</td>
+                        <td>{{ app_version.whats_new }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}

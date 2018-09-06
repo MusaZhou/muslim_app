@@ -16,37 +16,40 @@ logger = logging.getLogger(__name__)
 def add_mobile_app(request):
     if request.method == 'POST':
         addAppModelForm = AddAppModelForm(request.POST)
-        addAppVersionModelForm = AddAppVersionModelForm(request.POST)
+        addAppVersionModelForm = AddAppVersionModelForm(request.POST, request.FILES)
 
         if addAppModelForm.is_valid()\
         and addAppVersionModelForm.is_valid():
 
             newApp = addAppModelForm.save(commit=False)
             newApp.upload_by = request.user
-            
-
-            newAppVersion = addAppVersionModelForm.save(commit=False)
-            newAppVersion.upload_by = request.user
-            newAppVersion.mobile_app = newApp
-            
-            newAppVersion.full_clean()
             newApp.save()
             addAppModelForm.save_m2m()
-            newAppVersion.save()
 
-            imgIds = addAppModelForm.cleaned_data['imgIds'];
-            logger.debug('imgIds:' + imgIds)
-            if imgIds:
-                imgIds = imgIds.split(',')
-                for img in Image.objects.filter(id__in=imgIds):
-                    img.content_object = newApp;
-                    img.save()
-
-            return redirect('management:app_table_basic')
-                       
-    addAppModelForm = AddAppModelForm()
-    addAppVersionModelForm = AddAppVersionModelForm()
+            newAppVersion = addAppVersionModelForm.save(commit=False)
+            newAppVersion.mobile_app = newApp
+            try:
+                newAppVersion.full_clean()
+                newAppVersion.save()
+    
+                imgIds = addAppModelForm.cleaned_data['imgIds'];
+                logger.debug('imgIds:' + imgIds)
+                if imgIds:
+                    imgIds = imgIds.split(',')
+                    for img in Image.objects.filter(id__in=imgIds):
+                        img.content_object = newApp;
+                        img.save()
+    
+                return redirect('management:app_table_basic')
+            except ValidationError as error:
+                addAppVersionModelForm.add_error(None, error)
+                newApp.delete()
+    else:
+        addAppModelForm = AddAppModelForm()
+        addAppVersionModelForm = AddAppVersionModelForm()
         
+    logger.debug('app form errors:' + ','.join(addAppModelForm.errors))
+    logger.debug('app version form errors:' + ','.join(addAppVersionModelForm.errors))  
     return render(request,
                   'management/add_mobile_app.html',
                     {'addAppModelForm': addAppModelForm,
@@ -165,7 +168,16 @@ class AddAppVersionView(View):
                  'updateAppModelForm': updateAppModelForm,
                  'imgUrls': imgUrls})
             
-
+class AppHistoryView(View):
+    def get(self, request, *args, **kwargs):
+        mobile_app = get_object_or_404(MobileApp, slug=kwargs['slug'])
+        app_version_list = mobile_app.appversion_set.all()
+        context = {'mobile_app': mobile_app, 'app_version_list': app_version_list}
+        return render(request, 'management/app_history.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        pass
+    
 def update_app_images(imgIds, mobile_app):
     logger.debug('new imgIds:' + ','.join(imgIds))
     if imgIds:

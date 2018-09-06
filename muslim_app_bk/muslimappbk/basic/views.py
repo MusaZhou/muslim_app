@@ -18,18 +18,19 @@ def datatable(request):
 def forms(request):
     return render(request, 'management/forms.html')
 
+def index(request):
+    return render(request, 'management/index.html')
+
 def signin(request):
     return render(request, 'management/signin.html')
 
 def signup(request):
     return render(request, 'management/signup.html')
 
-def index(request):
-    return render(request, 'management/index.html')
-
 def others(request, file):
     # print('what is requesting is :' + characters)
-    return redirect(settings.STATIC_URL + request.resolver_match.namespace + '/' + file)
+    return redirect(settings.STATIC_URL + 'management/' + file)
+#     return redirect(settings.STATIC_URL + file)
 
 def customLogger(request):
     logger.debug('test logger')

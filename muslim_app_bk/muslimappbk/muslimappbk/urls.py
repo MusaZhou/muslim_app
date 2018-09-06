@@ -14,15 +14,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
-from management import views
+from basic import views as basic_view
 
 urlpatterns = [
+    
     path('admin/', admin.site.urls),
     path('management/', include('management.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('basic/', include('basic.urls')),
+    
 ]
 
 
@@ -32,6 +35,8 @@ if settings.DEBUG:
     urlpatterns += [
         path('__debug__', include(debug_toolbar.urls)),
     ]
+    
+
 # accounts/login/ [name='login']
 # accounts/logout/ [name='logout']
 # accounts/password_change/ [name='password_change']

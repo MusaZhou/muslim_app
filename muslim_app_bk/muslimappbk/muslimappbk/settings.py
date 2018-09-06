@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'management.apps.ManagementConfig',
     'widget_tweaks',
     'debug_toolbar',
+    'basic.apps.BasicConfig',
+    'userauth.apps.UserauthConfig'
 ]
 
 MIDDLEWARE = [
