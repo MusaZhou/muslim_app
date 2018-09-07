@@ -5,35 +5,37 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
 from django.core.exceptions import ValidationError
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 # Create your models here.
 class Profile(models.Model):
     GENDER_CHOICES = (('male', '男'), ('female', '女'))
-    name = models.CharField(max_length=50, blank=True)
+    name = models.CharField(max_length=50, blank=True, null=True)
     gender =models.CharField(max_length=10,
                              choices=GENDER_CHOICES,
                              default='male')
     date_of_birth = models.DateField(blank=True, null=True)
-    avatar = models.ImageField(upload_to="avatar/%Y/%m/%d/",blank=True)
-    wechatid = models.CharField(max_length=100,
-                                blank=True,
-                                db_index=True)
-    weiboid = models.CharField(max_length=100,
-                               blank=True,
-                               db_index=True)
-    qqid = models.CharField(max_length=100,
-                            blank=True,
-                            db_index=True)
+    avatar = models.ImageField(upload_to="avatar/%Y/%m/%d/",blank=True, null=True)
+    wechatid = models.CharField(max_length=100,blank=True,db_index=True,null=True)
+    weiboid = models.CharField(max_length=100,blank=True,db_index=True,null=True)
+    qqid = models.CharField(max_length=100,blank=True,db_index=True,null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(unique=True, null=True, blank=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.user.user_name)
+            self.slug = slugify(self.user.username)
         super(Profile, self).save(*args, **kwargs)
+    
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def update_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+    instance.profile.save()
 
 class Image(models.Model):
     #id, content_type, object_id, content_object, url
