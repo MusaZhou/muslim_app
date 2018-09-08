@@ -9,6 +9,7 @@ class SignUpForm(UserCreationForm):
     date_of_birth = forms.DateField(help_text='Format: YYYY-MM-DD', required=False)
     gender =forms.ChoiceField(choices=GENDER_CHOICES)
     avatar = forms.ImageField(required=False)
+    email = forms.EmailField(max_length=254, help_text='Required. Inform a valid email address.')
     
     class Meta:
         model = User

@@ -9,10 +9,15 @@ from django.core.paginator import Paginator, Page
 from django.core.exceptions import ValidationError
 from datetime import date
 import logging
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import PermissionRequiredMixin
 
 logger = logging.getLogger(__name__)
                 
 # Create your views here.
+@login_required
 def add_mobile_app(request):
     if request.method == 'POST':
         addAppModelForm = AddAppModelForm(request.POST)
@@ -55,7 +60,7 @@ def add_mobile_app(request):
                     {'addAppModelForm': addAppModelForm,
                     'addAppVersionModelForm': addAppVersionModelForm})
 
-class ImageFieldView(View):
+class ImageFieldView(LoginRequiredMixin, View):
     def post(self, request):
         if request.is_ajax():
             files = request.FILES.getlist('images');
@@ -67,7 +72,7 @@ class ImageFieldView(View):
                 imageIds.append(image.id)
             return JsonResponse(imageIds, safe=False)
 
-class UpdateMobileAppView(View):
+class UpdateMobileAppView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         mobile_app = MobileApp.objects.get(slug=kwargs['slug']);
         appImages = mobile_app.images.all()
@@ -107,7 +112,9 @@ class UpdateMobileAppView(View):
                           {'updateAppModelForm': updateAppModelForm,
                              'imgUrls': imgUrls})
             
-class AppTableBasicView(View):
+class AppTableBasicView(PermissionRequiredMixin, View):
+    permission_required = 'management.can_approve_app'
+    
     def get(self, request, *args, **kwargs):
         all_apps = MobileApp.objects.all()
         paginator = Paginator(all_apps, 5)
@@ -116,6 +123,7 @@ class AppTableBasicView(View):
         
         return render(request, 'management/app_table_basic.html', {'page_apps': page_apps})
 
+@method_decorator(login_required, name='dispatch')
 class AddAppVersionView(View):
     def get(self, request, *args, **kwargs):
         mobile_app = MobileApp.objects.get(slug=kwargs['slug'])
@@ -168,7 +176,8 @@ class AddAppVersionView(View):
                  'updateAppModelForm': updateAppModelForm,
                  'imgUrls': imgUrls})
             
-class AppHistoryView(View):
+class AppHistoryView(PermissionRequiredMixin, View):
+    permission_required = 'management.can_approve_app'
     def get(self, request, *args, **kwargs):
         mobile_app = get_object_or_404(MobileApp, slug=kwargs['slug'])
         app_version_list = mobile_app.appversion_set.all()
@@ -177,6 +186,7 @@ class AppHistoryView(View):
     
     def post(self, request, *args, **kwargs):
         pass
+
     
 def update_app_images(imgIds, mobile_app):
     logger.debug('new imgIds:' + ','.join(imgIds))

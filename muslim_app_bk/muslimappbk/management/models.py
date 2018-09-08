@@ -22,6 +22,7 @@ class Profile(models.Model):
     qqid = models.CharField(max_length=100,blank=True,db_index=True,null=True)
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     slug = models.SlugField(unique=True, null=True, blank=True)
+    email_confirmed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
@@ -34,8 +35,9 @@ class Profile(models.Model):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
-        Profile.objects.create(user=instance)
-    instance.profile.save()
+        if not hasattr(instance, 'profile'):
+            Profile.objects.create(user=instance)
+        instance.profile.save()
 
 class Image(models.Model):
     #id, content_type, object_id, content_object, url

@@ -135,7 +135,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-LOGIN_REDIRECT_URL = '/management/index'
+LOGIN_REDIRECT_URL = '/basic/index'
 
 LOGGING = {
     'version': 1,
@@ -178,3 +178,5 @@ if DEBUG:
     # make all loggers use the console.
     for logger in LOGGING['loggers']:
         LOGGING['loggers'][logger]['handlers'] = ['console']
+        
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
