@@ -1,4 +1,4 @@
-{% extends "management/index.html" %}
+{% extends "management/uploader/index_uploader.html" %}
 {% load static %}
 {% load widget_tweaks %}
 {% block title %}Applications Table{% endblock %}
@@ -11,23 +11,20 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="bgc-white bd bdrs-3 p-20 mB-20">
-                  <a class="button btn btn-primary cur-p" href="{% url 'management:add_mobile_app' %}">Add Application</a>
-<!--                  <p>Use <code class="highlighter-rouge">.table-striped</code> to add zebra-striping to any table row within the <code class="highlighter-rouge">&lt;tbody&gt;</code>.</p>-->
+                  <a class="button btn btn-primary cur-p" href="{% url 'management:add_mobile_app' %}">Upload Application</a>
                   <table class="table table-striped">
                     <thead>
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Description</th>
+                        <th scope="col">Latest Version</th>
+                        <th scope="col">Upload time</th>
                         <th scope="col">Active</th>
-                        <th scope="col">Category</th>
-                        <th scope="col">upload time</th>
-                        <th scope="col">upload by</th>
-                        <th scope="col">avg rate</th>
-                        <th scope="col">comment count</th>
-                        <th scope="col">download count</th>
-                        <th scope="col">history</th>
-                        <th scope="col">edit</th>
+                        <th scope="col">AVG rate</th>
+                        <th scope="col">Comment count</th>
+                        <th scope="col">Download count</th>
+                        <th scope="col">History</th>
+                        <th scope="col">Edit</th>
                       </tr>
                     </thead>
                         <tbody>
@@ -40,16 +37,14 @@
                         <tr>
                             <th scope="row" class="app_order"></th>
                             <td>{{ mobile_app.name }}</td>
-                            <td>{{ mobile_app.description }}</td>
-                            <td>{{ mobile_app.is_active|yesno:"active,inactive" }}</td>
-                            <td>{{ mobile_app.category }}</td>
+                            <td>{{ mobile_app.latest_version.version_number }}</td>
                             <td>{{ mobile_app.upload_date }}</td>
-                            <td>{{ mobile_app.upload_by }}</td>
+                            <td>{{ mobile_app.is_active|yesno:"active,inactive" }}</td>
                             <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
                             <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
                             <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
                             <td>
-                                <a class="button btn-primary btn cur-p" href='{% url "management:app_history" mobile_app.slug %}'>History</a>
+                                <a class="button btn-primary btn cur-p" href='{% url "management:app_history_uploader" mobile_app.slug %}'>History</a>
                             </td>
                             <td>
                                 <a class="button btn-primary btn cur-p" href='{% url "management:update_mobile_app" mobile_app.slug %}'>Edit</a>

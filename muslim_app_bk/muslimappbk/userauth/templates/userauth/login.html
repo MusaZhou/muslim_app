@@ -95,7 +95,8 @@
           <p>Please login to see this page.</p>
           {% endif %}
       {% endif %}
-      <form method="post" action="{% url 'login' %}" novalidate>
+      <form method="post" action="{% url 'userauth:
+                                  login' %}" novalidate>
         {% csrf_token %}
         <div class="form-group">
           <label class="text-normal text-dark" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>

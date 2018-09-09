@@ -18,6 +18,7 @@ from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
 from basic import views as basic_view
+from userauth import views as userauth_view
 
 urlpatterns = [
     
@@ -25,7 +26,7 @@ urlpatterns = [
     path('management/', include('management.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('basic/', include('basic.urls')),
-    path('userauth/', include('userauth.urls'))
+    path('userauth/', include('userauth.urls')),
 ]
 
 

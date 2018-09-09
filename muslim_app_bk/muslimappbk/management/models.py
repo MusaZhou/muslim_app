@@ -7,10 +7,10 @@ from django.core import validators
 from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from .choices import ACTIVE_CHOICES, APPROVE_CHOICES, GENDER_CHOICES
 
 # Create your models here.
 class Profile(models.Model):
-    GENDER_CHOICES = (('male', '男'), ('female', '女'))
     name = models.CharField(max_length=50, blank=True, null=True)
     gender =models.CharField(max_length=10,
                              choices=GENDER_CHOICES,
@@ -79,6 +79,7 @@ class MobileApp(models.Model):
     slug = models.SlugField(unique=True, null=True, blank=True)
     images = GenericRelation(Image, related_query_name='imaged_app')
     tags = models.ManyToManyField(Tag)
+    is_active = models.BooleanField(default=False)
 
     def slugDefault(self):
         return slugify(self.name)
@@ -95,11 +96,6 @@ class MobileApp(models.Model):
         return AppVersion.objects.filter(mobile_app=self).latest('created_time')
     
 class AppVersion(models.Model):
-    APPROVE_CHOICES = (('new', 'new'),
-                       ('approved', 'approved'),
-                       ('rejected', 'rejected'))
-    ACTIVE_CHOICES = (('active', 'active'), ('inactive', 'inactive'))
-
     version_number = models.CharField(max_length=10,
                                       validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")])
     created_time = models.DateTimeField(auto_now_add=True)
@@ -111,9 +107,6 @@ class AppVersion(models.Model):
                                     null=True, blank=True)
     approved_time = models.DateTimeField(null=True, blank=True)
     mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, blank=True, null=True)
-    active_status = models.CharField(max_length=10,
-                                     choices=ACTIVE_CHOICES,
-                                     default='inactive')
     whats_new = models.TextField(blank=True, null=True, verbose_name="What's New")
     apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk'])])
 
@@ -126,10 +119,6 @@ class AppVersion(models.Model):
                 raise ValidationError({'version_number': 'Version number is duplicated on this application.'})
 
 class Evaluation(models.Model):
-    APPROVE_CHOICES = (('new', 'new'),
-                       ('approved', 'approved'),
-                       ('rejected', 'rejected'))
-
     content = models.TextField()
     rate = models.PositiveSmallIntegerField()
     app = models.ForeignKey(MobileApp, on_delete=models.CASCADE)
@@ -149,10 +138,6 @@ class Evaluation(models.Model):
         return self.content
 
 class Comment(models.Model):
-    APPROVE_CHOICES = (('new', 'new'),
-                       ('approved', 'approved'),
-                       ('rejected', 'rejected'))
-
     content = models.TextField()
     evluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)
     app = models.ForeignKey(MobileApp, on_delete=models.CASCADE)

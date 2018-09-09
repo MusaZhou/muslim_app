@@ -4,6 +4,7 @@ from .forms import SignUpForm
 from django.views.generic import View
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.models import Group
+from django.contrib.auth.views import LoginView
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
@@ -11,6 +12,7 @@ from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from django.http.response import HttpResponse
 from django.contrib.auth import logout
+from django.urls.base import reverse
 
 # Create your views here.
    
@@ -71,5 +73,13 @@ def activate(request, uidb64, token):
 class Logout(View):
     def get(self, request, *args, **kwargs):
         logout(request)
-        return redirect('login')
+        return redirect('userauth:login')
+    
+class UserauthLoginView(LoginView):
+    def get_success_url(self):
+        user = self.request.user
+        if user.has_perm('management.can_approve_app'):
+            return reverse('management:app_table_basic')
+        else:
+            return reverse('management:app_table_uploader')
     

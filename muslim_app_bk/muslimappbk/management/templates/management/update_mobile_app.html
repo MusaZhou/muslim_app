@@ -21,6 +21,13 @@
     }
   </style>
 {% endblock %}
+{% block sidebar %}
+    {% if perms.management.can_approve_app %}
+        {% include 'management/sidebar.html' %}
+    {% else %}
+        {% include 'management/uploader/sidebar_uploader.html' %}
+    {% endif %}
+{% endblock %}
 {% block mainContent %}
           <form id="update_app_form" method="POST" action="{% url 'management:update_mobile_app' updateAppModelForm.slug.value %}" enctype="multipart/form-data">
             {% csrf_token %}

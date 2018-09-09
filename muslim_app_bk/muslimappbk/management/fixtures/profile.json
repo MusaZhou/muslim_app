@@ -5,10 +5,49 @@
       "fields": {
         "name": "Musa Zhou",
         "gender": "male",
-        "avatar": "musazhou@gmail.com",
+        "email_confirmed": 1,
         "slug": "admin",
         "user_id": 1,
+        "date_of_birth": "2018-09-04",
+        "avatar": "avatar/2018/09/08/webwxgetmsgimg_3_JSHY2ek.jpeg"
+      }
+  },
+  {
+      "model": "management.profile",
+      "pk": 2,
+      "fields": {
+        "name": "test2",
+        "gender": "male",
+        "email_confirmed": 1,
+        "slug": "test2",
+        "user_id": 2,
+        "date_of_birth": "2018-09-04",
+        "avatar": "avatar/2018/09/08/webwxgetmsgimg_3_JSHY2ek.jpeg"
+      }
+  },
+  {
+      "model": "management.profile",
+      "pk": 3,
+      "fields": {
+        "name": "test3",
+        "gender": "male",
+        "email_confirmed": 1,
+        "slug": "test3",
+        "user_id": 3,
+        "date_of_birth": "2018-09-04",
+        "avatar": "avatar/2018/09/08/webwxgetmsgimg_3_JSHY2ek.jpeg"
+      }
+  },
+  {
+      "model": "management.profile",
+      "pk": 4,
+      "fields": {
+        "name": "test4",
+        "gender": "male",
+        "email_confirmed": 1,
+        "slug": "test4",
+        "user_id": 4,
         "date_of_birth": "2018-09-04"
       }
-  }
+  },
 ]

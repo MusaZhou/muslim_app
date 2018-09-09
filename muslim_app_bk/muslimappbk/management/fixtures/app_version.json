@@ -7,7 +7,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 1,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -19,7 +18,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 10,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -31,7 +29,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 2,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -43,7 +40,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 3,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -55,7 +51,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 4,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -67,7 +62,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 5,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -79,7 +73,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 6,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -91,7 +84,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 7,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -103,7 +95,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 8,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   },
@@ -115,7 +106,6 @@
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
       "mobile_app_id": 9,
-      "active_status": "inactive",
       "apk": "apk/test.apk"
     }
   }

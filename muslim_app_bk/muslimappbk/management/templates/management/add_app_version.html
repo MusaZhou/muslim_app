@@ -21,6 +21,13 @@
     }
   </style>
 {% endblock %}
+{% block sidebar %}
+    {% if perms.management.can_approve_app %}
+        {% include 'management/sidebar.html' %}
+    {% else %}
+        {% include 'management/uploader/sidebar_uploader.html' %}
+    {% endif %}
+{% endblock %}
 {% block mainContent %}
           <form id="add_version_form" method="POST" action="{% url 'management:add_app_version' updateAppModelForm.slug.value %}" enctype="multipart/form-data">
             {% csrf_token %}

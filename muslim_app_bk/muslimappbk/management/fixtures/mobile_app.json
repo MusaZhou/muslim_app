@@ -9,7 +9,8 @@
       "upload_date": "2018-09-02 04:10:11.668149",
       "slug": "food",
       "category_id": 1,
-      "upload_by_id": 1
+      "upload_by_id": 1,
+      "is_active": 0
     }
   },
   {
@@ -22,7 +23,8 @@
       "upload_date": "2018-09-03 04:10:11.668149",
       "slug": "hamberger",
       "category_id": 2,
-      "upload_by_id": 1
+      "upload_by_id": 1,
+      "is_active": 0
     }
   },
   {
@@ -35,7 +37,8 @@
       "upload_date": "2018-09-03 04:10:11.668149",
       "slug": "chips",
       "category_id": 3,
-      "upload_by_id": 1
+      "upload_by_id": 1,
+      "is_active": 0
     }
   },
   {
@@ -48,7 +51,8 @@
       "upload_date": "2018-09-05 04:10:11.668149",
       "slug": "soya-bean",
       "category_id": 1,
-      "upload_by_id": 1
+      "upload_by_id": 1,
+      "is_active": 0
     }
   },
   {
@@ -61,7 +65,8 @@
       "upload_date": "2018-09-06 04:10:11.668149",
       "slug": "chicken",
       "category_id": 2,
-      "upload_by_id": 1
+      "upload_by_id": 1,
+      "is_active": 0
     }
   },
   {
@@ -74,7 +79,8 @@
       "upload_date": "2018-09-07 04:10:11.668149",
       "slug": "egg",
       "category_id": 3,
-      "upload_by_id": 1
+      "upload_by_id": 1,
+      "is_active": 0
     }
   },
   {
@@ -87,7 +93,8 @@
       "upload_date": "2018-09-08 04:10:11.668149",
       "slug": "meat",
       "category_id": 1,
-      "upload_by_id": 1
+      "upload_by_id": 1,
+      "is_active": 0
     }
   },
   {
@@ -100,7 +107,8 @@
       "upload_date": "2018-09-09 04:10:11.668149",
       "slug": "milk",
       "category_id": 2,
-      "upload_by_id": 1
+      "upload_by_id": 2,
+      "is_active": 0
     }
   },
   {
@@ -113,7 +121,8 @@
       "upload_date": "2018-09-05 08:10:11.668149",
       "slug": "banana",
       "category_id": 3,
-      "upload_by_id": 1
+      "upload_by_id": 2,
+      "is_active": 0
     }
   },
   {
@@ -126,7 +135,8 @@
       "upload_date": "2018-09-02 04:10:11.668149",
       "slug": "apple",
       "category_id": 1,
-      "upload_by_id": 1
+      "upload_by_id": 3,
+      "is_active": 0
     }
   }
 ]
