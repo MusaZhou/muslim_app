@@ -208,3 +208,11 @@ def update_app_images(imgIds, mobile_app):
             if not img.content_object:
                 img.content_object = mobile_app;
                 img.save()
+                
+class VersionDetailView(View):
+    def get(self, request, *args, **kwargs):
+        app = get_object_or_404(MobileApp, slug=kwargs['app_slug'])
+        app_version = AppVersion.objects.filter(mobile_app=app, version_number=kwargs['version_number']).first()
+        context = {'app_version': app_version, 'mobile_app': app}
+        return render(request, 'management/app_version_detail.html', context)
+        

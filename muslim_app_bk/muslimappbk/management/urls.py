@@ -3,7 +3,7 @@ from django.conf import settings
 from . import views
 from basic import views as basic_view
 from .views import ImageFieldView, UpdateMobileAppView,  AppTableBasicView,\
-AddAppVersionView, AppHistoryView
+AddAppVersionView, AppHistoryView, VersionDetailView
 from .views_uploader import AppTableUploaderView, AppHistoryUploaderView
 app_name = 'management'
 
@@ -16,5 +16,6 @@ urlpatterns = [
     path('app_history/<slug:slug>', AppHistoryView.as_view(), name='app_history'),
     path('app_table_uploader', AppTableUploaderView.as_view(), name='app_table_uploader'),
     path('app_history_uploader/<slug:slug>', AppHistoryUploaderView.as_view(), name='app_history_uploader'),
+    path('version_detail/<str:app_slug>-<str:version_number>', VersionDetailView.as_view(), name='version_detail'),
     re_path(r'(?P<file>(\w*\.(eot|svg|woff|woff2|ttf))$)', basic_view.others, name='others'),
 ]

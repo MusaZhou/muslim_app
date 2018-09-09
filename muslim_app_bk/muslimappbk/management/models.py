@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from slugify import slugify
+from django.utils.text import slugify
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
@@ -51,35 +51,35 @@ class Image(models.Model):
         return self.content_object
 
 class Tag(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='Tag')
 
     def __str__(self):
         return self.name
 
 class AppCategory(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, verbose_name='Category')
 
     def __str__(self):
         return self.name
 
 class MobileApp(models.Model):
-    name = models.CharField(max_length=100,
-                            unique=True,
-                            db_index=True)
-    description = models.TextField(blank=True, null=True)
-    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    video_url = models.URLField(blank=True, null=True)
-    upload_date = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=100,unique=True,
+                            db_index=True, verbose_name='App Name')
+    description = models.TextField(blank=True, null=True, verbose_name='Description')
+    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                  verbose_name='Uploader')
+    video_url = models.URLField(blank=True, null=True, verbose_name='Video')
+    upload_date = models.DateTimeField(auto_now_add=True, verbose_name='Upload Time')
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
     avg_rate = models.DecimalField(max_digits=2,
                                    decimal_places=1,
-                                   null=True)
-    comment_count = models.PositiveIntegerField(null=True)
-    download_count = models.PositiveIntegerField(null=True)
+                                   null=True, verbose_name='Average Rate')
+    comment_count = models.PositiveIntegerField(null=True, verbose_name='Comment Count')
+    download_count = models.PositiveIntegerField(null=True, verbose_name='Download Count')
     slug = models.SlugField(unique=True, null=True, blank=True)
-    images = GenericRelation(Image, related_query_name='imaged_app')
-    tags = models.ManyToManyField(Tag)
-    is_active = models.BooleanField(default=False)
+    images = GenericRelation(Image, related_query_name='imaged_app', verbose_name='Screenshots')
+    tags = models.ManyToManyField(Tag, verbose_name='Tags')
+    is_active = models.BooleanField(default=False, verbose_name='Active Status')
 
     def slugDefault(self):
         return slugify(self.name)
@@ -97,16 +97,18 @@ class MobileApp(models.Model):
     
 class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,
-                                      validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")])
-    created_time = models.DateTimeField(auto_now_add=True)
+                                      validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")],
+                                      verbose_name='Version No.')
+    created_time = models.DateTimeField(auto_now_add=True, verbose_name='Created Time')
     approve_status = models.CharField(max_length=10,
                                       choices=APPROVE_CHOICES,
-                                      default='new')
+                                      default='new', verbose_name='Approve Status')
     approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     on_delete=models.CASCADE,
-                                    null=True, blank=True)
-    approved_time = models.DateTimeField(null=True, blank=True)
-    mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, blank=True, null=True)
+                                    null=True, blank=True, verbose_name='Approved By')
+    approved_time = models.DateTimeField(null=True, blank=True, verbose_name='Approved Time')
+    mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, blank=True,
+                                   null=True, verbose_name='Application')
     whats_new = models.TextField(blank=True, null=True, verbose_name="What's New")
     apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk'])])
 
@@ -119,48 +121,41 @@ class AppVersion(models.Model):
                 raise ValidationError({'version_number': 'Version number is duplicated on this application.'})
 
 class Evaluation(models.Model):
-    content = models.TextField()
-    rate = models.PositiveSmallIntegerField()
-    app = models.ForeignKey(MobileApp, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                   on_delete=models.CASCADE,
-                                   related_name='createdEvaluations')
-    created_time = models.DateTimeField(auto_now_add=True)
-    approve_status = models.CharField(max_length=10,
-                                      choices=APPROVE_CHOICES,
-                                      default='new')
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    on_delete=models.CASCADE,
+    content = models.TextField(verbose_name='Content')
+    rate = models.PositiveSmallIntegerField(verbose_name='Rate')
+    app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, verbose_name='Application')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
+                                   related_name='createdEvaluations', verbose_name='Comment By')
+    created_time = models.DateTimeField(auto_now_add=True, verbose_name='Comment At')
+    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
+                                      default='new', verbose_name='Approve Status')
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
                                     related_name='checkedEvaluations',
-                                    null=True)
+                                    null=True, verbose_name='Approved By')
 
     def __str__(self):
         return self.content
 
 class Comment(models.Model):
-    content = models.TextField()
-    evluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE)
-    app = models.ForeignKey(MobileApp, on_delete=models.CASCADE)
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                   on_delete=models.CASCADE,
-                                   related_name='createdComments')
-    created_time = models.DateTimeField(auto_now_add=True)
-    approve_status = models.CharField(max_length=10,
-                                      choices=APPROVE_CHOICES,
-                                      default='new')
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    on_delete=models.CASCADE,
+    content = models.TextField(verbose_name='Content')
+    evluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE, verbose_name='Evaluation')
+    app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, verbose_name='Application')
+    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
+                                   related_name='createdComments', verbose_name='Created By')
+    created_time = models.DateTimeField(auto_now_add=True, verbose_name='Created At')
+    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
+                                      default='new', verbose_name='Approve Status')
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
                                     related_name='checkedComments',
-                                    null=True)
+                                    null=True, verbose_name='Approved By')
 
     def __str__(self):
         return self.content
 
 class Download(models.Model):
-    download_time = models.DateTimeField(auto_now_add=True)
-    os = models.CharField(max_length=100)
-    mobile = models.CharField(max_length=100)
-    app = models.ForeignKey(MobileApp,
-                            on_delete=models.CASCADE,
-                            null=True)
+    download_time = models.DateTimeField(auto_now_add=True, verbose_name='Download At')
+    os = models.CharField(max_length=100, verbose_name='Operating System')
+    mobile = models.CharField(max_length=100, verbose_name='Mobile Phone')
+    app = models.ForeignKey(MobileApp,on_delete=models.CASCADE,
+                            null=True, verbose_name='Application')
 

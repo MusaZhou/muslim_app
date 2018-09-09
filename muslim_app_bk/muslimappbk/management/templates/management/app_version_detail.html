@@ -1,0 +1,114 @@
+{% extends "management/index.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Add New Version{% endblock %}
+{% block stylesheet %}
+  {{ block.super }}
+  <style>
+    .imgDivTop {
+      padding:5px;
+      margin-right:5px;
+    }
+
+    .gap-20 .imgDivTop .delImgBtn {
+      vertical-align: top;
+    }
+
+    #submit_btn {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
+    }
+  </style>
+{% endblock %}
+{% block sidebar %}
+    {% if perms.management.can_approve_app %}
+        {% include 'management/sidebar.html' %}
+    {% else %}
+        {% include 'management/uploader/sidebar_uploader.html' %}
+    {% endif %}
+{% endblock %}
+{% block mainContent %}
+          <form method="" action="" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row gap-20 pos-r">
+              <div class="col-md-6">
+                <div class="bgc-white p-20 bd">
+                  <h6 class="c-grey-900">
+                      {{ mobile_app.name|add:' Version Number' }}
+                      {{ app_version.version_number }}
+                  </h6>
+                  <div class="mT-30">
+                      <div class="form-group">
+                        <label>Application {{ mobile_app.is_active|yesno:'Active, Inactive' }}</label>
+                      </div>
+                      <div class="form-group">
+                        <label>{{ mobile_app.description.verbose_name }}</label>
+                        {{ mobile_app.description }}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ app_version.whats_new.verbose_name }}</label>
+                        {{ app_version.whats_new }}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ mobile_app.category.verbose_name }}</label>
+                        {{ mobile_app.category }}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ mobile_app.tags.verbose_name }}</label>
+                        {{ updateAppModelForm|join:' ' }}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ mobile_app.upload_by.verbose_name }}</label>
+                        {{ mobile_app.upload_by }}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ app_version.created_time.verbose_name }}</label>
+                        {{ mobile_app.upload_date }}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ app_version.approve_status.verbose_name }}</label>
+                        {{ app_version.approve_status }}
+                      </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="bgc-white p-20 bd">
+                  <div class="mT-30">
+                      <div class="form-group">
+                        <label>{{ mobile_app.video_url.verbose_name}}</label>
+                      </div>
+                      <button type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Play</button>
+                      <video width="100%" height="300" controls>
+                        {% if mobile_app.video_url is not None %}
+                            <source src="{{ mobile_app.video_url }}">
+                        {% endif %}
+                      </video>
+                      <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >Add New Version</button>
+                  </div>
+                </div>
+              </div>
+                <div class="divSplitter" style="display:none"></div>
+                {% for imgUrl in mobile_app.images.all %}
+                  <div class="bgc-white bd imgDivTop">
+                      <img src="{{ imgUrl.picture.url }}" width="auto" height="200px" class="appImg rounded">
+                      <button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>
+                      <input type="checkbox" class="delImgCheckbox" style="display:none">
+                      <input type="number" class="orderImg" style="display:none">
+                  </div>
+                {% endfor %}
+            </div>
+          </form>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  <script>
+
+  $(function(){
+
+    
+  });
+
+  </script>
+{% endblock %}
