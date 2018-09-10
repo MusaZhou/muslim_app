@@ -7,7 +7,7 @@ from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.core.paginator import Paginator, Page
 from django.core.exceptions import ValidationError
-from datetime import date
+from datetime import datetime
 import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -215,4 +215,14 @@ class VersionDetailView(View):
         app_version = AppVersion.objects.filter(mobile_app=app, version_number=kwargs['version_number']).first()
         context = {'app_version': app_version, 'mobile_app': app}
         return render(request, 'management/app_version_detail.html', context)
+    
+def update_version_status(request):
+    if request.is_ajax():
+        app_slug = request.POST['app_slug']
+        app_version_number = request.POST['version_number']
+        status = request.POST['approve_status']
+        app = MobileApp.objects.get(slug=app_slug)
         
+        AppVersion.objects.filter(mobile_app=app, version_number=app_version_number)\
+        .update(approve_status=status, approved_time=datetime.now(), approved_by=request.user)
+        return JsonResponse({'status': 1}, safe=False)

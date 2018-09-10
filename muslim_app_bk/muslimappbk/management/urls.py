@@ -17,5 +17,6 @@ urlpatterns = [
     path('app_table_uploader', AppTableUploaderView.as_view(), name='app_table_uploader'),
     path('app_history_uploader/<slug:slug>', AppHistoryUploaderView.as_view(), name='app_history_uploader'),
     path('version_detail/<str:app_slug>-<str:version_number>', VersionDetailView.as_view(), name='version_detail'),
+    path('update_version_status', views.update_version_status, name="update_version_status"),
     re_path(r'(?P<file>(\w*\.(eot|svg|woff|woff2|ttf))$)', basic_view.others, name='others'),
 ]

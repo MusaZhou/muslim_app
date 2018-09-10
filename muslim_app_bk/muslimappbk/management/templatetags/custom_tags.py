@@ -179,3 +179,11 @@ def callmethod(parser, token):
     
     #Hand our vars over to our rendering node:
     return CallMethodNode(object_name, method_name, args, kwargs, asvar)
+
+@register.simple_tag(name="verbose_name")
+def verbose_name_tag(obj, field_name):
+    return obj._meta.get_field(field_name).verbose_name
+
+@register.filter(name="verbose_name")
+def verbose_name_filter(obj, field_name):
+    return obj._meta.get_field(field_name).verbose_name
