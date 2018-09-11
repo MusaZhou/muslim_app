@@ -8,8 +8,8 @@ from django.views.generic import View
 from django.core.paginator import Paginator, Page
 from django.core.exceptions import ValidationError
 from datetime import datetime
-import logging
-from django.contrib.auth.decorators import login_required
+import logging, os, random, string
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -212,7 +212,8 @@ def update_app_images(imgIds, mobile_app):
 class VersionDetailView(View):
     def get(self, request, *args, **kwargs):
         app = get_object_or_404(MobileApp, slug=kwargs['app_slug'])
-        app_version = AppVersion.objects.filter(mobile_app=app, version_number=kwargs['version_number']).first()
+        app_version = get_object_or_404(AppVersion, mobile_app=app, version_number=kwargs['version_number'])
+#         app_version = AppVersion.objects.filter(mobile_app=app, version_number=kwargs['version_number']).first()
         context = {'app_version': app_version, 'mobile_app': app}
         return render(request, 'management/app_version_detail.html', context)
     
@@ -226,3 +227,23 @@ def update_version_status(request):
         AppVersion.objects.filter(mobile_app=app, version_number=app_version_number)\
         .update(approve_status=status, approved_time=datetime.now(), approved_by=request.user)
         return JsonResponse({'status': 1}, safe=False)
+
+@permission_required('polls.can_vote')    
+def update_app_active(request):
+    if request.is_ajax():
+        app = get_object_or_404(MobileApp, slug=request.POST['app_slug'])
+        app.is_active = True if int(request.POST['status']) == 1 else False
+        app.save()
+        return JsonResponse({'status': 1}, safe=False)
+    
+@login_required    
+def upload_video(request):
+    if request.is_ajax():
+        video_file = request.FILES['video'];
+        extension = video_file.name.split('.')[-1]
+        base_name = 'videos/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
+        file_name = settings.MEDIA_ROOT + base_name
+        with open(file_name, 'wb+') as destination:
+            for chunk in video_file.chunks():
+                destination.write(chunk)
+        return JsonResponse({'video_url': base_name}, safe=False)

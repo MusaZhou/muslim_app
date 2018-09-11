@@ -18,16 +18,15 @@
                       <tr>
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
-                        <th scope="col">Description</th>
                         <th scope="col">Active</th>
                         <th scope="col">Category</th>
                         <th scope="col">upload time</th>
-                        <th scope="col">upload by</th>
                         <th scope="col">avg rate</th>
                         <th scope="col">comment count</th>
                         <th scope="col">download count</th>
                         <th scope="col">history</th>
                         <th scope="col">edit</th>
+                        <th scope="col">Active/Disable</th>
                       </tr>
                     </thead>
                         <tbody>
@@ -40,11 +39,9 @@
                         <tr>
                             <th scope="row" class="app_order"></th>
                             <td>{{ mobile_app.name }}</td>
-                            <td>{{ mobile_app.description }}</td>
-                            <td>{{ mobile_app.is_active|yesno:"active,inactive" }}</td>
+                            <td>{{ mobile_app.is_active|yesno:"active,disabled" }}</td>
                             <td>{{ mobile_app.category }}</td>
                             <td>{{ mobile_app.upload_date }}</td>
-                            <td>{{ mobile_app.upload_by }}</td>
                             <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
                             <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
                             <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
@@ -53,6 +50,13 @@
                             </td>
                             <td>
                                 <a class="button btn-primary btn cur-p" href='{% url "management:update_mobile_app" mobile_app.slug %}'>Edit</a>
+                            </td>
+                            <td>
+                                {% if not mobile_app.is_active %}
+                                <button type="button" class="button btn-primary btn cur-p" onclick="update_active('{{ mobile_app.slug }}', 1)">Active</button>
+                                {% else %}
+                                <button type="button" class="button btn-primary btn cur-p" onclick="update_active('{{ mobile_app.slug }}', 0)">Disable</button>
+                                {% endif %}
                             </td>
                           </tr>
                         {% endfor %}
@@ -115,6 +119,23 @@
             $(this).text(page_start_index + row_index);
         });
     });
+    
+    function update_active(app_slug, status){
+    	$.ajax({
+    		url: '{% url "management:update_app_active" %}',
+    		method: 'POST',
+    		data: {
+    			app_slug: app_slug,
+    			status: status
+    		}
+    	}).done(function(response){
+    		if(response.status == 1){
+    			location.reload();
+    		}else{
+    			alert('server error');
+    		}
+    	});
+    }
 </script>
 {% endblock %}
 

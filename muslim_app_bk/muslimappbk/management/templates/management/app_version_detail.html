@@ -84,9 +84,9 @@
                       <div class="form-group">
                         <h5>{{ mobile_app|verbose_name:'video_url'}}</h5>
                       </div>
-                      <video width="100%" height="300" controls>
+                      <video width="100%" height="auto" controls>
                         {% if mobile_app.video_url is not None %}
-                            <source src="{{ mobile_app.video_url }}">
+                            <source src="{% get_media_prefix %}{{ mobile_app.video_url }}">
                         {% endif %}
                       </video>
 					    {% if perms.management.can_approve_app %}

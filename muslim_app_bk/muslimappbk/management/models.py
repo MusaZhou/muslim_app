@@ -68,7 +68,7 @@ class MobileApp(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name='Description')
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   verbose_name='Uploader')
-    video_url = models.URLField(blank=True, null=True, verbose_name='Video')
+    video_url = models.CharField(max_length=200, blank=True, null=True, verbose_name='Video')
     upload_date = models.DateTimeField(auto_now_add=True, verbose_name='Upload Time')
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
     avg_rate = models.DecimalField(max_digits=2,
