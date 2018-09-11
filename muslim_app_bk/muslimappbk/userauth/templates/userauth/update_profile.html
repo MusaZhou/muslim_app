@@ -6,7 +6,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <title>Sign Up</title>
+  <title>Update Profile</title>
   <style>
     #loader {
       transition: all .3s ease-in-out;
@@ -80,25 +80,25 @@
       </div>
     </div>
     <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 bgc-white scrollable pos-r" style="min-width:320px">
-      <h4 class="fw-300 c-grey-900 mB-40">Register</h4>
-      <form action="{% url 'userauth:signuppost' %}" method="POST" enctype="multipart/form-data">
+      <h4 class="fw-300 c-grey-900 mB-40">Profile</h4>
+      <form action="{% url 'userauth:update_profile' %}" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {% if userCreationForm.errors %}
+        {% if userProfileForm.errors %}
         <div class="alert alert-danger" role="alert">
-          {% for error in userCreationForm.errors %}
+          {% for error in userProfileForm.errors %}
             {{ error }}
           {% endfor %}
         </div>
           {% endif %}
-          {% if userCreationForm.non_field_errors %}
+          {% if userProfileForm.non_field_errors %}
             <div class="alert alert-danger" role="alert">
-              {% for error in userCreationForm.non_field_errors %}
+              {% for error in userProfileForm.non_field_errors %}
                 {{ error }}
               {% endfor %}
             </div>
           {% endif %}
 
-          {% for hidden_field in userCreationForm.hidden_fields %}
+          {% for hidden_field in userProfileForm.hidden_fields %}
            {% if hidden_field.errors %}
              <div class="alert alert-danger" role="alert">
                {% for error in hidden_field.errors %}
@@ -108,70 +108,63 @@
            {% endif %}
           {% endfor %}
         <div class="form-group">
-            <label class="text-normal text-dark">Username</label>
-            {% render_field userCreationForm.username class="form-control"%}
-            {% if userCreationForm.username.errors %}
+            <label class="text-normal text-dark">{{ userProfileForm.nick_name.label }}</label>
+            {% render_field userProfileForm.nick_name class="form-control"%}
+            {% if userProfileForm.username.errors %}
                 <div class="invalid-feedback d-block">
-                {{ userCreationForm.username.errors }}
+                {{ userProfileForm.username.errors }}
                 </div>
             {% endif %}
         </div>
         <div class="form-group">
-            <label class="text-normal text-dark">Email Address</label> 
-            {% render_field userCreationForm.email class="form-control" %}
-            {% if userCreationForm.email.errors %}
+            <label class="text-normal text-dark">{{ userProfileForm.email.label }}</label> 
+            {% render_field userProfileForm.email class="form-control" %}
+            {% if userProfileForm.email.errors %}
                 <div class="invalid-feedback d-block">
-                {{ userCreationForm.email.errors }}
+                {{ userProfileForm.email.errors }}
                 </div>
             {% endif %}
         </div>
         <div class="form-group">
-            <label class="text-normal text-dark">Password</label> 
-            {% render_field userCreationForm.password1 class="form-control" %}
-            {% if userCreationForm.password1.errors %}
+            <label class="text-normal text-dark">{{ userProfileForm.gender.label }}</label> 
+            {% render_field userProfileForm.gender class="form-control" %}
+            {% if userProfileForm.gender.errors %}
                 <div class="invalid-feedback d-block">
-                {{ userCreationForm.password1.errors }}
-                </div>
-            {% endif %}
-        </div>
-        <div class="form-group">
-            <label class="text-normal text-dark">Confirm Password</label> 
-            {% render_field userCreationForm.password2 class="form-control" %}
-            {% if userCreationForm.password2.errors %}
-                <div class="invalid-feedback d-block">
-                {{ userCreationForm.password2.errors }}
-                </div>
-            {% endif %}
-        </div>
-        <div class="form-group">
-            <label class="text-normal text-dark">Gender</label> 
-            {% render_field userCreationForm.gender class="form-control" %}
-            {% if userCreationForm.gender.errors %}
-                <div class="invalid-feedback d-block">
-                {{ userCreationForm.gender.errors }}
+                {{ userProfileForm.gender.errors }}
                 </div>
             {% endif %}
         </div>from djan
         <div class="form-group">
-            <label class="text-normal text-dark">Date of Birth</label> 
-            {% render_field userCreationForm.date_of_birth class="form-control" %}
-            {% if userCreationForm.date_of_birth.errors %}
+            <label class="text-normal text-dark">{{ userProfileForm.date_of_birth.label }}</label> 
+            {% render_field userProfileForm.date_of_birth class="form-control" %}
+            {% if userProfileForm.date_of_birth.errors %}
                 <div class="invalid-feedback d-block">
-                {{ userCreationForm.date_of_birth.errors }}
+                {{ userProfileForm.date_of_birth.errors }}
                 </div>
             {% endif %}
         </div>
         <div class="form-group">
             <button type="button" class="btn btn-primary avatar-btn">Broswer Avatar</button>
-            {% render_field userCreationForm.avatar style="display:none" id="avatar_input"%}
+            <div id="avatar_widget_div" style="display:none">
+                {% render_field userProfileForm.avatar id="avatar_input" %}
+            </div>
+            {% if userProfileForm.avatar.errors %}
+                <div class="invalid-feedback d-block">
+                {{ userProfileForm.avatar.errors }}
+                </div>
+            {% endif %}
+            {% if userProfileForm.instance.avatar.url is not None %}
+            <img id="avatar_img" src="{{ userProfileForm.instance.avatar.url }}" width="50px" height="50px"/>
+            {% else %}
             <img id="avatar_img" src="{% static 'management/images/mobile.png' %}" width="50px" height="50px"/>
-            {% if userCreationForm.avatar.errors %}
+            {% endif %}
+            {% if userProfileForm.avatar.errors %}
                 <div class="invalid-feedback d-block">
                 {{ userCreationForm.avatar.errors }}
                 </div>
             {% endif %}
         </div>
-        <div class="form-group"><button class="btn btn-primary">Register</button></div>
+        <div class="form-group"><button class="btn btn-primary">Update</button></div>
       </form>
     </div>
   </div>
@@ -180,18 +173,20 @@
   <script type="text/javascript" src="{% static "management/bundle.js" %}"></script>
 </body>
 <script>
+
 $(function(){
     $('.avatar-btn').click(function(){
-        $(this).siblings('input').click();
+    	$('#avatar_input').click();
     });
     
     $('#avatar_input').change(function(){
-    	var file = this.files[0];
-    	displayImage(file, $('#avatar_img'));
+    	//$(this).siblings(':checkbox').prop('checked', true);
+        var file = this.files[0];
+        displayImage(file, $('#avatar_img'));
     });
 })
 
-function displayImage(file, imgEle){
+ function displayImage(file, imgEle){
     var reader = new FileReader();
     reader.onload = function(e) {
       // Set the img src property using the data URL.

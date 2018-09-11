@@ -11,12 +11,11 @@ from .choices import ACTIVE_CHOICES, APPROVE_CHOICES, GENDER_CHOICES
 
 # Create your models here.
 class Profile(models.Model):
-    name = models.CharField(max_length=50, blank=True, null=True)
-    gender =models.CharField(max_length=10,
-                             choices=GENDER_CHOICES,
-                             default='male')
-    date_of_birth = models.DateField(blank=True, null=True)
-    avatar = models.ImageField(upload_to="avatar/%Y/%m/%d/",blank=True, null=True)
+    nick_name = models.CharField(max_length=50, blank=True, null=True, verbose_name="Nick Name")
+    gender =models.CharField(max_length=10, verbose_name="Gender",
+                             choices=GENDER_CHOICES, default='male')
+    date_of_birth = models.DateField(blank=True, null=True, verbose_name="Date of birth")
+    avatar = models.ImageField(upload_to="avatar/%Y/%m/%d/",blank=True, null=True, verbose_name="Avatar")
     wechatid = models.CharField(max_length=100,blank=True,db_index=True,null=True)
     weiboid = models.CharField(max_length=100,blank=True,db_index=True,null=True)
     qqid = models.CharField(max_length=100,blank=True,db_index=True,null=True)

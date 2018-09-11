@@ -3,16 +3,18 @@ from django.contrib.sites.shortcuts import get_current_site
 from .forms import SignUpForm
 from django.views.generic import View
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.contrib.auth.views import LoginView
 from django.template.loader import render_to_string
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_text
 from .tokens import account_activation_token
-from django.contrib.auth.models import User
 from django.http.response import HttpResponse
 from django.contrib.auth import logout
 from django.urls.base import reverse
+from userauth.forms import UserProfileForm
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
    
@@ -82,4 +84,23 @@ class UserauthLoginView(LoginView):
             return reverse('management:app_table_basic')
         else:
             return reverse('management:app_table_uploader')
+
+@method_decorator(login_required, name='dispatch')        
+class UpdateProfileView(View):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        profile = user.profile
+        userProfileForm = UserProfileForm(instance=profile, initial={'email': user.email})
+        return render(request, 'userauth/update_profile.html', {'userProfileForm': userProfileForm})
+    
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        user_profile = user.profile
+        userProfileForm = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if userProfileForm.is_valid():
+            user_profile = userProfileForm.save()
+            user.email = userProfileForm.cleaned_data['email']
+            user.save()
+            return redirect('basic:index')
+        return render(request, 'userauth/update_profile.html', {'userProfileForm': userProfileForm})
     

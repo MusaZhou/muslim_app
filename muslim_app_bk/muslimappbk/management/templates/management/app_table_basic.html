@@ -55,7 +55,7 @@
                                 {% if not mobile_app.is_active %}
                                 <button type="button" class="button btn-primary btn cur-p" onclick="update_active('{{ mobile_app.slug }}', 1)">Active</button>
                                 {% else %}
-                                <button type="button" class="button btn-primary btn cur-p" onclick="update_active('{{ mobile_app.slug }}', 0)">Disable</button>
+                                <button type="button" class="button btn-danger btn cur-p" onclick="update_active('{{ mobile_app.slug }}', 0)">Disable</button>
                                 {% endif %}
                             </td>
                           </tr>
