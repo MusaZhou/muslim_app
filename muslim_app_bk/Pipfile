@@ -12,6 +12,7 @@ pillow = "*"
 python-slugify = "*"
 django-widget-tweaks = "*"
 django-debug-toolbar = "*"
+django-allauth = "*"
 
 [dev-packages]
 
