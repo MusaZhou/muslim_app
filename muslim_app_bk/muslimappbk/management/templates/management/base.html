@@ -1,124 +1,79 @@
 {% load static %}
-{% load widget_tweaks %}
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<!-- saved from url=(0053)# -->
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <title>{% block title %}Muslim App Backend{% endblock %}</title>
-  {% block stylesheet %}
-  <style>
-    #loader {
-      transition: all .3s ease-in-out;
-      opacity: 1;
-      visibility: visible;
-      position: fixed;
-      height: 100vh;
-      width: 100%;
-      background: #fff;
-      z-index: 90000
-    }
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="http://getbootstrap.com/favicon.ico">
 
-    #loader.fadeOut {
-      opacity: 0;
-      visibility: hidden
-    }
+        <title>{% block title %}Muslim App{% endblock %}</title>
+        
+        {% block stylesheet %}
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      position: absolute;
-      top: calc(50% - 20px);
-      left: calc(50% - 20px);
-      background-color: #333;
-      border-radius: 100%;
-      -webkit-animation: sk-scaleout 1s infinite ease-in-out;
-      animation: sk-scaleout 1s infinite ease-in-out
-    }
-
-    @-webkit-keyframes sk-scaleout {
-      0% {
-        -webkit-transform: scale(0)
-      }
-      100% {
-        -webkit-transform: scale(1);
-        opacity: 0
-      }
-    }
-
-    @keyframes sk-scaleout {
-      0% {
-        -webkit-transform: scale(0);
-        transform: scale(0)
-      }
-      100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 0
-      }
-    }
-  </style>
-  <link href="{% static "management/style.css" %}" rel="stylesheet">
-  {% endblock %}
-</head>
-
-<body class="app">
-  <div id="loader">
-    <div class="spinner"></div>
-  </div>
-  <script>
-    window.addEventListener('load', () => {
-      const loader = document.getElementById('loader');
-      setTimeout(() => {
-        loader.classList.add('fadeOut');
-      }, 300);
-    });
-  </script>
-  <div>
-    <div class="sidebar">
-      {% block sidebar %}
-
-      {% endblock %}
-    </div>
-    <div class="page-container">
-      <div class="header navbar">
-        {% block navbar %}
-
+        <!-- Custom styles for this template -->
+        <link href="{% static 'management/dashboard.css' %}" rel="stylesheet">
+        
+        <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet">
         {% endblock %}
+    </head>
+
+  <body>
+    <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+    {% block navbar %}
+      <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Company name</a>
+      <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+      <ul class="navbar-nav px-3">
+        <li class="nav-item text-nowrap">
+          <a class="nav-link" href="{% url 'userauth:logout' %}">Sign out</a>
+        </li>
+      </ul>
+    {% endblock %}
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+          {% block sidebar %}{% endblock %}
+        </nav>
+
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        {% block mainContent %}{% endblock %}
+        </main>
       </div>
-      <main class="main-content bgc-grey-100">
-        <div id="mainContent">
-          {% block mainContent %}
-          <div class="full-container"></div>
-          {% endblock %}
-        </div>
-      </main>
-      <footer class="bdT ta-c p-30 lh-0 fsz-sm c-grey-600"><span>Copyright © 2017 Designed by <a href="https://colorlib.com" target="_blank" title="Colorlib">Colorlib</a>. All rights reserved.</span></footer>
     </div>
-  </div>
-  {% block javascript %}
-  <script type="text/javascript" src="{% static "management/jquery-3.3.1.min.js" %}"></script>
-  <script type="text/javascript" src="{% static "management/vendor.js" %}"></script>
-  <script type="text/javascript" src="{% static "management/bundle.js" %}"></script>
-  <script type="text/javascript" src="{% static "management/js.cookie.js" %}"></script>
-  <script>
-  var csrftoken = Cookies.get('csrftoken');
+    {% block javascript %}
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'DataTables/datatables.js' %}"></script>
+    <script src="{% static 'js.cookie.js' %}"></script>
 
-  function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-  }
-
-  $.ajaxSetup({
-      beforeSend: function(xhr, settings) {
-          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-              xhr.setRequestHeader("X-CSRFToken", csrftoken);
-          }
-      }
-  });
-  </script>
-  {% endblock %}
-</body>
-
+    <!-- Icons -->
+    <script src="{% static 'feather.min.js' %}"></script>
+    <script>
+      feather.replace()
+      var csrftoken = Cookies.get('csrftoken');
+      function csrfSafeMethod(method) {
+	    	// these HTTP methods do not require CSRF protection
+	    	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    	}
+    	$.ajaxSetup({
+	    	beforeSend: function(xhr, settings) {
+		    	if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		    	    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		    	}
+	    	}
+    	});
+    </script>
+    {% endblock %}
+  </body>
 </html>

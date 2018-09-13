@@ -1,4 +1,4 @@
 {% extends 'management/base.html' %}
 {% block sidebar %}
-    {% include 'management/sidebar.html' %}
+    {% include 'management/uploader/sidebar_uploader.html' %}
 {% endblock %}

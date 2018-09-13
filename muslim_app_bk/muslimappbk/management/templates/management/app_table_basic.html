@@ -7,12 +7,11 @@
 {% endblock %}
 {% block mainContent %}
           <div class="container-fluid">
-            <h4 class="c-grey-900 mT-10 mB-30">Applications</h4>
+            <h4 class="">Applications</h4>
             <div class="row">
               <div class="col-md-12">
-                <div class="bgc-white bd bdrs-3 p-20 mB-20">
-                  <a class="button btn btn-primary cur-p" href="{% url 'management:add_mobile_app' %}">Add Application</a>
-<!--                  <p>Use <code class="highlighter-rouge">.table-striped</code> to add zebra-striping to any table row within the <code class="highlighter-rouge">&lt;tbody&gt;</code>.</p>-->
+                <div class="table-responsive">
+                  <a class="button btn btn-primary" href="{% url 'management:add_mobile_app' %}">Add Application</a>
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -53,9 +52,9 @@
                             </td>
                             <td>
                                 {% if not mobile_app.is_active %}
-                                <button type="button" class="button btn-primary btn cur-p" onclick="update_active('{{ mobile_app.slug }}', 1)">Active</button>
+                                <button type="button" class="button btn-primary btn" onclick="update_active('{{ mobile_app.slug }}', 1)">Active</button>
                                 {% else %}
-                                <button type="button" class="button btn-danger btn cur-p" onclick="update_active('{{ mobile_app.slug }}', 0)">Disable</button>
+                                <button type="button" class="button btn-danger btn" onclick="update_active('{{ mobile_app.slug }}', 0)">Disable</button>
                                 {% endif %}
                             </td>
                           </tr>

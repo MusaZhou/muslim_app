@@ -10,7 +10,7 @@
       margin-right:5px;
     }
 
-    .gap-20 .imgDivTop .delImgBtn {
+    .imgDivTop .delImgBtn {
       vertical-align: top;
     }
 
@@ -31,11 +31,11 @@
 {% block mainContent %}
           <form id="update_app_form" method="POST" action="{% url 'management:update_mobile_app' updateAppModelForm.slug.value %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="row gap-20 pos-r">
+            <div class="row">
               <div class="col-md-6">
-                <div class="bgc-white p-20 bd">
-                  <h6 class="c-grey-900">{{ updateAppModelForm.name.value|add:' Version '|add:updateAppModelForm.instance }} </h6>
-                  <div class="mT-30">
+                <div class="">
+                  <h6 class="">{{ updateAppModelForm.name.value|add:' Version '|add:updateAppModelForm.instance }} </h6>
+                  <div class="">
                       <div class="form-group">
                         <label>{{ updateAppModelForm.description.label }}</label>
                         {% render_field updateAppModelForm.description class="form-control" %}
@@ -54,8 +54,8 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="bgc-white p-20 bd">
-                  <div class="mT-30">
+                <div class="">
+                  <div class="">
                       {% if updateAppModelForm.errors %}
                         <div class="alert alert-danger" role="alert">
                           {% for error in updateAppModelForm.errors %}
@@ -116,7 +116,7 @@
 {% block javascript %}
   {{ block.super }}
   <script>
-  var imageDivTemplate = '<div class="bgc-white bd imgDivTop">'+
+  var imageDivTemplate = '<div class="imgDivTop">'+
                         '<img width="auto" height="200px" class="appImg rounded">'+
                         '<button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>'+
                         '<input type="checkbox" class="delImgCheckbox" style="display:none">'+
