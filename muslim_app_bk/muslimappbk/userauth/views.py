@@ -67,8 +67,9 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.profile.email_confirmed = True
         user.save()
-        login(request, user)
-        return redirect('management:app_table_basic')
+        user.profile.save()
+        login(request, user, 'django.contrib.auth.backends.ModelBackend')
+        return redirect('management:app_table_uploader')
     else:
         return HttpResponse('The confirmation link was invalid, possibly because it has already been used.')
 
@@ -78,6 +79,7 @@ class Logout(View):
         return redirect('userauth:login')
     
 class UserauthLoginView(LoginView):
+    template_name = "userauth/login.html"
     def get_success_url(self):
         user = self.request.user
         if user.has_perm('management.can_approve_app'):

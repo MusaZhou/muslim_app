@@ -7,11 +7,11 @@
 {% endblock %}
 {% block mainContent %}
           <div class="container-fluid">
-            <h4 class="c-grey-900 mT-10 mB-30">Applications</h4>
+            <h4 class="">Applications</h4>
             <div class="row">
               <div class="col-md-12">
-                <div class="bgc-white bd bdrs-3 p-20 mB-20">
-                  <a class="button btn btn-primary cur-p" href="{% url 'management:add_mobile_app' %}">Upload Application</a>
+                <div class="">
+                  <a class="button btn btn-primary" href="{% url 'management:add_mobile_app' %}">Upload Application</a>
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -44,10 +44,10 @@
                             <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
                             <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
                             <td>
-                                <a class="button btn-primary btn cur-p" href='{% url "management:app_history_uploader" mobile_app.slug %}'>History</a>
+                                <a class="button btn-primary btn" href='{% url "management:app_history_uploader" mobile_app.slug %}'>History</a>
                             </td>
                             <td>
-                                <a class="button btn-primary btn cur-p" href='{% url "management:update_mobile_app" mobile_app.slug %}'>Edit</a>
+                                <a class="button btn-primary btn" href='{% url "management:update_mobile_app" mobile_app.slug %}'>Edit</a>
                             </td>
                           </tr>
                         {% endfor %}

@@ -11,7 +11,7 @@
       margin-right:5px;
     }
 
-    .gap-20 .imgDivTop .delImgBtn {
+    .imgDivTop .delImgBtn {
       vertical-align: top;
     }
 
@@ -32,14 +32,14 @@
 {% block mainContent %}
           <form method="" action="" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="row gap-20 pos-r">
+            <div class="row">
               <div class="col-md-6">
-                <div class="bgc-white p-20 bd">
-                  <h4 class="c-grey-900">
+                <div class="">
+                  <h4 class="">
                       {{ mobile_app.name|add:' Version Number' }}
                       {{ app_version.version_number }}
                   </h4>
-                  <div class="mT-30">
+                  <div class="">
                       <div class="form-group">
                         <h5>Application {{ mobile_app.is_active|yesno:'Active, Inactive' }}</h5>
                       </div>
@@ -79,7 +79,7 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="bgc-white p-20 bd">
+                <div class="">
                   <div class="mT-30">
                       <div class="form-group">
                         <h5>{{ mobile_app|verbose_name:'video_url'}}</h5>
@@ -90,15 +90,15 @@
                         {% endif %}
                       </video>
 					    {% if perms.management.can_approve_app %}
-					        <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'approved')" class="btn cur-p button btn-success" style="margin-top:50px;" >Approve</button>
-                            <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'rejected')" class="btn cur-p button btn-warning" style="margin-top:50px;" >Reject</button>
+					        <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'approved')" class="btn button btn-success" style="margin-top:50px;" >Approve</button>
+                            <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'rejected')" class="btn button btn-warning" style="margin-top:50px;" >Reject</button>
 					    {% endif %}
                   </div>
                 </div>
               </div>
                 <div class="divSplitter" style="display:none"></div>
                 {% for imgUrl in mobile_app.images.all %}
-                  <div class="bgc-white bd imgDivTop">
+                  <div class="imgDivTop">
                       <img src="{{ imgUrl.picture.url }}" width="auto" height="200px" class="appImg rounded">
                       <input type="checkbox" class="delImgCheckbox" style="display:none">
                       <input type="number" class="orderImg" style="display:none">

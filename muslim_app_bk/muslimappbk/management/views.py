@@ -164,9 +164,9 @@ class AddAppVersionView(View):
                     imgIds = imgIds.split(',')
                     update_app_images(imgIds, mobile_app)
                     
-                return redirect('management:app_table_basic')\
+                return redirect('management:app_history', slug=mobile_app.slug)\
                      if user.has_perm('management.can_approve_app')\
-                     else redirect('management:app_table_uploader')
+                     else redirect('management:app_history_uploader', slug=mobile_app.slug)
         
             except ValidationError as error:
                 addAppVersionModelForm.add_error(None, error)
@@ -208,15 +208,17 @@ def update_app_images(imgIds, mobile_app):
             if not img.content_object:
                 img.content_object = mobile_app;
                 img.save()
+
                 
-class VersionDetailView(View):
+class VersionDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         app = get_object_or_404(MobileApp, slug=kwargs['app_slug'])
         app_version = get_object_or_404(AppVersion, mobile_app=app, version_number=kwargs['version_number'])
 #         app_version = AppVersion.objects.filter(mobile_app=app, version_number=kwargs['version_number']).first()
         context = {'app_version': app_version, 'mobile_app': app}
         return render(request, 'management/app_version_detail.html', context)
-    
+
+@permission_required('polls.can_vote')    
 def update_version_status(request):
     if request.is_ajax():
         app_slug = request.POST['app_slug']

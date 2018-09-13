@@ -10,7 +10,7 @@
       margin-right:5px;
     }
 
-    .gap-20 .imgDivTop .delImgBtn {
+    .imgDivTop .delImgBtn {
       vertical-align: top;
     }
 
@@ -31,11 +31,11 @@
 {% block mainContent %}
           <form id="add_app_form" method="POST" action="{% url 'management:add_mobile_app' %}" enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="row gap-20 pos-r">
+            <div class="row">
               <div class="col-md-6">
-                <div class="bgc-white p-20 bd">
-                  <h6 class="c-grey-900">Add Appliction</h6>
-                  <div class="mT-30">
+                <div class="">
+                  <h6 class="">Add Appliction</h6>
+                  <div class="">
                       <div class="form-group">
                         <label>{{ addAppModelForm.name.label }}</label>
                         {% render_field addAppModelForm.name class="form-control" placeholder=addAppModelForm.name.name %}
@@ -87,8 +87,8 @@
                 </div>
               </div>
               <div class="col-md-6">
-                <div class="bgc-white p-20 bd">
-                  <div class="mT-30">
+                <div class="">
+                  <div class="">
                       {% if addAppModelForm.non_field_errors %}
                         <div class="alert alert-danger" role="alert">
                           {% for error in addAppModelForm.non_field_errors %}
@@ -122,7 +122,7 @@
                 </div>
               </div>
                 <div class="divSplitter" style="display:none"></div>
-                  <!-- <div class="bgc-white bd imgDivTop">
+                  <!-- <div class="imgDivTop">
                       <img src="/static/management/images/mobile.png" width="auto" height="200px" class="appImg rounded">
                       <button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>
                       <input type="checkbox" class="delImgCheckbox" style="display:none">
@@ -136,7 +136,7 @@
 {% block javascript %}
   {{ block.super }}
   <script>
-  var imageDivTemplate = '<div class="bgc-white bd imgDivTop">'+
+  var imageDivTemplate = '<div class="imgDivTop">'+
                         '<img width="auto" height="200px" class="appImg rounded">'+
                         '<button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>'+
                         '<input type="checkbox" class="delImgCheckbox" style="display:none">'+

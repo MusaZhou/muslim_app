@@ -1,88 +1,28 @@
 {% load static %}
 {% load widget_tweaks %}
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<!-- saved from url=(0050)http://getbootstrap.com/docs/4.1/examples/sign-in/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://getbootstrap.com/favicon.ico">
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,shrink-to-fit=no">
-  <title>Update Profile</title>
-  <style>
-    #loader {
-      transition: all .3s ease-in-out;
-      opacity: 1;
-      visibility: visible;
-      position: fixed;
-      height: 100vh;
-      width: 100%;
-      background: #fff;
-      z-index: 90000
-    }
+    <title>My Profile</title>
 
-    #loader.fadeOut {
-      opacity: 0;
-      visibility: hidden
-    }
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
-    .spinner {
-      width: 40px;
-      height: 40px;
-      position: absolute;
-      top: calc(50% - 20px);
-      left: calc(50% - 20px);
-      background-color: #333;
-      border-radius: 100%;
-      -webkit-animation: sk-scaleout 1s infinite ease-in-out;
-      animation: sk-scaleout 1s infinite ease-in-out
-    }
+    <!-- Custom styles for this template -->
+    <link href="{% static 'userauth/signin.css' %}" rel="stylesheet">
+  </head>
 
-    @-webkit-keyframes sk-scaleout {
-      0% {
-        -webkit-transform: scale(0)
-      }
-      100% {
-        -webkit-transform: scale(1);
-        opacity: 0
-      }
-    }
-
-    @keyframes sk-scaleout {
-      0% {
-        -webkit-transform: scale(0);
-        transform: scale(0)
-      }
-      100% {
-        -webkit-transform: scale(1);
-        transform: scale(1);
-        opacity: 0
-      }
-    }
-  </style>
-  <link href="{% static "management/style.css" %}" rel="stylesheet">
-</head>
-
-<body class="app">
-  <div id="loader">
-    <div class="spinner"></div>
-  </div>
-  <script>
-    window.addEventListener('load', () => {
-      const loader = document.getElementById('loader');
-      setTimeout(() => {
-        loader.classList.add('fadeOut');
-      }, 300);
-    });
-  </script>
-  <div class="peers ai-s fxw-nw h-100vh">
-    <div class="peer peer-greed h-100 pos-r bgr-n bgpX-c bgpY-c bgsz-cv" style="background-image:url({% static "management/images/bg.jpg" %})">
-      <div class="pos-a centerXY">
-        <div class="bgc-white bdrs-50p pos-r" style="width:120px;height:120px"><img class="pos-a centerXY" src="{% static "management/images/logo.png" %}" alt=""></div>
-      </div>
-    </div>
-    <div class="col-12 col-md-4 peer pX-40 pY-80 h-100 bgc-white scrollable pos-r" style="min-width:320px">
-      <h4 class="fw-300 c-grey-900 mB-40">Profile</h4>
-      <form action="{% url 'userauth:update_profile' %}" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
+  <body class="text-center">
+    <form class="form-signin" action="{% url 'userauth:update_profile' %}" method="POST" enctype="multipart/form-data" style="max-width: 500px">
+      <img class="mb-4" src="{% static 'images/logo.png' %}" alt="" width="72" height="72">
+      <h1 class="h3 mb-3 font-weight-normal">My Profile</h1>
+      {% csrf_token %}
         {% if userProfileForm.errors %}
         <div class="alert alert-danger" role="alert">
           {% for error in userProfileForm.errors %}
@@ -107,44 +47,44 @@
              </div>
            {% endif %}
           {% endfor %}
-        <div class="form-group">
-            <label class="text-normal text-dark">{{ userProfileForm.nick_name.label }}</label>
-            {% render_field userProfileForm.nick_name class="form-control"%}
+        <div class="form-group row">
+            <label class="text-normal text-dark col-md-4">{{ userProfileForm.nick_name.label }}</label>
+            {% render_field userProfileForm.nick_name class="form-control col-md-8"%}
             {% if userProfileForm.username.errors %}
                 <div class="invalid-feedback d-block">
                 {{ userProfileForm.username.errors }}
                 </div>
             {% endif %}
         </div>
-        <div class="form-group">
-            <label class="text-normal text-dark">{{ userProfileForm.email.label }}</label> 
-            {% render_field userProfileForm.email class="form-control" %}
+        <div class="form-group row">
+            <label class="text-normal text-dark col-md-4">{{ userProfileForm.email.label }}</label> 
+            {% render_field userProfileForm.email class="form-control col-md-8" %}
             {% if userProfileForm.email.errors %}
                 <div class="invalid-feedback d-block">
                 {{ userProfileForm.email.errors }}
                 </div>
             {% endif %}
         </div>
-        <div class="form-group">
-            <label class="text-normal text-dark">{{ userProfileForm.gender.label }}</label> 
-            {% render_field userProfileForm.gender class="form-control" %}
+        <div class="form-group row">
+            <label class="text-normal text-dark col-md-4">{{ userProfileForm.gender.label }}</label> 
+            {% render_field userProfileForm.gender class="form-control col-md-8" %}
             {% if userProfileForm.gender.errors %}
                 <div class="invalid-feedback d-block">
                 {{ userProfileForm.gender.errors }}
                 </div>
             {% endif %}
-        </div>from djan
-        <div class="form-group">
-            <label class="text-normal text-dark">{{ userProfileForm.date_of_birth.label }}</label> 
-            {% render_field userProfileForm.date_of_birth class="form-control" %}
+        </div>
+        <div class="form-group row">
+            <label class="text-normal text-dark col-md-4">{{ userProfileForm.date_of_birth.label }}</label> 
+            {% render_field userProfileForm.date_of_birth class="form-control col-md-8" %}
             {% if userProfileForm.date_of_birth.errors %}
                 <div class="invalid-feedback d-block">
                 {{ userProfileForm.date_of_birth.errors }}
                 </div>
             {% endif %}
         </div>
-        <div class="form-group">
-            <button type="button" class="btn btn-primary avatar-btn">Broswer Avatar</button>
+        <div class="form-group row">
+            <button type="button" class="btn btn-primary avatar-btn col-md-3">Broswer Avatar</button>
             <div id="avatar_widget_div" style="display:none">
                 {% render_field userProfileForm.avatar id="avatar_input" %}
             </div>
@@ -156,7 +96,7 @@
             {% if userProfileForm.instance.avatar.url is not None %}
             <img id="avatar_img" src="{{ userProfileForm.instance.avatar.url }}" width="50px" height="50px"/>
             {% else %}
-            <img id="avatar_img" src="{% static 'management/images/mobile.png' %}" width="50px" height="50px"/>
+            <img id="avatar_img" src="{% static 'images/mobile.png' %}" width="50px" height="50px"/>
             {% endif %}
             {% if userProfileForm.avatar.errors %}
                 <div class="invalid-feedback d-block">
@@ -164,13 +104,9 @@
                 </div>
             {% endif %}
         </div>
-        <div class="form-group"><button class="btn btn-primary">Update</button></div>
-      </form>
-    </div>
-  </div>
-  <script type="text/javascript" src="{% static "management/jquery-3.3.1.min.js" %}"></script>
-  <script type="text/javascript" src="{% static "management/vendor.js" %}"></script>
-  <script type="text/javascript" src="{% static "management/bundle.js" %}"></script>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
+    </form>
+ <script type="text/javascript" src="{% static 'jquery-3.3.1.min.js' %}"></script> 
 </body>
 <script>
 

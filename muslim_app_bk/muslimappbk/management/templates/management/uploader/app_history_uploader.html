@@ -11,13 +11,13 @@
 {% endblock %}
 {% block mainContent %}
     <div class="container-fluid">
-            <h4 class="c-grey-900 mT-10 mB-30">Version History</h4>
+            <h4 class="">Version History</h4>
             <div class="row">
               <div class="col-md-12">
-                <div class="bgc-white bd bdrs-3 p-20 mB-20">
+                <div class="">
                   <div class="row">
-                    <h4 class="c-grey-900 mB-20 app-name col-md-10">{{ mobile_app.name }}</h4>
-                    <a class=" btn btn-primary cur-p add-new-version" href="{% url 'management:add_app_version' mobile_app.slug %}">
+                    <h4 class="app-name">{{ mobile_app.name }}</h4>
+                    <a class=" btn btn-primary add-new-version" href="{% url 'management:add_app_version' mobile_app.slug %}">
                         Add New Version
                     </a>
                   </div>
