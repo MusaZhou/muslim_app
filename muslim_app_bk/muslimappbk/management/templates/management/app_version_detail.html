@@ -35,10 +35,14 @@
             <div class="row">
               <div class="col-md-6">
                 <div class="">
-                  <h4 class="">
+                  <div class="row">
+                    <h4 class="col-md-6">
                       {{ mobile_app.name|add:' Version Number' }}
                       {{ app_version.version_number }}
-                  </h4>
+                    </h4>
+                    <img src="{{ mobile_app.icon.url }}" width="64px" height="64px">
+                  </div>
+                  
                   <div class="">
                       <div class="form-group">
                         <h5>Application {{ mobile_app.is_active|yesno:'Active, Inactive' }}</h5>

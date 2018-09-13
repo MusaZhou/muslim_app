@@ -8,7 +8,7 @@ class AddAppModelForm(ModelForm):
     video_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_url'}))
     class Meta:
         model = MobileApp
-        fields = ['name', 'description', 'video_url', 'category', 'tags', 'slug']
+        fields = ['name', 'description', 'video_url', 'category', 'tags', 'slug', 'icon']
 
 class AddAppVersionModelForm(ModelForm):
 

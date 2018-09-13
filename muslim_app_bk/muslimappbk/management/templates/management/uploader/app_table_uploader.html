@@ -18,7 +18,7 @@
                         <th scope="col">#</th>
                         <th scope="col">Name</th>
                         <th scope="col">Latest Version</th>
-                        <th scope="col">Upload time</th>
+                        <th scope="col">Icon</th>
                         <th scope="col">Active</th>
                         <th scope="col">AVG rate</th>
                         <th scope="col">Comment count</th>
@@ -38,7 +38,7 @@
                             <th scope="row" class="app_order"></th>
                             <td>{{ mobile_app.name }}</td>
                             <td>{{ mobile_app.latest_version.version_number }}</td>
-                            <td>{{ mobile_app.upload_date }}</td>
+                            <td><img src="{{ mobile_app.icon.url }}" width="64px" height="64"></td>
                             <td>{{ mobile_app.is_active|yesno:"active,inactive" }}</td>
                             <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
                             <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>

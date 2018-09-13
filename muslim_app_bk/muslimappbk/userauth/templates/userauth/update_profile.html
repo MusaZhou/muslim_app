@@ -88,11 +88,6 @@
             <div id="avatar_widget_div" style="display:none">
                 {% render_field userProfileForm.avatar id="avatar_input" %}
             </div>
-            {% if userProfileForm.avatar.errors %}
-                <div class="invalid-feedback d-block">
-                {{ userProfileForm.avatar.errors }}
-                </div>
-            {% endif %}
             {% if userProfileForm.instance.avatar.url is not None %}
             <img id="avatar_img" src="{{ userProfileForm.instance.avatar.url }}" width="50px" height="50px"/>
             {% else %}
@@ -121,15 +116,5 @@ $(function(){
         displayImage(file, $('#avatar_img'));
     });
 })
-
- function displayImage(file, imgEle){
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      // Set the img src property using the data URL.
-      imgEle.prop('src', reader.result);
-    }
-
-    reader.readAsDataURL(file);
-  }
 </script>
 </html>

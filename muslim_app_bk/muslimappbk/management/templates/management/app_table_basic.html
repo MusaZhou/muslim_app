@@ -19,7 +19,7 @@
                         <th scope="col">Name</th>
                         <th scope="col">Active</th>
                         <th scope="col">Category</th>
-                        <th scope="col">upload time</th>
+                        <th scope="col">Icon</th>
                         <th scope="col">avg rate</th>
                         <th scope="col">comment count</th>
                         <th scope="col">download count</th>
@@ -40,7 +40,7 @@
                             <td>{{ mobile_app.name }}</td>
                             <td>{{ mobile_app.is_active|yesno:"active,disabled" }}</td>
                             <td>{{ mobile_app.category }}</td>
-                            <td>{{ mobile_app.upload_date }}</td>
+                            <td><img src="{{ mobile_app.icon.url }}" width="64px" height="64"></td>
                             <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
                             <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
                             <td>{{ mobile_app.download_count|default_if_none:0 }}</td>

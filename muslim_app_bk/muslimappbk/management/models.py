@@ -79,6 +79,7 @@ class MobileApp(models.Model):
     images = GenericRelation(Image, related_query_name='imaged_app', verbose_name='Screenshots')
     tags = models.ManyToManyField(Tag, verbose_name='Tags')
     is_active = models.BooleanField(default=False, verbose_name='Active Status')
+    icon = models.ImageField(upload_to="icons")
 
     def slugDefault(self):
         return slugify(self.name)

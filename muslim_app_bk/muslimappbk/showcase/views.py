@@ -6,3 +6,12 @@ def blog_template(request):
 
 def dashboard_template(request):
     return render(request, 'showcase/dashboard_template.html')
+
+def carousel_template(request):
+    return render(request, 'showcase/carousel_template.html')
+
+def album_template(request):
+    return render(request, 'showcase/album_template.html')
+
+def index(request):
+    return render(request, 'showcase/index.html')

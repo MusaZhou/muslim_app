@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 @login_required
 def add_mobile_app(request):
     if request.method == 'POST':
-        addAppModelForm = AddAppModelForm(request.POST)
+        addAppModelForm = AddAppModelForm(request.POST, request.FILES)
         addAppVersionModelForm = AddAppVersionModelForm(request.POST, request.FILES)
         if addAppModelForm.is_valid()\
         and addAppVersionModelForm.is_valid():

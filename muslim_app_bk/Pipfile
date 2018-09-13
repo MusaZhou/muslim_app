@@ -8,11 +8,12 @@ django = "*"
 "jinja2" = "*"
 mysqlclient = "*"
 django-model-utils = "*"
-pillow = "*"
+pillow = "==5.2.0"
 python-slugify = "*"
 django-widget-tweaks = "*"
 django-debug-toolbar = "*"
 django-allauth = "*"
+sorl-thumbnail = "==12.4.1"
 
 [dev-packages]
 
