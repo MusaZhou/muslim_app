@@ -15,3 +15,6 @@ def album_template(request):
 
 def index(request):
     return render(request, 'showcase/index.html')
+
+def app(request):
+    return render(request, 'showcase/app.html')
