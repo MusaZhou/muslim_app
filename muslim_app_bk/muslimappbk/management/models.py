@@ -98,7 +98,7 @@ class MobileApp(models.Model):
         return AppVersion.objects.filter(mobile_app=self).latest('created_time')
     
     def get_absolute_url(self):
-        return reverse('app', args=self.slug)
+        return reverse('showcase:app', args=[self.slug])
     
 class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,

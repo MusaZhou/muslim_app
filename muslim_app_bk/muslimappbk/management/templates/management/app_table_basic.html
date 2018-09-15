@@ -21,7 +21,6 @@
                         <th scope="col">Category</th>
                         <th scope="col">Icon</th>
                         <th scope="col">avg rate</th>
-                        <th scope="col">comment count</th>
                         <th scope="col">download count</th>
                         <th scope="col">history</th>
                         <th scope="col">edit</th>
@@ -42,7 +41,6 @@
                             <td>{{ mobile_app.category }}</td>
                             <td><img src="{{ mobile_app.icon.url }}" width="64px" height="64"></td>
                             <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
-                            <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
                             <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
                             <td>
                                 <a class="button btn-primary btn cur-p" href='{% url "management:app_history" mobile_app.slug %}'>History</a>
