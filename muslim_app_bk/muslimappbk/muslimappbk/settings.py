@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.weixin',
     'sorl.thumbnail',
+    'django_comments_xtd',
+    'django_comments',
 ]
 
 MIDDLEWARE = [
@@ -201,4 +203,38 @@ if DEBUG:
         
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+#EMAIL_HOST = "smtp.mail.com"
+#EMAIL_PORT = "587"
+#EMAIL_HOST_USER = "alias@mail.com"
+#EMAIL_HOST_PASSWORD = "yourpassword"
+#DEFAULT_FROM_EMAIL = "Helpdesk <helpdesk@yourdomain>"
+
 SITE_ID = 1
+
+COMMENTS_APP = 'django_comments_xtd'
+
+COMMENTS_XTD_MAX_THREAD_LEVEL = 1
+
+#  To help obfuscating comments before they are sent for confirmation.
+COMMENTS_XTD_SALT = (b"Timendi causa est nescire. "
+                     b"Aequam memento rebus in arduis servare mentem.")
+
+# Source mail address used for notifications.
+COMMENTS_XTD_FROM_EMAIL = "admin@muslimapp.cn"
+
+# Contact mail address to show in messages.
+COMMENTS_XTD_CONTACT_EMAIL = "admin@muslimapp.cn"
+
+MANAGERS = (
+    ('Musa Zhou', 'musazhou@gmail.com'),
+)
+
+COMMENTS_XTD_CONFIRM_EMAIL = False
+
+COMMENTS_XTD_APP_MODEL_OPTIONS = {
+    'management.mobileapp': {
+        'allow_flagging': True,
+        'allow_feedback': False,
+        'show_feedback': False,
+    }
+}

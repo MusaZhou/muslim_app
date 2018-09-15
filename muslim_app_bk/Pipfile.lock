@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "c9b84933f56d718d5a163dbe5a75c27b5b57dac90566e32458c937922901ba26"
+            "sha256": "c1323fc1eddf9087fe1a4a664ee3b2355e03ee9c4880bbceb9efb8be8cb2415c"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -52,6 +52,21 @@
             "index": "pypi",
             "version": "==0.37.1"
         },
+        "django-comments-xtd": {
+            "hashes": [
+                "sha256:11ed9ed05a68c0d9729e3575650f1ec93d39beb266d7582db408f6759313973f",
+                "sha256:721b6b0cad1e45ba0de36c82c04fff9b982f136423651a710054b6243e54f9f1"
+            ],
+            "index": "pypi",
+            "version": "==2.2.0"
+        },
+        "django-contrib-comments": {
+            "hashes": [
+                "sha256:37fb0c60e0880c0978797925705ecbc1a153bf9cbc1253b579963e101a9acaac",
+                "sha256:689f3f80ff7ea8ab9f712ae5fe17ffa2ee8babbf8d75229ee8acc7bad461dfef"
+            ],
+            "version": "==1.9.0"
+        },
         "django-debug-toolbar": {
             "hashes": [
                 "sha256:08e0e43f6c1fd9820af4cbdcd54b5fb80bf83a2e08b2cc952547a671174999b8",
@@ -75,6 +90,22 @@
             ],
             "index": "pypi",
             "version": "==1.4.3"
+        },
+        "djangorestframework": {
+            "hashes": [
+                "sha256:b6714c3e4b0f8d524f193c91ecf5f5450092c2145439ac2769711f7eba89a9d9",
+                "sha256:c375e4f95a3a64fccac412e36fb42ba36881e52313ec021ef410b40f67cddca4"
+            ],
+            "markers": "python_version != '3.0.*' and python_version != '3.2.*' and python_version != '3.3.*' and python_version >= '2.7' and python_version != '3.1.*'",
+            "version": "==3.8.2"
+        },
+        "docutils": {
+            "hashes": [
+                "sha256:02aec4bd92ab067f6ff27a38a38a41173bf01bed8f89157768c1573f53e474a6",
+                "sha256:51e64ef2ebfb29cae1faa133b3710143496eca21c530f3f71424d77687764274",
+                "sha256:7a4bd47eaf6596e1295ecb11361139febe29b084a87bf005bf899f9a42edc3c6"
+            ],
+            "version": "==0.14"
         },
         "idna": {
             "hashes": [
@@ -181,6 +212,13 @@
                 "sha256:e21232e2465808c0e892e0e4dbb8c2faafec16ac6dc067dd546e9b466f3deac8"
             ],
             "version": "==1.0.0"
+        },
+        "six": {
+            "hashes": [
+                "sha256:70e8a77beed4562e7f14fe23a786b54f6296e34344c23bc42f07b15018ff98e9",
+                "sha256:832dc0e10feb1aa2c68dcc57dbb658f1c7e65b9b61af69048abc87a2db00a0eb"
+            ],
+            "version": "==1.11.0"
         },
         "sorl-thumbnail": {
             "hashes": [

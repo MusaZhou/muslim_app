@@ -8,6 +8,8 @@ from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from .choices import ACTIVE_CHOICES, APPROVE_CHOICES, GENDER_CHOICES
+from django_comments_xtd.moderation import moderator, XtdCommentModerator
+from django.urls import reverse
 
 # Create your models here.
 class Profile(models.Model):
@@ -70,7 +72,7 @@ class MobileApp(models.Model):
     video_url = models.CharField(max_length=200, blank=True, null=True, verbose_name='Video')
     upload_date = models.DateTimeField(auto_now_add=True, verbose_name='Upload Time')
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
-    avg_rate = models.DecimalField(max_digits=2,
+    avg_rate = models.DecimalField(max_digits=2, default=5.0,
                                    decimal_places=1,
                                    null=True, verbose_name='Average Rate')
     comment_count = models.PositiveIntegerField(null=True, verbose_name='Comment Count')
@@ -94,6 +96,9 @@ class MobileApp(models.Model):
     
     def latest_version(self):
         return AppVersion.objects.filter(mobile_app=self).latest('created_time')
+    
+    def get_absolute_url(self):
+        return reverse('app', args=self.slug)
     
 class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,
@@ -159,3 +164,8 @@ class Download(models.Model):
     app = models.ForeignKey(MobileApp,on_delete=models.CASCADE,
                             null=True, verbose_name='Application')
 
+class AppCommentModerator(XtdCommentModerator):
+    removal_suggestion_notification = True
+    email_notification = True
+
+moderator.register(MobileApp, AppCommentModerator)

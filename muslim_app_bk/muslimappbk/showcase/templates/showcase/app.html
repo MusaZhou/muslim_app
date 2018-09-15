@@ -1,56 +1,43 @@
 {% extends 'showcase/base.html' %}
 {% load static %}
+{% load comments %}
+{% load comments_xtd %}
+
+{% block stylesheet %}
+    {{ block.super }}
+<style>
+    .comment .well .alert.hidden {
+        display: none;
+    }
+</style>
+{% endblock %}
+
 {% block mainContent %}
 <div class="container">
     <div class="row align-items-center">
         <div class="col-auto">
-            <img src="/media/icons/icon_1.png" width="128px" height="128px">
+            <img src="{{ mobile_app.icon.url }}" width="128px" height="128px">
         </div>
         <div class="col">
             <div class="row" style="font-size: 1.2em; margin-bottom: 10px; font-weight: bold">
-                Quran Explonation
+                {{ mobile_app.name }}
             </div>
             <div class="row" style="font-size: 0.9em; color: gray; height:130px">
-                <p style="width:80%">This is an detailed explonation of the Holy Quran.This is an detailed explonation of the Holy Quran.This is an detailed explonation of the Holy Quran.This is an detailed explonation of the Holy Quran.This is an detailed explonation of the Holy Quran.This is an detailed explonation of the Holy Quran.This is an detailed explonation of the Holy Quran.</p>
+                <p style="width:80%">{{ mobile_app.description }}</p>
             </div>
             <div class="row align-items-center">
                 <div class="col-auto" style="padding-left: 0px">
-                    <div class="rating star-icon value-3 color-positive label-right">
-                        <div class="label-value" style="color:orange">1.5</div>
-                        <div class="star-container">
-                            <div class="star">
-                                <i class="star-empty"></i>
-                                <i class="star-half"></i>
-                                <i class="star-filled"></i>
-                            </div>
-                            <div class="star">
-                                <i class="star-empty"></i>
-                                <i class="star-half"></i>
-                                <i class="star-filled"></i>
-                            </div>
-                            <div class="star">
-                                <i class="star-empty"></i>
-                                <i class="star-half"></i>
-                                <i class="star-filled"></i>
-                            </div>
-                            <div class="star">
-                                <i class="star-empty"></i>
-                                <i class="star-half"></i>
-                                <i class="star-filled"></i>
-                            </div>
-                            <div class="star">
-                                <i class="star-empty"></i>
-                                <i class="star-half"></i>
-                                <i class="star-filled"></i>
-                            </div>
-                        </div>
+                    <div class="rating star-icon value-{{ mobile_app.avg_rate|floatformat:'0' }} color-positive label-right">
+                        <div class="label-value" style="color:orange">{{ mobile_app.avg_rate }}</div>
+                        {% include 'showcase/star.html' %}
                     </div>
                 </div>
                 <div class="col-auto" style="color:cornflowerblue">
-                    <span>Downloads 100</span>
+                    <span>Downloads {{ mobile_app.download_count|default_if_none:0 }}</span>
                 </div>
                 <div class="col-auto" style="color:cornflowerblue">
-                    <span>Comments 200</span>
+                    {% get_comment_count for mobile_app as comment_count %}
+                    <span>Comments {{ comment_count }}</span>
                 </div>
                 <div class="col-3">
                     <button type="button" class="btn btn-primary" style="width:100%">Download APK</button>
@@ -61,11 +48,23 @@
 </div>
 <div class="slide-box" style="overflow: hidden; overflow-x: scroll; width: 100%; height: 370px; position: relative; margin-top: 10px">
     <div class="slide-content" style="position: absolute;left: 0px; white-space: nowrap">
-        <img src="/media/banners/banner_1.jpg" height="350px" width="auto">
-        <img src="/media/icons/icon_1.png">
-        <img src="/media/banners/banner_2.jpg" height="350px" width="auto">
-        <img src="/media/icons/icon_2.png">
-        <img src="/media/banners/banner_3.jpg" height="350px" width="auto">
+        {% for img in mobile_app.images.all %}
+        <img src="{{ img.picture.url }}" height="350px" width="auto">
+        {% endfor %}
     </div>
 </div>
+<div class="comment" style="margin-top:20px">
+  <h4 class="text-center">Comments</h4>
+  <div class="well">
+    {% render_comment_form for mobile_app %}
+  </div>
+</div>
+
+{% if comment_count %}
+<hr/>
+<ul class="media-list">
+  {% render_xtdcomment_tree for mobile_app allow_flagging %}
+</ul>
+{% endif %}
+
 {% endblock %}
