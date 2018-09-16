@@ -1,0 +1,128 @@
+{% extends "management/index.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load thumbnail %}
+
+{% block title %}Banner List{% endblock %}
+{% block stylesheet %}
+  {{ block.super }}
+{% endblock %}
+{% block mainContent %}
+          <div class="container-fluid">
+            <h4 class="">Banner List</h4>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <a class="button btn btn-primary" href="{% url 'management:add_banner' %}">Add Banner</a>
+                  <table class="table table-striped">
+                    <thead>
+                      <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Link</th>
+                        <th scope="col">Picture</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                      </tr>
+                    </thead>
+                        <tbody>
+                        {% for banner in page_banners %}
+                        <tr>
+                            <th scope="row" class="banner_order"></th>
+                            <td>{{ banner.title }}</td>
+                            <td>{{ banner.description }}</td>
+                            <td>{{ banner.link }}</td>
+                            {% thumbnail img.picture "x256" as im %}
+                            <td><img src="{{ im.url }}" ></td>
+                            {% endthumbnail %}
+                            <td>
+                                <a class="btn-primary btn" href="{% url 'management:edit_banner' %}">Edit</a>
+                            </td>
+                            <td>
+                                <a class="btn-primary btn" href="{% url 'management:delete_banner' %}">Delete</a>
+                            </td>
+                          </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="10" align="center">We don't have data at this moment</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+                <nav>
+                  <ul class="pagination justify-content-end">
+                    <li class="page-item">
+                      <a class="page-link" href="?page=1">First</a>
+                    </li>
+                    {% if not page_banners.has_previous %}
+                    <li class="page-item disabled">
+                      <span class="page-link">Previous</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_banners.previous_page_number }}">Previous</a>
+                    </li>
+                    {% endif %}
+                    {% for page_index in page_banners.paginator.page_range %}
+                      {% if page_index == page_banners.number %}
+                      <li class="page-item active">
+                          <span class="page-link">
+                            {{ page_banners.number }}
+                          </span>
+                        </li>
+                      {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_index }}">{{ page_index }}</a>
+                        </li>
+                      {% endif %}
+                    {% endfor %}
+                    {% if not page_banners.has_next %}
+                    <li class="page-item disabled">
+                      <span class="page-link">Next</span>
+                    </li>
+                    {% else %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_banners.next_page_number }}">Next</a>
+                    </li>
+                    {% endif %}
+                    <li class="page-item">
+                      <a class="page-link" href="?page={{ page_banners.paginator.num_pages }}">Last</a>
+                    </li>
+                  </ul>
+                </nav>  
+              </div>
+            </div>
+          </div>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+<script>
+    var page_start_index = {{ page_apps.start_index|default:0 }};
+    $(function(){
+        $('.banner_order').each(function(index, element){
+            var row_index = $(this).parents('tr').index();
+            $(this).text(page_start_index + row_index);
+        });
+    });
+//    
+//    function update_active(app_slug, status){
+//    	$.ajax({
+//    		url: '{% url "management:update_app_active" %}',
+//    		method: 'POST',
+//    		data: {
+//    			app_slug: app_slug,
+//    			status: status
+//    		}
+//    	}).done(function(response){
+//    		if(response.status == 1){
+//    			location.reload();
+//    		}else{
+//    			alert('server error');
+//    		}
+//    	});
+//    }
+</script>
+{% endblock %}
+

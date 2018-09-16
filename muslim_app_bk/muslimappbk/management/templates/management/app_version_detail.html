@@ -2,6 +2,8 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load custom_tags %}
+{% load comments %}
+
 {% block title %}Add New Version{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
@@ -43,7 +45,11 @@
                     <img src="{{ mobile_app.icon.url }}" width="64px" height="64px">
                   </div>
                   
-                  <div class="">
+                  <div>
+                      <div class="form-group">
+                        {% get_comment_count for mobile_app as comment_count %}
+                        <h5>Download {{ mobile_app.download_count|default_if_none:0 }} Comment {{ comment_count|default_if_none:0 }}</h5>
+                      </div>
                       <div class="form-group">
                         <h5>Application {{ mobile_app.is_active|yesno:'Active, Inactive' }}</h5>
                       </div>

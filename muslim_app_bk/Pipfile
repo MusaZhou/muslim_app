@@ -13,7 +13,8 @@ python-slugify = "*"
 django-widget-tweaks = "*"
 django-debug-toolbar = "*"
 django-allauth = "*"
-sorl-thumbnail = "==12.4.1"
+sorl-thumbnail = "==12.5.0"
+django-comments-xtd = "*"
 
 [dev-packages]
 

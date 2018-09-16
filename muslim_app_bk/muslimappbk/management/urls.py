@@ -5,6 +5,7 @@ from basic import views as basic_view
 from .views import ImageFieldView, UpdateMobileAppView,  AppTableBasicView,\
 AddAppVersionView, AppHistoryView, VersionDetailView
 from .views_uploader import AppTableUploaderView, AppHistoryUploaderView
+from .views import BannerListView, BannerEditView, BannerDeleteView
 app_name = 'management'
 
 urlpatterns = [
@@ -20,5 +21,9 @@ urlpatterns = [
     path('update_version_status', views.update_version_status, name="update_version_status"),
     path('update_app_active', views.update_app_active, name="update_app_active"),
     path('upload_video', views.upload_video, name="upload_video"),
+    path('banner_list', BannerListView.as_view(), name="banner_list"),
+    path('add_banner', BannerEditView.as_view(), name="add_banner"),
+    path('edit_banner/<int:id>', BannerEditView.as_view(), name="edit_banner"),
+    path('delete_banner/<int:id>', BannerDeleteView.as_view(), name="delete_banner"),
     re_path(r'(?P<file>(\w*\.(eot|svg|woff|woff2|ttf))$)', basic_view.others, name='others'),
 ]

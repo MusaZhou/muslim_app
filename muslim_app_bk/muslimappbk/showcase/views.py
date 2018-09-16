@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from management.models import MobileApp
 
 # Create your views here.
 def blog_template(request):
@@ -16,5 +17,8 @@ def album_template(request):
 def index(request):
     return render(request, 'showcase/index.html')
 
-def app(request):
-    return render(request, 'showcase/app.html')
+def app(request, slug):
+    mobile_app = get_object_or_404(MobileApp, slug=slug)
+    app_version = mobile_app.latest_version()
+    context = {'mobile_app': mobile_app, 'app_version': app_version}
+    return render(request, 'showcase/app.html', context)

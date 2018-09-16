@@ -1,6 +1,7 @@
 {% extends "management/uploader/index_uploader.html" %}
 {% load static %}
 {% load widget_tweaks %}
+
 {% block title %}Applications Table{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
@@ -21,7 +22,6 @@
                         <th scope="col">Icon</th>
                         <th scope="col">Active</th>
                         <th scope="col">AVG rate</th>
-                        <th scope="col">Comment count</th>
                         <th scope="col">Download count</th>
                         <th scope="col">History</th>
                         <th scope="col">Edit</th>
@@ -41,7 +41,6 @@
                             <td><img src="{{ mobile_app.icon.url }}" width="64px" height="64"></td>
                             <td>{{ mobile_app.is_active|yesno:"active,inactive" }}</td>
                             <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
-                            <td>{{ mobile_app.comment_count|default_if_none:0 }}</td>
                             <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
                             <td>
                                 <a class="button btn-primary btn" href='{% url "management:app_history_uploader" mobile_app.slug %}'>History</a>

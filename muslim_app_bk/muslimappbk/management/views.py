@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from management.forms import AddAppModelForm, AddAppVersionModelForm
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
-from management.models import Image, MobileApp, AppVersion
+from management.models import Image, MobileApp, AppVersion, Banner
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.core.paginator import Paginator, Page
@@ -249,3 +249,27 @@ def upload_video(request):
             for chunk in video_file.chunks():
                 destination.write(chunk)
         return JsonResponse({'video_url': base_name}, safe=False)
+    
+class BannerListView(PermissionRequiredMixin, View):
+    permission_required = 'management.can_approve_app'
+    def get(self, request, *args, **kwargs):
+        all_banners = Banner.objects.all()
+        paginator = Paginator(all_banners, 5)
+        page = request.GET.get('page')
+        page_banners = paginator.get_page(page)
+        return render(request, 'management/banner_list.html', {'page_banners': page_banners})
+    
+class BannerEditView(PermissionRequiredMixin, View):
+    permission_required = 'management.can_approve_app'
+    
+    def get(self):
+        pass
+    
+    def post(self):
+        pass
+    
+class BannerDeleteView(PermissionRequiredMixin, View):
+    permission_required = 'management.can_approve_app'
+    
+    def get(self):
+        pass

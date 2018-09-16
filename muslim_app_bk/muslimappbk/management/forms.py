@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from management.models import MobileApp, AppVersion
+from management.models import MobileApp, AppVersion, Banner
 
 
 class AddAppModelForm(ModelForm):
@@ -15,5 +15,11 @@ class AddAppVersionModelForm(ModelForm):
     class Meta:
         model = AppVersion
         fields = ['version_number', 'whats_new', 'apk']
+        
+class BannerForm(ModelForm):
+    
+    class Meta:
+        model = Banner
+        fields = ['title', 'description', 'image', 'link']
         
 
