@@ -10,6 +10,8 @@ from django.db.models.signals import post_save
 from .choices import ACTIVE_CHOICES, APPROVE_CHOICES, GENDER_CHOICES
 from django_comments_xtd.moderation import moderator, XtdCommentModerator
 from django.urls import reverse
+from management.templatetags.custom_tags import verbose_name_filter
+from django.db.models.fields import CharField
 
 # Create your models here.
 class Profile(models.Model):
@@ -163,6 +165,12 @@ class Download(models.Model):
     mobile = models.CharField(max_length=100, verbose_name='Mobile Phone')
     app = models.ForeignKey(MobileApp,on_delete=models.CASCADE,
                             null=True, verbose_name='Application')
+
+class Banner(models.Model):
+    title = models.CharField(verbose_name='Title', max_length=100);
+    description = models.TextField('Description', blank=True, null=True)
+    image = models.ImageField(upload_to='banners')
+    link = models.CharField(verbose_name="Link", max_length=200)
 
 class AppCommentModerator(XtdCommentModerator):
     removal_suggestion_notification = True
