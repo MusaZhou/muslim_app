@@ -33,14 +33,14 @@
                             <td>{{ banner.title }}</td>
                             <td>{{ banner.description }}</td>
                             <td>{{ banner.link }}</td>
-                            {% thumbnail img.picture "x256" as im %}
+                            {% thumbnail banner.image "x256" as im %}
                             <td><img src="{{ im.url }}" ></td>
                             {% endthumbnail %}
                             <td>
-                                <a class="btn-primary btn" href="{% url 'management:edit_banner' %}">Edit</a>
+                                <a class="btn-primary btn" href="{% url 'management:edit_banner' banner.id %}">Edit</a>
                             </td>
                             <td>
-                                <a class="btn-primary btn" href="{% url 'management:delete_banner' %}">Delete</a>
+                                <a class="btn-primary btn" href="{% url 'management:delete_banner' banner.id %}">Delete</a>
                             </td>
                           </tr>
                         {% empty %}
@@ -99,7 +99,7 @@
 {% block javascript %}
   {{ block.super }}
 <script>
-    var page_start_index = {{ page_apps.start_index|default:0 }};
+    var page_start_index = {{ page_banners.start_index|default:0 }};
     $(function(){
         $('.banner_order').each(function(index, element){
             var row_index = $(this).parents('tr').index();

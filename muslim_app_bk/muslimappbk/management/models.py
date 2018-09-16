@@ -102,6 +102,10 @@ class MobileApp(models.Model):
     def get_absolute_url(self):
         return reverse('showcase:app', args=[self.slug])
     
+    @property
+    def userLink(self):
+        return reverse('showcase:app', args=[self.slug])
+    
 class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,
                                       validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")],
@@ -167,9 +171,9 @@ class Download(models.Model):
                             null=True, verbose_name='Application')
 
 class Banner(models.Model):
-    title = models.CharField(verbose_name='Title', max_length=100);
+    title = models.CharField(verbose_name='Title', max_length=100)
     description = models.TextField('Description', blank=True, null=True)
-    image = models.ImageField(upload_to='banners')
+    image = models.ImageField(upload_to='banners', verbose_name='Banner Image')
     link = models.CharField(verbose_name="Link", max_length=200)
 
 class AppCommentModerator(XtdCommentModerator):

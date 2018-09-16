@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
-from management.forms import AddAppModelForm, AddAppVersionModelForm
+from management.forms import AddAppModelForm, AddAppVersionModelForm, BannerForm
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from management.models import Image, MobileApp, AppVersion, Banner
 from django.http import HttpResponse, JsonResponse
@@ -262,14 +262,34 @@ class BannerListView(PermissionRequiredMixin, View):
 class BannerEditView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
     
-    def get(self):
-        pass
+    def get(self, request, *args, **kwargs):
+        if 'id' in kwargs:
+            banner_id = kwargs['id']
+            banner = get_object_or_404(Banner, id=kwargs['id'])
+            bannerForm = BannerForm(instance=banner)
+        else:
+            banner_id = None
+            bannerForm = BannerForm()
+            
+        return render(request, 'management/add_banner.html', {'bannerForm': bannerForm, 'banner_id': banner_id})
     
-    def post(self):
-        pass
+    def post(self, request, *args, **kwargs):
+        if 'id' in kwargs:
+            banner = get_object_or_404(Banner, id=kwargs['id'])
+        else:
+            banner = Banner()    
+            
+        bannerForm = BannerForm(request.POST, request.FILES, instance=banner)
+            
+        if bannerForm.is_valid():
+            bannerForm.save()
+            return redirect('management:banner_list')
+        return render(request, 'management/add_banner.html', {'bannerForm': bannerForm})
     
 class BannerDeleteView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
     
-    def get(self):
-        pass
+    def get(self, request, *args, **kwargs):
+        banner = get_object_or_404(Banner, id=kwargs['id'])
+        banner.delete()
+        return redirect('management:banner_list')

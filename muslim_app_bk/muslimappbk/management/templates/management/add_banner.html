@@ -1,0 +1,95 @@
+{% extends "management/index.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}Add Application{% endblock %}
+{% block stylesheet %}
+  {{ block.super }}
+  <style>
+    #submit_btn {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
+    }
+  </style>
+{% endblock %}
+{% block mainContent %}
+          {% if banner_id is None %}
+            <form id="add_app_form" method="POST" action="{% url 'management:add_banner' %}" enctype="multipart/form-data">
+          {% else %}
+            <form id="add_app_form" method="POST" action="{% url 'management:edit_banner' banner_id %}" enctype="multipart/form-data">
+          {% endif %}
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-6">
+                <div class="">
+                  <h6 class="">Banner</h6>
+                  <div class="">
+                      <div class="form-group">
+                        <label>{{ bannerForm.title.label }}</label>
+                        {% render_field bannerForm.title class="form-control" %}
+                        {% if bannerForm.title.errors %}
+                          <div class="invalid-feedback d-block">
+                              {{ bannerForm.title.errors }}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ bannerForm.description.label }}</label>
+                        {% render_field bannerForm.description class="form-control" %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ bannerForm.link.label }}</label>
+                        {% render_field bannerForm.link class="form-control" id="banner_link" %}
+                        {% if bannerForm.link.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ bannerForm.link.errors }}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ bannerForm.app_list.label }}</label>
+                        {% render_field bannerForm.app_list class="form-control" id="app_list" %}
+                      </div>
+                      <div class="form-group" style="margin-left: 0">
+                          <label>{{ bannerForm.image.label }}</label>
+                            {% render_field bannerForm.image id="image_input"%}
+                            {% if bannerForm.image.errors %}
+                                <div class="invalid-feedback d-block">
+                                {{ bannerForm.image.errors }}
+                                </div>
+                            {% endif %}
+                      </div>
+                      
+                      
+                      <button class="button btn-primary btn" style="margin-bottom: 5px">Submit</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                 <img id="image_img" src="{% static 'images/mobile.png' %}" width="100%" height="auto" style="margin-left: 10px"/>
+              </div>
+            </div>
+          </form>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  <script>
+  var imgSrc = $('#image_input').siblings('a').prop('href');
+      
+  $(function(){
+    $('#image_input').change(function(){
+    	var file = this.files[0];
+    	displayImage(file, $('#image_img'));
+    });
+      
+    $('#app_list').change(function(){
+       var selected_value = $(this).val();
+       $('#banner_link').val(selected_value);
+    });
+      
+    if ( imgSrc!== undefined){
+        $('#image_img').prop('src', imgSrc);
+    }
+  });
+  </script>
+{% endblock %}
