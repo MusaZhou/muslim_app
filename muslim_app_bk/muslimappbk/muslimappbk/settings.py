@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'sorl.thumbnail',
     'django_comments_xtd',
     'django_comments',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -237,4 +238,12 @@ COMMENTS_XTD_APP_MODEL_OPTIONS = {
         'allow_feedback': False,
         'show_feedback': False,
     }
+}
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+#     ]
 }
