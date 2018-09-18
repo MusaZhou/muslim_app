@@ -5,6 +5,6 @@ from . import views
 app_name = 'api'
 
 urlpatterns = [
-    path('app_list/<int:cate_id>', views.AppListView.as_view(), name='app_list'),
+    path('app_list', views.AppListView.as_view(), name='app_list'),
 ]
 

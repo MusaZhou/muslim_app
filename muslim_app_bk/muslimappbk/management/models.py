@@ -106,6 +106,13 @@ class MobileApp(models.Model):
     def userLink(self):
         return reverse('showcase:app', args=[self.slug])
     
+    @property
+    def latestAPK(self):
+        return self.latest_version().apk.url
+    
+    def latestTime(self):
+        return self.latest_version().created_time
+    
 class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,
                                       validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")],

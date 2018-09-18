@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from management.models import MobileApp, Banner
+from management.models import MobileApp, Banner, AppCategory
 
 # Create your views here.
 def blog_template(request):
@@ -16,7 +16,9 @@ def album_template(request):
 
 def index(request):
     banner_list = Banner.objects.all()
-    return render(request, 'showcase/index.html', {'banner_list': banner_list})
+    category_list = AppCategory.objects.all()
+    context = {'banner_list': banner_list, 'category_list': category_list}
+    return render(request, 'showcase/index.html', context)
 
 def app(request, slug):
     mobile_app = get_object_or_404(MobileApp, slug=slug)

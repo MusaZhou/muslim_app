@@ -40,20 +40,12 @@
 <div id="myCarousel" class="carousel slide" data-ride="carousel" style="margin-bottom: 0">
     <ol class="carousel-indicators">
       {% for banner in banner_list %}
-        {% if forloop.first %}
-        <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}" class="active"></li>
-        {% else %}
-        <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}"></li>
-        {% endif %}
+        <li data-target="#myCarousel" data-slide-to="{{ forloop.counter0 }}" class="{{ forloop.first|yesno:'active,abc' }}"></li>
       {% endfor %}
     </ol>
     <div class="carousel-inner">
       {% for banner in banner_list %}
-        {% if forloop.first %}
-        <div class="carousel-item active">
-        {% else %}
-        <div class="carousel-item">
-        {% endif %}
+        <div class="carousel-item {{ forloop.first|yesno:'active,' }}">
             <img src="{{ banner.image.url }}">
             <div class="container">
               <div class="carousel-caption text-left">
@@ -62,92 +54,106 @@
                 <p><a class="btn btn-lg btn-primary" href="{{ banner.link }}" role="button">Detail</a></p>
               </div>
             </div>
-          </div>
+        </div>
       {% endfor %}
     </div>
     <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-      <span class="sr-only">Previous</span>
+      <span class="carousel-control-prev-icon"></span>
     </a>
     <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-      <span class="carousel-control-next-icon" aria-hidden="true"></span>
-      <span class="sr-only">Next</span>
+      <span class="carousel-control-next-icon"></span>
     </a>
 </div>
+
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">All</a>
-    <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Quran</a>
-    <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Hadith</a>
+    <a class="nav-item nav-link active" data-cateid="9999"  data-toggle="tab" href="#nav-9999" role="tab">All</a>
+    {% for category in category_list %}
+    <a class="nav-item nav-link"  data-toggle="tab" data-cateid="{{ category.id }}" href="#nav-{{ category.id }}" role="tab">{{ category.name }}</a>
+    {% endfor %}
   </div>
 </nav>
 <div class="tab-content" id="nav-tabContent">
-  <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+  <div class="tab-pane fade show active" id="nav-9999" role="tabpanel">
       <div class="container" style="margin-top: 20px">
-    <div class="row">
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-        <div class="col-md-4">
-          {% include 'showcase/app_card.html' %}
-        </div>
-    </div>
-</div>
-  </div>
-  <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
-      <div class="container" style="margin-top: 20px">
-        <div class="row">
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
-            <div class="col-md-4">
-              {% include 'showcase/app_card.html' %}
-            </div>
+        <div class="row app-card-container">
         </div>
       </div>
   </div>
+  {% for category in category_list %}
+  <div class="tab-pane fade" id="nav-{{ category.id }}" role="tabpanel">
+      <div class="container" style="margin-top: 20px">
+        <div class="row app-card-container">
+        </div>
+      </div>
+  </div>
+  {% endfor %}
 </div>
 
+<div class="col-md-4 app-card-template " style="display:none">
+    <div class="card mb-4 shadow-sm flex-row flex-wrap">
+        <div class="row no-gutter">
+            <div class="col-auto">
+                <a href="#" class="img-a">
+                    <img style="height: 128px; width: 128px; display:block;" src="/media/icons/icon_1.png">
+                </a>
+                <div class="rating star-icon color-positive label-bottom">
+                    <div class="label-value">1.5</div>
+                    {% include 'showcase/star.html' %}
+                </div>
+            </div>
+            <div class="col pl-0 pr-2 py-2">
+                <div class="card-block">
+                  <p class="card-title"><a href="#" style="text-decoration: none">Test Title</a></p>
+                  <p class="card-text" style="font-size: 0.7em; height:70px">This is 1a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <div class="d-flex justify-content-between align-items-center">
+                      <a type="button" class="btn btn-sm btn-outline-secondary download-btn" href="#">Download</a>
+                      <small class="text-muted created_time" style="margin-left: 15px">2018/08/12</small>
+                  </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+    
+{% block javascript %}
+    {{ block.super }}
+<script>
+$(function(){
+    $('#nav-tab a').on('click', function(){
+        var cateid = $(this).data('cateid');
+        $.ajax({
+           url: '{% url "api:app_list" %}',
+           method: 'GET',
+           data: {
+                    'cate_id': cateid,
+                 },
+           contentType: 'application/json'
+        }).done(function(response){
+            console.log(response);
+            var tabPane = $('#nav-'+cateid+' .app-card-container');
+            tabPane.empty();
+            response.forEach(function(data, index){
+                var appCard = $('.app-card-template').clone().removeClass('app-card-template').addClass('app-card');
+                appCard.find('img').prop('src', data.icon);
+                appCard.find('.img-a').prop('href', data.url);
+                appCard.find('.rating').addClass('value-'+Math.round(data.avg_rate));
+                appCard.find('.rating .label-value').text(data.avg_rate);
+                appCard.find('.card-title a').text(data.name);
+                appCard.find('.card-title a').prop('href', data.url);
+                appCard.find('.card-text').text(data.description);
+                appCard.find('.download-btn').prop('href', data.apk);
+                appCard.find('.created_time').text(data.time);
+                console.log(appCard.html());
+                tabPane.append(appCard);
+            });
+            
+            $('.app-card').show();
+        });
+    });
+    
+    $('#nav-tab a:first-child').click();
+})
+</script>    
 {% endblock %}
