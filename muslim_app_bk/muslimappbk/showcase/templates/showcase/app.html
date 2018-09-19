@@ -3,6 +3,7 @@
 {% load comments %}
 {% load comments_xtd %}
 {% load thumbnail %}
+{% load custom_tags %}
 
 {% block stylesheet %}
     {{ block.super }}
@@ -15,7 +16,10 @@
      - preloader.gif (for browsers that do not support CSS animations) -->
 <link rel="stylesheet" href="{% static 'PhotoSwipe/default-skin/default-skin.css' %}"> 
 <style>
-
+    .app-attr {
+        color: black; 
+    }
+    
 </style>
 {% endblock %}
 
@@ -30,7 +34,25 @@
                 {{ mobile_app.name }}
             </div>
             <div class="row" style="font-size: 0.9em; color: gray; height:130px">
-                <p style="width:80%">{{ mobile_app.description }}</p>
+                <div class="col-5">{{ mobile_app.description }}</div>
+                <div calss="col-7" style="width:400px">
+                    <div class="row">
+                        <div class="col app-attr">{{ mobile_app|verbose_name:'developer' }}</div>
+                        <div class="col">{{ mobile_app.developer|default_if_none:'' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'translator' }}</div>
+                        <div class="col">{{ app_version.translator|default_if_none:'' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'android_version' }}</div>
+                        <div class="col">{{ app_version.android_version|default_if_none:'' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'created_time' }}</div>
+                        <div class="col">{{ app_version.created_time|date:'Y/m/d' }}</div>
+                    </div>
+                </div>
             </div>
             <div class="row">
                 {% for app_tag in mobile_app.tags.all %}
@@ -52,7 +74,7 @@
                     <span>Comments {{ comment_count }}</span>
                 </div>
                 <div class="col-3">
-                    <button type="button" class="btn btn-primary" style="width:100%">Download APK</button>
+                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')">Download APK</a>
                 </div>
             </div>
         </div>
@@ -60,7 +82,7 @@
 </div>
 <div class="slide-box" style="overflow: hidden; overflow-x: scroll; width: 100%; height: 370px; position: relative; margin-top: 10px">
     <div class="slide-content" style="position: absolute;left: 0px; white-space: nowrap">
-        {% if mobile_app.video_url is not none %}
+        {% if mobile_app.video_url != '' %}
             <video style="height:350px; width:auto" controls>
                 <source src="{% get_media_prefix %}{{ mobile_app.video_url }}">
             </video>

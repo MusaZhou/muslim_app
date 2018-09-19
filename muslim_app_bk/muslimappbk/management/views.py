@@ -293,3 +293,9 @@ class BannerDeleteView(PermissionRequiredMixin, View):
         banner = get_object_or_404(Banner, id=kwargs['id'])
         banner.delete()
         return redirect('management:banner_list')
+    
+def index(request):
+    if request.user.is_authenticated():
+        return redirect('management:app_table_basic')
+    else:
+        return redirect('management:app_table_uploader')

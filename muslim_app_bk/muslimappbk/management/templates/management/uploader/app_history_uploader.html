@@ -16,7 +16,7 @@
               <div class="col-md-12">
                 <div class="">
                   <div class="row">
-                    <h4 class="app-name">{{ mobile_app.name }}</h4>
+                    <h3 class="app-name" style="color: dodgerblue">{{ mobile_app.name }}</h3>
                     <a class=" btn btn-primary add-new-version" href="{% url 'management:add_app_version' mobile_app.slug %}">
                         Add New Version
                     </a>
@@ -28,6 +28,8 @@
                         <th>Time</th>
                         <th>Approve</th>
                         <th>What's New</th>
+                        <th>View Detail</th>
+                        <th>Download</th>
                       </tr>
                     </thead>
                     <tfoot>
@@ -36,6 +38,8 @@
                         <th>Time</th>
                         <th>Approve</th>
                         <th>What's New</th>
+                        <th>View Detail</th>
+                        <th>Download</th>
                       </tr>
                     </tfoot>
                     <tbody>
@@ -45,6 +49,12 @@
                         <td>{{ app_version.created_time }}</td>
                         <td>{{ app_version.approve_status }}</td>
                         <td>{{ app_version.whats_new }}</td>
+                        <td>
+                            <a href="{% url 'management:version_detail' mobile_app.slug app_version.version_number %}" class="btn btn-primary">Detail</a>
+                        </td>
+                        <td style="vertical-align: middle">
+                            <a href="{{ app_version.apk.url }}"><i class="fas fa-download" ></i></a>
+                        </td>
                       </tr>
                       {% endfor %}
                     </tbody>

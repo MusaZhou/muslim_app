@@ -22,6 +22,10 @@
       left: 50%;
       transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
     }
+    
+      .attr-val {
+          color:blueviolet
+      }
   </style>
 {% endblock %}
 {% block sidebar %}
@@ -42,48 +46,62 @@
                       {{ mobile_app.name|add:' Version Number' }}
                       {{ app_version.version_number }}
                     </h4>
-                    <img src="{{ mobile_app.icon.url }}" width="64px" height="64px">
+                    <img src="{{ mobile_app.icon.url }}" width="128px" height="128px">
                   </div>
                   
-                  <div>
-                      <div class="form-group">
+                  <div style="font-size: 1.2em; margin-top: 10px">
+                      <div class="row">
+                        <span class="col">Statistic (Download, Comment) </span>
                         {% get_comment_count for mobile_app as comment_count %}
-                        <h5>Download {{ mobile_app.download_count|default_if_none:0 }} Comment {{ comment_count|default_if_none:0 }}</h5>
+                        <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>Application {{ mobile_app.is_active|yesno:'Active, Inactive' }}</h5>
+                      <div class="row">
+                        <span class="col">Application Activation</span>
+                        <span class="col attr-val">{{ mobile_app.is_active|yesno:'Active, Inactive' }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>{{ mobile_app|verbose_name:'description'}}</h5>
-                        {{ mobile_app.description }}
+                      <div class="row">
+                        <span class="col">{{ mobile_app|verbose_name:'description'}}</span>
+                        <span class="col attr-val">{{ mobile_app.description }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>{{ app_version|verbose_name:'whats_new' }}</h5>
-                        {{ app_version.whats_new }}
+                      <div class="row">
+                        <span class="col">{{ app_version|verbose_name:'whats_new' }}</span>
+                        <span class="col attr-val">{{ app_version.whats_new }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>{{ mobile_app|verbose_name:'category' }}</h5>
-                        {{ mobile_app.category }}
+                      <div class="row">
+                        <span class="col">{{ mobile_app|verbose_name:'category' }}</span>
+                        <span class="col attr-val">{{ mobile_app.category }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>{{ mobile_app|verbose_name:'tags' }}</h5>
-                        {{ mobile_app.tags.all|join:' ' }}
+                      <div class="row">
+                        <span class="col">{{ mobile_app|verbose_name:'tags' }}</span>
+                        <span class="col attr-val">{{ mobile_app.tags.all|join:' ' }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>{{ mobile_app|verbose_name:'upload_by' }}</h5>
-                        {{ mobile_app.upload_by }}
+                      <div class="row">
+                        <span class="col">{{ mobile_app|verbose_name:'upload_by' }}</span>
+                        <span class="col attr-val">{{ mobile_app.upload_by }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>{{ app_version|verbose_name:'created_time' }}</h5>
-                        {{ mobile_app.upload_date }}
+                      <div class="row">
+                        <span class="col">{{ app_version|verbose_name:'created_time' }}</span>
+                        <span class="col attr-val">{{ mobile_app.upload_date }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>{{ app_version|verbose_name:'approve_status' }}</h5>
-                        {{ app_version.approve_status }}
+                      <div class="row">
+                        <span class="col">{{ mobile_app|verbose_name:'developer'}}</span>
+                        <span class="col attr-val">{{ mobile_app.developer }}</span>
                       </div>
-                      <div class="form-group">
-                        <h5>Checked By</h5>
-                        {{ app_version.approved_by }} at {{ app_version.approved_time }}
+                      <div class="row">
+                        <span class="col">{{ app_version|verbose_name:'translator'}}</span>
+                        <span class="col attr-val">{{ app_version.translator }}</span>
+                      </div>
+                      <div class="row">
+                        <span class="col">{{ app_version|verbose_name:'android_version'}}</span>
+                        <span class="col attr-val">{{ app_version.android_version }}</span>
+                      </div>
+                      <div class="row">
+                        <span class="col">{{ app_version|verbose_name:'approve_status' }}</span>
+                        <span class="col attr-val">{{ app_version.approve_status }}</span>
+                      </div>
+                      <div class="row">
+                        <span class="col">Checked By</span>
+                        <span class="col attr-val">{{ app_version.approved_by }} at {{ app_version.approved_time }}</span>
                       </div>
                   </div>
                 </div>
@@ -91,14 +109,15 @@
               <div class="col-md-6">
                 <div class="">
                   <div class="mT-30">
-                      <div class="form-group">
+                      <div class="row">
                         <h5>{{ mobile_app|verbose_name:'video_url'}}</h5>
                       </div>
                       <video width="100%" height="auto" controls>
-                        {% if mobile_app.video_url is not None %}
+                        {% if mobile_app.video_url != '' %}
                             <source src="{% get_media_prefix %}{{ mobile_app.video_url }}">
                         {% endif %}
                       </video>
+                        <a type="button" href="{{ app_version.apk.url }}" class="btn button btn-secondary" style="margin-top:50px;" >Download</a>
 					    {% if perms.management.can_approve_app %}
 					        <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'approved')" class="btn button btn-success" style="margin-top:50px;" >Approve</button>
                             <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'rejected')" class="btn button btn-warning" style="margin-top:50px;" >Reject</button>

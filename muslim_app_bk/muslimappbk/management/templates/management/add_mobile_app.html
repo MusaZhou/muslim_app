@@ -91,6 +91,33 @@
                                 </div>
                             {% endif %}
                       </div>
+                      <div class="form-group">
+                        <label>{{ addAppModelForm.developer.label }}</label>
+                        {% render_field addAppModelForm.developer class="form-control" %}
+                        {% if addAppModelForm.developer.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ addAppModelForm.developer.errors }}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ addAppVersionModelForm.translator.label }}</label>
+                        {% render_field addAppVersionModelForm.translator class="form-control" %}
+                        {% if addAppVersionModelForm.translator.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ addAppVersionModelForm.translator.errors }}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ addAppVersionModelForm.android_version.label }}</label>
+                        {% render_field addAppVersionModelForm.android_version class="form-control" %}
+                        {% if addAppVersionModelForm.android_version.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ addAppVersionModelForm.android_version.errors }}
+                          </div>
+                        {% endif %}
+                      </div>
                       <button id="imgCtrBtn" type="button" class="button btn-primary btn" style="margin-bottom: 5px">Choose Screenshots</button>
                       <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
                   </div>
@@ -267,16 +294,6 @@
     var newImgDiv = $(imageDivTemplate.repeat(1));
     currentImgCount > 0 ? $('.imgDivTop').last().after(newImgDiv) : $('.divSplitter').after(newImgDiv);
     return newImgDiv.find('.appImg');
-  }
-
-  function displayImage(file, imgEle){
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      // Set the img src property using the data URL.
-      imgEle.prop('src', reader.result);
-    }
-
-    reader.readAsDataURL(file);
   }
 
   function attachEvents(){

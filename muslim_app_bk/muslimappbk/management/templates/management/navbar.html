@@ -4,7 +4,7 @@
         margin: 5px;
     }
 </style>
-<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="#">Muslim App</a>
+<a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'showcase:index' %}">Muslim App</a>
 <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
 {% if user.is_authenticated %}
 <span style="color: white;margin-left: 5px">{{ user.username }}</span>

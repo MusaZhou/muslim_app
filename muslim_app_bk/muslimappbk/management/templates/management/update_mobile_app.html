@@ -64,8 +64,12 @@
                             </div>
                         {% endif %}
                     </div>
-                      <button id="imgCtrBtn" type="button" class="button btn-primary btn" style="margin-bottom: 5px">Choose Screenshots</button>
-                      <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
+                    <div class="form-group">
+                        <label>{{ updateAppModelForm.developer.label }}</label>
+                        {% render_field updateAppModelForm.developer class="form-control" %}
+                    </div>
+                    <button id="imgCtrBtn" type="button" class="button btn-primary btn" style="margin-bottom: 5px">Choose Screenshots</button>
+                    <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
                   </div>
                 </div>
               </div>

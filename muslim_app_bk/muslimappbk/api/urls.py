@@ -6,5 +6,6 @@ app_name = 'api'
 
 urlpatterns = [
     path('app_list', views.AppListView.as_view(), name='app_list'),
+    path('app_download_count', views.app_download_count, name="app_download_count")
 ]
 

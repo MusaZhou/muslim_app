@@ -10,13 +10,13 @@ class AddAppModelForm(ModelForm):
     video_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_url'}))
     class Meta:
         model = MobileApp
-        fields = ['name', 'description', 'video_url', 'category', 'tags', 'slug', 'icon']
+        fields = ['name', 'description', 'video_url', 'category', 'tags', 'slug', 'icon', 'developer']
 
 class AddAppVersionModelForm(ModelForm):
 
     class Meta:
         model = AppVersion
-        fields = ['version_number', 'whats_new', 'apk']
+        fields = ['version_number', 'whats_new', 'apk', 'translator', 'android_version']
 
 class ModelChoiceFieldBeta(ModelChoiceField):
     

@@ -11,7 +11,7 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="table-responsive">
-                  <a class="button btn btn-primary" href="{% url 'management:add_mobile_app' %}">Add Application</a>
+                  <a class="button btn btn-primary float-right" href="{% url 'management:add_mobile_app' %}">Upload Application</a>
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -21,7 +21,7 @@
                         <th scope="col">Category</th>
                         <th scope="col">Icon</th>
                         <th scope="col">avg rate</th>
-                        <th scope="col">download count</th>
+                        <th scope="col">download</th>
                         <th scope="col">history</th>
                         <th scope="col">edit</th>
                         <th scope="col">Active/Disable</th>
@@ -40,8 +40,11 @@
                             <td>{{ mobile_app.is_active|yesno:"active,disabled" }}</td>
                             <td>{{ mobile_app.category }}</td>
                             <td><img src="{{ mobile_app.icon.url }}" width="64px" height="64"></td>
-                            <td>{{ mobile_app.avg_rate|default_if_none:0 }}</td>
-                            <td>{{ mobile_app.download_count|default_if_none:0 }}</td>
+                            <td>{{ mobile_app.avg_rate }}</td>
+                            <td>
+                                <span>{{ mobile_app.download_count }}</span>
+                                <a href="{{ mobile_app.latestAPK }}"><i class="fas fa-download" ></i></a>
+                            </td>
                             <td>
                                 <a class="button btn-primary btn cur-p" href='{% url "management:app_history" mobile_app.slug %}'>History</a>
                             </td>

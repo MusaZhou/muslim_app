@@ -144,6 +144,9 @@ $(function(){
                 appCard.find('.card-title a').prop('href', data.url);
                 appCard.find('.card-text').text(data.description);
                 appCard.find('.download-btn').prop('href', data.apk);
+                appCard.find('.download-btn').on('click', function(){
+                   downloadCount(data.slug); 
+                });
                 appCard.find('.created_time').text(data.time);
                 console.log(appCard.html());
                 tabPane.append(appCard);

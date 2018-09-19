@@ -64,6 +64,16 @@ class AppCategory(models.Model):
 
     def __str__(self):
         return self.name
+    
+class ActiveAppManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_active=True)
+    
+class ShownAppManager(ActiveAppManager):
+    def get_queryset(self):
+        qs_appversion = AppVersion.approved_manager.values_list('mobile_app', flat=True).distinct()
+        return super().get_queryset().filter(id__in=qs_appversion)
+        
 
 class MobileApp(models.Model):
     name = models.CharField(max_length=100,unique=True,
@@ -77,13 +87,18 @@ class MobileApp(models.Model):
     avg_rate = models.DecimalField(max_digits=2, default=5.0,
                                    decimal_places=1,
                                    null=True, verbose_name='Average Rate')
-    comment_count = models.PositiveIntegerField(null=True, verbose_name='Comment Count')
-    download_count = models.PositiveIntegerField(null=True, verbose_name='Download Count')
+    comment_count = models.PositiveIntegerField(null=True, verbose_name='Comment Count', default=0)
+    download_count = models.PositiveIntegerField(null=True, verbose_name='Download Count', default=0)
     slug = models.SlugField(unique=True, null=True, blank=True)
     images = GenericRelation(Image, related_query_name='imaged_app', verbose_name='Screenshots')
     tags = models.ManyToManyField(Tag, verbose_name='Tags')
     is_active = models.BooleanField(default=False, verbose_name='Active Status')
     icon = models.ImageField(upload_to="icons")
+    developer = models.CharField(max_length=100, blank=True, null=True, verbose_name="Developer")
+    
+    objects = models.Manager()
+    active_apps = ActiveAppManager()
+    shown_apps = ShownAppManager()
 
     def slugDefault(self):
         return slugify(self.name)
@@ -97,10 +112,20 @@ class MobileApp(models.Model):
         super(MobileApp, self).save(*args, **kwargs)
     
     def latest_version(self):
-        return AppVersion.objects.filter(mobile_app=self).latest('created_time')
+        if self.canShow():
+            return self.appversion_set.filter(approve_status='approved')[0]
+        return None
     
     def get_absolute_url(self):
         return reverse('showcase:app', args=[self.slug])
+    
+    def has_approved_version(self):
+        if self.appversion_set.filter(approve_status='approved').count() > 0:
+            return True
+        return False
+    
+    def canShow(self):
+        return self.is_active and self.has_approved_version()
     
     @property
     def userLink(self):
@@ -108,11 +133,21 @@ class MobileApp(models.Model):
     
     @property
     def latestAPK(self):
-        return self.latest_version().apk.url
+        latestVersion = self.latest_version()
+        if latestVersion is not None:
+            return self.latest_version().apk.url
+        return None
     
     def latestTime(self):
-        return self.latest_version().created_time
-    
+        latestVersion = self.latest_version()
+        if latestVersion is not None:
+            return latestVersion.created_time
+        return None
+
+class VersionApprovedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(approve_status='approved') 
+           
 class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,
                                       validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")],
@@ -129,7 +164,12 @@ class AppVersion(models.Model):
                                    null=True, verbose_name='Application')
     whats_new = models.TextField(blank=True, null=True, verbose_name="What's New")
     apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk'])])
-
+    translator = models.CharField(max_length=100, null=True, blank=True, verbose_name="Translator")
+    android_version = models.CharField(max_length=100, null=True, blank=True, verbose_name="Supported Android Version")
+    
+    objects = models.Manager()
+    approved_manager = VersionApprovedManager()
+    
     def __str__(self):
         return self.version_number
 
