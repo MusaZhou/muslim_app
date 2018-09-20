@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "13f5b054013f5f1a49a62ddc34819b123332b30365196f11450440536308073b"
+            "sha256": "c0bfa727f52ef08db62b73c1da8bb0910362ebc2c96db9ce17dd3c68aa6d02c4"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -135,6 +135,13 @@
                 "sha256:a6be69091dac236ea9c6bc7d012beab42010fa914c459791d627dad4910eb665"
             ],
             "version": "==1.0"
+        },
+        "mod-wsgi": {
+            "hashes": [
+                "sha256:33aa7021623d79e4857faa9d3cbcbae3d5b5d36770af7732790f9f0833da9397"
+            ],
+            "index": "pypi",
+            "version": "==4.6.4"
         },
         "mysqlclient": {
             "hashes": [

@@ -17,6 +17,7 @@ sorl-thumbnail = "==12.5.0"
 django-comments-xtd = "*"
 djangorestframework = "*"
 httpie = "*"
+mod-wsgi = "*"
 
 [dev-packages]
 

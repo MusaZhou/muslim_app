@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_comments_xtd',
     'django_comments',
     'rest_framework',
+    'mod_wsgi.server',
 ]
 
 MIDDLEWARE = [
