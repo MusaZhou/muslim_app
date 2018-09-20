@@ -7,10 +7,15 @@ For more information on this file, see
 https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 """
 
-import os
+import os, sys
 
 from django.core.wsgi import get_wsgi_application
 
+# If path has not been set in the server config, need append here
+# path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# if path not in sys.path:
+#     sys.path.append(path)
+    
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'muslimappbk.settings')
 
 application = get_wsgi_application()
