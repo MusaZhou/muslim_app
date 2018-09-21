@@ -12,6 +12,7 @@ from django_comments_xtd.moderation import moderator, XtdCommentModerator
 from django.urls import reverse
 from management.templatetags.custom_tags import verbose_name_filter
 from django.db.models.fields import CharField
+from star_ratings.models import Rating
 
 # Create your models here.
 class Profile(models.Model):
@@ -84,9 +85,9 @@ class MobileApp(models.Model):
     video_url = models.CharField(max_length=200, blank=True, null=True, verbose_name='Video')
     upload_date = models.DateTimeField(auto_now_add=True, verbose_name='Upload Time')
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
-    avg_rate = models.DecimalField(max_digits=2, default=5.0,
-                                   decimal_places=1,
-                                   null=True, verbose_name='Average Rate')
+   # avg_rate = models.DecimalField(max_digits=2, default=5.0,
+   #                                decimal_places=1,
+   #                                null=True, verbose_name='Average Rate')
     comment_count = models.PositiveIntegerField(null=True, verbose_name='Comment Count', default=0)
     download_count = models.PositiveIntegerField(null=True, verbose_name='Download Count', default=0)
     slug = models.SlugField(unique=True, null=True, blank=True)
@@ -95,6 +96,7 @@ class MobileApp(models.Model):
     is_active = models.BooleanField(default=False, verbose_name='Active Status')
     icon = models.ImageField(upload_to="icons")
     developer = models.CharField(max_length=100, blank=True, null=True, verbose_name="Developer")
+    ratings = GenericRelation(Rating, related_query_name='mobile_apps')
     
     objects = models.Manager()
     active_apps = ActiveAppManager()
@@ -143,7 +145,14 @@ class MobileApp(models.Model):
         if latestVersion is not None:
             return latestVersion.created_time
         return None
-
+    
+    @property
+    def avg_rate(self):
+        last_rating = self.ratings.last()
+        if last_rating is not None:
+            return last_rating.average
+        return 5.0
+    
 class VersionApprovedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(approve_status='approved') 

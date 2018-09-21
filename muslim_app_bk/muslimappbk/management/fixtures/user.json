@@ -4,8 +4,8 @@
       "pk": 1,
       "fields": {
         "password": "pbkdf2_sha256$120000$Slrl5D209j3A$GAmKq531+DxPSISKmIjQwq2nb7AEkwJsIah+a33uUCY=",
-        "is_super_user": 1,
-        "user_name": "admin",
+        "is_superuser": 1,
+        "username": "admin",
         "email": "musazhou@gmail.com",
         "is_staff": 1,
         "is_active": 1,
@@ -17,8 +17,8 @@
       "pk": 2,
       "fields": {
         "password": "pbkdf2_sha256$120000$8YRXiFO8mFmb$A1NpwF/ztkgy3YwCKYQClHdx7kRSkm6RB0w2FhDVKss=",
-        "is_super_user": 0,
-        "user_name": "test1",
+        "is_superuser": 0,
+        "username": "test1",
         "email": "musazhou@gmail.com",
         "is_staff": 0,
         "is_active": 1,
@@ -30,8 +30,8 @@
       "pk": 3,
       "fields": {
         "password": "pbkdf2_sha256$120000$8YRXiFO8mFmb$A1NpwF/ztkgy3YwCKYQClHdx7kRSkm6RB0w2FhDVKss=",
-        "is_super_user": 0,
-        "user_name": "test2",
+        "is_superuser": 0,
+        "username": "test2",
         "email": "musazhou@gmail.com",
         "is_staff": 0,
         "is_active": 1,
@@ -43,8 +43,8 @@
       "pk": 4,
       "fields": {
         "password": "pbkdf2_sha256$120000$8YRXiFO8mFmb$A1NpwF/ztkgy3YwCKYQClHdx7kRSkm6RB0w2FhDVKss=",
-        "is_super_user": 0,
-        "user_name": "test3",
+        "is_superuser": 0,
+        "username": "test3",
         "email": "musazhou@gmail.com",
         "is_staff": 0,
         "is_active": 0,

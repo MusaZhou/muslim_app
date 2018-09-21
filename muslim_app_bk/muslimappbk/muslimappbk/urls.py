@@ -30,7 +30,8 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     path('showcase/', include('showcase.urls')),
     path('comments/', include('django_comments_xtd.urls')),
-    path('api/', include('api.urls'))
+    path('api/', include('api.urls')),
+    path('ratings/', include('star_ratings.urls', namespace='ratings')),
 ]
 
 

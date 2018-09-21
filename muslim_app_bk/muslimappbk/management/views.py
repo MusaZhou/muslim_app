@@ -295,7 +295,7 @@ class BannerDeleteView(PermissionRequiredMixin, View):
         return redirect('management:banner_list')
     
 def index(request):
-    if request.user.is_authenticated():
+    if request.user.is_authenticated:
         return redirect('management:app_table_basic')
     else:
         return redirect('management:app_table_uploader')

@@ -4,6 +4,7 @@
 {% load comments_xtd %}
 {% load thumbnail %}
 {% load custom_tags %}
+{% load ratings %}
 
 {% block stylesheet %}
     {{ block.super }}
@@ -60,9 +61,10 @@
                 {% endfor %}
             </div>
             <div class="row align-items-center">
+                
                 <div class="col-auto" style="padding-left: 0px">
-                    <div class="rating star-icon value-{{ mobile_app.avg_rate|floatformat:'0' }} color-positive label-right">
-                        <div class="label-value" style="color:orange">{{ mobile_app.avg_rate }}</div>
+                    <div class="rating star-icon value-{{ mobile_app.ratings.last.average|default:'5'|floatformat:'0' }} color-positive label-right">
+                        <div class="label-value" style="color:orange">{{ mobile_app.ratings.last.average|default_if_none:'5'|floatformat }}</div>
                         {% include 'showcase/star.html' %}
                     </div>
                 </div>
@@ -95,6 +97,9 @@
             {% endthumbnail %}
         {% endfor %}
     </div>
+</div>
+<div class="rating container" style="margin-top:20px">
+  {% ratings mobile_app %}
 </div>
 <div class="comment" style="margin-top:20px">
   <h4 class="text-center">Comments</h4>

@@ -40,7 +40,7 @@
                             <td>{{ mobile_app.latest_version.version_number }}</td>
                             <td><img src="{{ mobile_app.icon.url }}" width="64px" height="64"></td>
                             <td>{{ mobile_app.is_active|yesno:"active,inactive" }}</td>
-                            <td>{{ mobile_app.avg_rate }}</td>
+                            <td>{{ mobile_app.ratings.average|default:'5' }}</td>
                             <td>
                                 <span>{{ mobile_app.download_count }}</span>
                                 <a href="{{ mobile_app.latestAPK }}"><i class="fas fa-download" ></i></a>

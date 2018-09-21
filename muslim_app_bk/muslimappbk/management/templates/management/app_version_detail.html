@@ -51,9 +51,9 @@
                   
                   <div style="font-size: 1.2em; margin-top: 10px">
                       <div class="row">
-                        <span class="col">Statistic (Download, Comment) </span>
+                        <span class="col">Statistic (Download, Comment, Average Rate) </span>
                         {% get_comment_count for mobile_app as comment_count %}
-                        <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}</span>
+                        <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.rating.average|default:5 }}</span>
                       </div>
                       <div class="row">
                         <span class="col">Application Activation</span>

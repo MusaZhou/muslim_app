@@ -18,6 +18,7 @@ django-comments-xtd = "*"
 djangorestframework = "*"
 httpie = "*"
 mod-wsgi = "*"
+django-star-ratings = "*"
 
 [dev-packages]
 

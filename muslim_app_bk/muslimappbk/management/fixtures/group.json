@@ -1,9 +1,9 @@
 [
   {
-    "model": "auth.UserGroups",
+    "model": "auth.Group",
     "pk": 1,
     "fields":{
         "name": "uploader"
     }
-   },
+   }
 ]

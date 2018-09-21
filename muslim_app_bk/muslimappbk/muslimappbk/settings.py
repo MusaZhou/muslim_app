@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'jmo%i=431(gx*2(*rn)c%f9@c!(22fzy$-s-*p#*w(a!i%hip9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'muslimapp.cn']
+ALLOWED_HOSTS = ['localhost', 'muslimapp.cn', 'www.muslimapp.cn']
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'django_comments',
     'rest_framework',
     'mod_wsgi.server',
+    'star_ratings'
 ]
 
 MIDDLEWARE = [
@@ -156,7 +157,7 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "assets"),
 ]
 
 
@@ -250,3 +251,6 @@ REST_FRAMEWORK = {
 #         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
 #     ]
 }
+
+STAR_RATINGS_RERATE = True
+STAR_RATINGS_ANONYMOUS = True

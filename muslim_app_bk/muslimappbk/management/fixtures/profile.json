@@ -3,7 +3,7 @@
       "model": "management.profile",
       "pk": 1,
       "fields": {
-        "name": "Musa Zhou",
+        "nick_name": "Musa Zhou",
         "gender": "male",
         "email_confirmed": 1,
         "slug": "admin",
@@ -16,7 +16,7 @@
       "model": "management.profile",
       "pk": 2,
       "fields": {
-        "name": "test2",
+        "nick_name": "test2",
         "gender": "male",
         "email_confirmed": 1,
         "slug": "test2",
@@ -29,7 +29,7 @@
       "model": "management.profile",
       "pk": 3,
       "fields": {
-        "name": "test3",
+        "nick_name": "test3",
         "gender": "male",
         "email_confirmed": 1,
         "slug": "test3",
@@ -42,12 +42,12 @@
       "model": "management.profile",
       "pk": 4,
       "fields": {
-        "name": "test4",
+        "nick_name": "test4",
         "gender": "male",
         "email_confirmed": 1,
         "slug": "test4",
         "user_id": 4,
         "date_of_birth": "2018-09-04"
       }
-  },
+  }
 ]
