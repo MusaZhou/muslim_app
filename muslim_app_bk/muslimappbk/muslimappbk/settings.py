@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'mod_wsgi.server',
     'star_ratings',
-#     'django_upyun'
+    'django_upyun'
 ]
 
 MIDDLEWARE = [
@@ -161,8 +161,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
 ]
 
-# STATICFILES_STORAGE = 'django_upyun.backends.UpYunStaticStorage'
-# DEFAULT_FILE_STORAGE = 'django_upyun.backends.UpYunMediaStorage'
+STATICFILES_STORAGE = 'django_upyun.backends.UpYunStaticStorage'
+DEFAULT_FILE_STORAGE = 'django_upyun.backends.UpYunMediaStorage'
 
 UPY_SERVICE = 'muslimapp'
 
