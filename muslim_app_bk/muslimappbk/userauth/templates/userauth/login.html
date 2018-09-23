@@ -20,7 +20,7 @@
 
   <body class="text-center">
     <form class="form-signin" method="post" action="{% url 'userauth:login' %}">
-      <img class="mb-4" src="{% static 'images/logo.png' %}" alt="" width="72" height="72">
+      <img class="mb-4" src="{% static 'images/logo.png' %}" alt="" width="256" height="256">
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
       {% if form.errors %}
       <div class="alert alert-danger" role="alert">
@@ -76,12 +76,12 @@
         </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
       <div class="form-group">
-        <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+        <p style="margin-top: 10px" class="justify-content-between"><a href="{% url 'userauth:signup' %}" style="margin-right: 40px">Sign Up</a><a href="{% url 'password_reset' %}">Lost password?</a></p>
       </div>
       {% for hidden_field in form.hidden_fields %}
           {{ hidden_field }}
       {% endfor %}
-      <p class="mt-5 mb-3 text-muted">© 2017-2018</p>
+      <p class="mt-5 mb-3 text-muted">©Muslim App 2017-2018</p>
     </form>
   
 

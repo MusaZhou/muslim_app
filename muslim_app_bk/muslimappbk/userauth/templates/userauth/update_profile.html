@@ -20,7 +20,6 @@
 
   <body class="text-center">
     <form class="form-signin" action="{% url 'userauth:update_profile' %}" method="POST" enctype="multipart/form-data" style="max-width: 500px">
-      <img class="mb-4" src="{% static 'images/logo.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">My Profile</h1>
       {% csrf_token %}
         {% if userProfileForm.errors %}
@@ -48,7 +47,7 @@
            {% endif %}
           {% endfor %}
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">{{ userProfileForm.nick_name.label }}</label>
+            <label class="text-normal text-dark col-md-4 align-self-center">{{ userProfileForm.nick_name.label }}</label>
             {% render_field userProfileForm.nick_name class="form-control col-md-8"%}
             {% if userProfileForm.username.errors %}
                 <div class="invalid-feedback d-block">
@@ -57,7 +56,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">{{ userProfileForm.email.label }}</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{{ userProfileForm.email.label }}</label> 
             {% render_field userProfileForm.email class="form-control col-md-8" %}
             {% if userProfileForm.email.errors %}
                 <div class="invalid-feedback d-block">
@@ -66,7 +65,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">{{ userProfileForm.gender.label }}</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{{ userProfileForm.gender.label }}</label> 
             {% render_field userProfileForm.gender class="form-control col-md-8" %}
             {% if userProfileForm.gender.errors %}
                 <div class="invalid-feedback d-block">
@@ -75,7 +74,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">{{ userProfileForm.date_of_birth.label }}</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{{ userProfileForm.date_of_birth.label }}</label> 
             {% render_field userProfileForm.date_of_birth class="form-control col-md-8" %}
             {% if userProfileForm.date_of_birth.errors %}
                 <div class="invalid-feedback d-block">
@@ -84,7 +83,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <button type="button" class="btn btn-primary avatar-btn col-md-3">Avatar</button>
+            <button type="button" class="btn btn-primary avatar-btn offset-md-2">Avatar</button>
             <div id="avatar_widget_div" style="display:none">
                 {% render_field userProfileForm.avatar id="avatar_input" %}
             </div>

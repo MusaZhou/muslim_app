@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "0f273d520eff577623da4fef80f8ddc1b401eb2bca537e683f9fda9d672d091e"
+            "sha256": "33345542593fe907d36282ab91d4219f5e1d44325c5b2d37a422f76f73a0bcba"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -96,6 +96,14 @@
             ],
             "index": "pypi",
             "version": "==0.7.0"
+        },
+        "django-upyun": {
+            "hashes": [
+                "sha256:1116e9c32bcaca7c1ff7de278197d29c188d0c52d7404300ebf3559657cac229",
+                "sha256:c6310a0b10039f8239f06449dc408d85d5ba471faf1d5f8a800d320184c1efbb"
+            ],
+            "index": "pypi",
+            "version": "==1.0.1"
         },
         "django-widget-tweaks": {
             "hashes": [
@@ -283,6 +291,13 @@
                 "sha256:8c33dd588e0c9bc22a76eaa0c715a5434851f726131bd44a6c26471746efabf5"
             ],
             "version": "==1.0.22"
+        },
+        "upyun": {
+            "hashes": [
+                "sha256:48c3950647578697bc5aabd65420b8a8e560e7866e5105452fa0d6e656a69f47",
+                "sha256:80ccdd3761183f1bc094b074b489e30e4c0516a775d75eae150bd33a97056301"
+            ],
+            "version": "==2.5.2"
         },
         "urllib3": {
             "hashes": [

@@ -19,6 +19,7 @@ djangorestframework = "*"
 httpie = "*"
 mod-wsgi = "*"
 django-star-ratings = "*"
+django-upyun = "*"
 
 [dev-packages]
 

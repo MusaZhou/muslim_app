@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 import logging
+from django.core.mail import send_mail
 
 logger = logging.getLogger(__name__)
 
@@ -38,3 +39,6 @@ def customLogger(request):
 
 def ui(request):
     return render(request, 'management/ui.html')
+
+def email(request):
+    return HttpResponse(send_mail('test', 'test from muslimapp', 'admin@muslimapp.cn', ['admin@muslimapp.cn','musazhou@gmail.com'], fail_silently=True))

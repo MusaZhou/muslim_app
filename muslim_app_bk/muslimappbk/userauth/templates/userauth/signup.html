@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="http://getbootstrap.com/favicon.ico">
+    <link rel="icon" href="{% static 'images/logo.png' %}">
 
     <title>Sign Up</title>
 
@@ -20,7 +20,6 @@
 
   <body class="text-center">
     <form class="form-signin" action="{% url 'userauth:signuppost' %}" method="POST" enctype="multipart/form-data" style="max-width: 500px">
-      <img class="mb-4" src="{% static 'images/logo.png' %}" alt="" width="72" height="72">
       <h1 class="h3 mb-3 font-weight-normal">Registration</h1>
       {% csrf_token %}
         {% if userCreationForm.errors %}
@@ -48,7 +47,7 @@
            {% endif %}
           {% endfor %}
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">User Name</label>
+            <label class="text-normal text-dark col-md-4 align-self-center">User Name</label>
             {% render_field userCreationForm.username class="form-control col-md-8"%}
             {% if userCreationForm.username.errors %}
                 <div class="invalid-feedback d-block">
@@ -57,7 +56,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">Email Address</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">Email Address</label> 
             {% render_field userCreationForm.email class="form-control col-md-8" %}
             {% if userCreationForm.email.errors %}
                 <div class="invalid-feedback d-block">
@@ -66,7 +65,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">Password</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">Password</label> 
             {% render_field userCreationForm.password1 class="form-control col-md-8" %}
             {% if userCreationForm.password1.errors %}
                 <div class="invalid-feedback d-block">
@@ -75,7 +74,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">Confirm Password</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">Confirm Password</label> 
             {% render_field userCreationForm.password2 class="form-control col-md-8" %}
             {% if userCreationForm.password2.errors %}
                 <div class="invalid-feedback d-block">
@@ -84,7 +83,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">Gender</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">Gender</label> 
             {% render_field userCreationForm.gender class="form-control col-md-8" %}
             {% if userCreationForm.gender.errors %}
                 <div class="invalid-feedback d-block">
@@ -93,7 +92,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4">Date of Birth</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">Date of Birth</label> 
             {% render_field userCreationForm.date_of_birth class="form-control col-md-8" %}
             {% if userCreationForm.date_of_birth.errors %}
                 <div class="invalid-feedback d-block">
@@ -102,7 +101,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <button type="button" class="btn btn-primary avatar-btn col-md-4">Avatar</button>
+            <button type="button" class="btn btn-secondary avatar-btn offset-md-2">Avatar</button>
             {% render_field userCreationForm.avatar style="display:none" id="avatar_input"%}
             <img id="avatar_img" src="{% static 'images/mobile.png' %}" width="50px" height="50px"/>
             {% if userCreationForm.avatar.errors %}

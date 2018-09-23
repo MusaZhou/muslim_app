@@ -25,7 +25,7 @@ SECRET_KEY = 'jmo%i=431(gx*2(*rn)c%f9@c!(22fzy$-s-*p#*w(a!i%hip9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'muslimapp.cn', 'www.muslimapp.cn']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'muslimapp.cn', 'www.muslimapp.cn', 'testmuslimapp.cn']
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -54,7 +54,8 @@ INSTALLED_APPS = [
     'django_comments',
     'rest_framework',
     'mod_wsgi.server',
-    'star_ratings'
+    'star_ratings',
+#     'django_upyun'
 ]
 
 MIDDLEWARE = [
@@ -160,6 +161,21 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "assets"),
 ]
 
+# STATICFILES_STORAGE = 'django_upyun.backends.UpYunStaticStorage'
+# DEFAULT_FILE_STORAGE = 'django_upyun.backends.UpYunMediaStorage'
+
+UPY_SERVICE = 'muslimapp'
+
+UPY_USERNAME = 'muslimapp'
+
+UPY_PASSWORD = 'muslimapp2018'
+
+UPY_SERVICE_URL = 'http://muslimapp.test.upcdn.net'
+
+UPY_NEED_COVERAGE = False
+
+UPY_SAVE_FULL_URL = True
+
 
 # LOGIN_REDIRECT_URL = 'basic:index'
 LOGIN_URL = 'userauth:login'
@@ -206,13 +222,16 @@ if DEBUG:
     for logger in LOGGING['loggers']:
         LOGGING['loggers'][logger]['handlers'] = ['console']
         
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-#EMAIL_HOST = "smtp.mail.com"
-#EMAIL_PORT = "587"
-#EMAIL_HOST_USER = "alias@mail.com"
-#EMAIL_HOST_PASSWORD = "yourpassword"
-#DEFAULT_FROM_EMAIL = "Helpdesk <helpdesk@yourdomain>"
+EMAIL_HOST = "smtp.exmail.qq.com"
+EMAIL_PORT = 465
+EMAIL_HOST_USER = "admin@muslimapp.cn"
+EMAIL_HOST_PASSWORD = "926419@Jelsyj"
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+EMAIL_SUBJECT_PREFIX = '[Muslim App] '
+EMAIL_USE_SSL = True
 
 SITE_ID = 1
 
@@ -231,7 +250,8 @@ COMMENTS_XTD_FROM_EMAIL = "admin@muslimapp.cn"
 COMMENTS_XTD_CONTACT_EMAIL = "admin@muslimapp.cn"
 
 MANAGERS = (
-    ('Musa Zhou', 'musazhou@gmail.com'),
+    ('Administrator', 'admin@muslimapp.cn'),
+    ('Ali Zhou', 'alizhou@muslimapp.cn')
 )
 
 COMMENTS_XTD_CONFIRM_EMAIL = False
