@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from management.forms import AddAppModelForm, AddAppVersionModelForm, BannerForm
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
-from management.models import Image, MobileApp, AppVersion, Banner
+from management.models import Image, MobileApp, AppVersion, Banner, Video
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.core.paginator import Paginator, Page
@@ -14,6 +14,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.files.storage import default_storage
+import requests
 
 logger = logging.getLogger(__name__)
                 
@@ -37,14 +38,20 @@ def add_mobile_app(request):
                 newAppVersion.full_clean()
                 newAppVersion.save()
     
-                imgIds = addAppModelForm.cleaned_data['imgIds'];
+                imgIds = addAppModelForm.cleaned_data['imgIds']
                 logger.debug('imgIds:' + imgIds)
                 if imgIds:
                     imgIds = imgIds.split(',')
                     for img in Image.objects.filter(id__in=imgIds):
-                        img.content_object = newApp;
+                        img.content_object = newApp
                         img.save()
                 
+                video_id = addAppModelForm.cleaned_data['video_id']
+                if video_id:
+                    video = Video.objects.get(id=video_id)
+                    video.content_object = newApp
+                    video.save()
+                    
                 return redirect('management:app_table_basic')\
                      if user.has_perm('management.can_approve_app')\
                      else redirect('management:app_table_uploader')
@@ -71,6 +78,13 @@ class ImageFieldView(LoginRequiredMixin, View):
             for file in files:
                 image = Image(picture=file)
                 image.save()
+                image_meta = requests.get(image.picture.url + '!/info')
+                if image_meta.status_code == 200:
+                    image_json = image_meta.json()
+                    image.width = image_json['width']
+                    image.height = image_json['height']
+                    image.save()
+                    
                 imageIds.append(image.id)
             return JsonResponse(imageIds, safe=False)
 
@@ -86,7 +100,13 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
             logger.debug('imgIds:' + str(imgIds))
             logger.debug('imgUrls:' + str(imgUrls))
         imgIds = ','.join(imgIds)
-        updateAppModelForm = AddAppModelForm(instance=mobile_app, initial={'imgIds': imgIds})
+        
+        video_id = None
+        last_video = mobile_app.videos.last()
+        if last_video is not None:
+            video_id = last_video.id
+            
+        updateAppModelForm = AddAppModelForm(instance=mobile_app, initial={'imgIds': imgIds, 'video_id': video_id})
         return render(request, 'management/update_mobile_app.html', {'updateAppModelForm': updateAppModelForm,
                                                                      'imgUrls': imgUrls})
 
@@ -94,6 +114,7 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
         mobile_app = get_object_or_404(MobileApp, slug=kwargs['slug'])
         updateAppModelForm = AddAppModelForm(request.POST, instance=mobile_app)
         imgUrls = []
+        video_id = None
         
         if updateAppModelForm.is_valid():
             mobile_app = updateAppModelForm.save()
@@ -102,19 +123,29 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
             if imgIds:
                 imgIds = imgIds.split(',')
                 update_app_images(imgIds, mobile_app)
+                
+            video_id = updateAppModelForm.cleaned_data['video_id']
+            if video_id:
+                video = Video.objects.get(id=video_id)
+                if video.content_object is None:
+                    video.content_object = mobile_app
+                    video.save()
             
-            return redirect('management:app_table_basic')\
-                     if request.user.has_perm('management.can_approve_app')\
-                     else redirect('management:app_table_uploader')
+            return redirect('management:index')
         else:
             appImages = mobile_app.images.all()
             imgUrls = []
             for img in appImages:
                 imgUrls.append(img.picture.url)
+            
+            last_video = mobile_app.videos().last()
+            if last_video is not None:
+                video_id = last_video.id
                 
         return render(request, 'management/update_mobile_app.html', 
                           {'updateAppModelForm': updateAppModelForm,
-                             'imgUrls': imgUrls})
+                             'imgUrls': imgUrls,
+                             'video_id': video_id})
             
 class AppTableBasicView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
@@ -242,7 +273,9 @@ def update_app_active(request):
 @login_required    
 def upload_video(request):
     if request.is_ajax():
-        video_file = request.FILES['video'];
+        video = Video()
+        video.file = request.FILES['video']
+        video.save()
 #         extension = video_file.name.split('.')[-1]
 #         base_name = 'videos/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
 #         file_name = settings.MEDIA_ROOT + base_name
@@ -250,9 +283,10 @@ def upload_video(request):
 #             for chunk in video_file.chunks():
 #                 destination.write(chunk)
 #         return JsonResponse({'video_url': base_name}, safe=False)
-        video_url = default_storage.save('videos/' + video_file.name, video_file)
-        video_url = default_storage._get_key_name(video_url)
-        return JsonResponse({'video_url': video_url}, safe=False)
+#         video_url = default_storage.save('videos/' + video_file.name, video_file)
+#         video_url = default_storage._get_key_name(video_url)
+        context = {'video_id': video.id, 'video_url': video.file.url}
+        return JsonResponse(context, safe=False)
         
     
 class BannerListView(PermissionRequiredMixin, View):

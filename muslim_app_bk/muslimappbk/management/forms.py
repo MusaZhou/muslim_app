@@ -7,10 +7,11 @@ from django.core.exceptions import ValidationError
 
 class AddAppModelForm(ModelForm):
     imgIds = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'imgIds'}))
-    video_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_url'}))
+    video_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_id'}))
+    
     class Meta:
         model = MobileApp
-        fields = ['name', 'description', 'video_url', 'category', 'tags', 'slug', 'icon', 'developer']
+        fields = ['name', 'description', 'video_id', 'category', 'tags', 'slug', 'icon', 'developer']
 
 class AddAppVersionModelForm(ModelForm):
 

@@ -43,15 +43,15 @@
                 <div class="">
                   <div class="row">
                     <h4 class="col-md-6">
-                      {{ mobile_app.name|add:' Version Number' }}
-                      {{ app_version.version_number }}
+                        {{ mobile_app.name }}<br/>
+                      Version {{ app_version.version_number }}
                     </h4>
                     <img src="{{ mobile_app.icon.url }}" width="128px" height="128px">
                   </div>
                   
                   <div style="font-size: 1.2em; margin-top: 10px">
                       <div class="row">
-                        <span class="col">Statistic (Download, Comment, Average Rate) </span>
+                        <span class="col">Statistic(Download, Comment, Average Rate) </span>
                         {% get_comment_count for mobile_app as comment_count %}
                         <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.rating.average|default:5 }}</span>
                       </div>
@@ -110,12 +110,14 @@
                 <div class="">
                   <div class="mT-30">
                       <div class="row">
-                        <h5>{{ mobile_app|verbose_name:'video_url'}}</h5>
+                        <h5>{{ mobile_app|verbose_name:'videos'}}</h5>
                       </div>
                       <video width="100%" height="auto" controls>
-                        {% if mobile_app.video_url != '' %}
-                            <source src="{% get_media_prefix %}{{ mobile_app.video_url }}">
-                        {% endif %}
+                        {% with video=mobile_app.videos.last %}
+                            {% if video is not None %}
+                                <source src="{{ video.file.url }}">
+                            {% endif %}
+                        {% endwith %}
                       </video>
                         <a type="button" href="{{ app_version.apk.url }}" class="btn button btn-secondary" style="margin-top:50px;" >Download</a>
 					    {% if perms.management.can_approve_app %}

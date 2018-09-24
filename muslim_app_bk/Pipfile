@@ -20,6 +20,7 @@ httpie = "*"
 mod-wsgi = "*"
 django-star-ratings = "*"
 django-upyun = "*"
+requests = "*"
 
 [dev-packages]
 

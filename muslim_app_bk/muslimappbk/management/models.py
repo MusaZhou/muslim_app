@@ -49,6 +49,8 @@ class Image(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
     picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True)
+    width = models.CharField(null=True, max_length=8, blank=True)
+    height = models.CharField(null=True, max_length=8, blank=True)
 #     test = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
@@ -58,7 +60,7 @@ class Video(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
-    video = models.FileField(upload_to="videos", blank=True)
+    file = models.FileField(upload_to="videos", blank=True)
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, verbose_name='Tag')
@@ -102,7 +104,8 @@ class MobileApp(models.Model):
     is_active = models.BooleanField(default=False, verbose_name='Active Status')
     icon = models.ImageField(upload_to="icons")
     developer = models.CharField(max_length=100, blank=True, null=True, verbose_name="Developer")
-    ratings = GenericRelation(Rating, related_query_name='mobile_apps')
+    ratings = GenericRelation(Rating, related_query_name='rating_apps')
+    videos = GenericRelation(Video, related_query_name='video_app', verbose_name='Video Show')
     
     objects = models.Manager()
     active_apps = ActiveAppManager()
@@ -117,6 +120,7 @@ class MobileApp(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
+    
         super(MobileApp, self).save(*args, **kwargs)
     
     def latest_version(self):
@@ -159,6 +163,11 @@ class MobileApp(models.Model):
             return last_rating.average
         return 5.0
     
+@receiver(post_save, sender=MobileApp)
+def add_rating(sender, instance, **kwargs):
+     if Rating.objects.filter(rating_apps=instance).count() == 0:
+            Rating.objects.rate(instance, 5, '127.0.0.1')
+         
 class VersionApprovedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(approve_status='approved') 

@@ -113,7 +113,13 @@
                             </div>
                         </div>
                       </div>
-                      <video width="100%" height="auto" controls></video>
+                      <video width="100%" height="auto" controls>
+                        {% with video=updateAppModelForm.instance.videos.last %}
+                            {% if video is not None %}
+                                <source src="{{ video.file.url }}">
+                            {% endif %}
+                        {% endwith %}
+                      </video>
                       <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >Update Application</button>
                   </div>
                 </div>
@@ -129,7 +135,7 @@
                 {% endfor %}
             </div>
             {{ updateAppModelForm.imgIds }}
-            {{ updateAppModelForm.video_url }}
+            {{ updateAppModelForm.video_id }}
 
           </form>
 {% endblock %}
@@ -149,6 +155,8 @@
   var imgIds = [];
   {% endif %}
 
+  var videoUploading = false;
+  
   $(function(){
 
     $('#imgCtrBtn').click(function(){
@@ -156,6 +164,7 @@
     });
 
     $('#imgCtr').change(function(){
+      videoUploading = true;
       var files = this.files;
       if(imgIds.length + files.length > 10){
         alert('maximum 10 images allowed');
@@ -184,6 +193,8 @@
             displayImage(file, imgEle);
           });
           attachEvents();
+        }).always(function(){
+           videoUploading=false; 
         });
       }
     });
@@ -238,18 +249,14 @@
               },
           }).done(function(data){
             console.log(data);
-            video_url = data.video_url;
-            $('#video_url').val(video_url);
-            $('video').prop('src', '{% get_media_prefix %}' +  video_url);
+            var video_url = data.video_url;
+            var video_id = data.video_id;
+            $('#video_id').val(video_id);
+            $('video').prop('src', video_url);
             $('video')[0].load();
           });
         }
       });
-    
-    if($('#video_url').val() != ''){
-    	$('video').prop('src', '{% get_media_prefix %}' +  $('#video_url').val());
-        $('video')[0].load();
-    }
       
     $('.icon-btn').click(function(){
     	$('#icon_input').click();
@@ -269,16 +276,6 @@
     var newImgDiv = $(imageDivTemplate.repeat(1));
     currentImgCount > 0 ? $('.imgDivTop').last().after(newImgDiv) : $('.divSplitter').after(newImgDiv);
     return newImgDiv.find('.appImg');
-  }
-
-  function displayImage(file, imgEle){
-    var reader = new FileReader();
-    reader.onload = function(e) {
-      // Set the img src property using the data URL.
-      imgEle.prop('src', reader.result);
-    }
-
-    reader.readAsDataURL(file);
   }
 
   function attachEvents(){
