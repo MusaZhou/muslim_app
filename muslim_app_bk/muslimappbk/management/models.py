@@ -49,10 +49,16 @@ class Image(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
     picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True)
-    test = models.CharField(max_length=100, blank=True, null=True)
+#     test = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.content_object
+    
+class Video(models.Model):
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    content_object = GenericForeignKey()
+    video = models.FileField(upload_to="videos", blank=True)
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, verbose_name='Tag')
@@ -82,7 +88,7 @@ class MobileApp(models.Model):
     description = models.TextField(blank=True, null=True, verbose_name='Description')
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   verbose_name='Uploader')
-    video_url = models.CharField(max_length=200, blank=True, null=True, verbose_name='Video')
+#     video_url = models.CharField(max_length=200, blank=True, null=True, verbose_name='Video')
     upload_date = models.DateTimeField(auto_now_add=True, verbose_name='Upload Time')
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
    # avg_rate = models.DecimalField(max_digits=2, default=5.0,
