@@ -179,6 +179,8 @@
                         '</div>';
 
   var imgIds = [];
+  var videoUploading = false;
+      
   $(function(){
 
     $('#imgCtrBtn').click(function(){
@@ -219,7 +221,12 @@
       }
     });
 
-    $('#add_app_form').submit(function(){
+    $('#add_app_form').submit(function(e){
+      if(videoUploading){
+          alert('sorry, please wait for a while, the video uploading has not complte yet');
+          e.preventDefault();
+          return false;
+      }
       $('#imgIds').val(imgIds);
       $(this).submit();
     });
@@ -229,6 +236,7 @@
     });
     
     $('#video_input').change(function(){
+        videoUploading = true;
         var file = this.files[0];
         
         // var fileList
@@ -273,6 +281,8 @@
             $('#video_url').val(video_url);
             $('video').prop('src', '{% get_media_prefix %}' +  video_url);
             $('video')[0].load();
+          }).always(function(){
+                videoUploading = false;    
           });
         }
       });

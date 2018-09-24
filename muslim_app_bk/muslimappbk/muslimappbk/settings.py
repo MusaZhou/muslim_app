@@ -170,11 +170,11 @@ UPY_USERNAME = 'muslimapp'
 
 UPY_PASSWORD = 'muslimapp2018'
 
-UPY_SERVICE_URL = 'http://muslimapp.test.upcdn.net'
+UPY_SERVICE_URL = 'http://upyun.muslimapp.cn'
 
 UPY_NEED_COVERAGE = False
 
-UPY_SAVE_FULL_URL = True
+UPY_SAVE_FULL_URL = False
 
 
 # LOGIN_REDIRECT_URL = 'basic:index'

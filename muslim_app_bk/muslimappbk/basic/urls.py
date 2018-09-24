@@ -15,6 +15,7 @@ urlpatterns = [
     path('ui', views.ui, name='ui'),
     path('logger', views.customLogger, name='logger'),
     path('email', views.email, name='email'),
+    path('test', views.test, name='test'),
     re_path(r'(?P<file>(\w*\.(eot|svg|woff|woff2|ttf))$)', views.others, name='others'),
 ]
 

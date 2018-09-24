@@ -42,3 +42,8 @@ def ui(request):
 
 def email(request):
     return HttpResponse(send_mail('test', 'test from muslimapp', 'admin@muslimapp.cn', ['admin@muslimapp.cn','musazhou@gmail.com'], fail_silently=True))
+
+def test(request):
+    profile = request.user.profile
+#     logger.debug(pro)
+    return HttpResponse(profile.avatar.url)

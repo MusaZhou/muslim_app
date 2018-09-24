@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.core.files.storage import default_storage
 
 logger = logging.getLogger(__name__)
                 
@@ -242,13 +243,17 @@ def update_app_active(request):
 def upload_video(request):
     if request.is_ajax():
         video_file = request.FILES['video'];
-        extension = video_file.name.split('.')[-1]
-        base_name = 'videos/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
-        file_name = settings.MEDIA_ROOT + base_name
-        with open(file_name, 'wb+') as destination:
-            for chunk in video_file.chunks():
-                destination.write(chunk)
-        return JsonResponse({'video_url': base_name}, safe=False)
+#         extension = video_file.name.split('.')[-1]
+#         base_name = 'videos/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
+#         file_name = settings.MEDIA_ROOT + base_name
+#         with open(file_name, 'wb+') as destination:
+#             for chunk in video_file.chunks():
+#                 destination.write(chunk)
+#         return JsonResponse({'video_url': base_name}, safe=False)
+        video_url = default_storage.save('videos/' + video_file.name, video_file)
+        video_url = default_storage._get_key_name(video_url)
+        return JsonResponse({'video_url': video_url}, safe=False)
+        
     
 class BannerListView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
@@ -295,7 +300,7 @@ class BannerDeleteView(PermissionRequiredMixin, View):
         return redirect('management:banner_list')
     
 def index(request):
-    if request.user.is_authenticated:
+    if request.user.has_perm('management.can_approve_app'):
         return redirect('management:app_table_basic')
-    else:
+    elif request.user.is_authenticated:
         return redirect('management:app_table_uploader')

@@ -124,6 +124,16 @@ $(function(){
     	var file = this.files[0];
     	displayImage(file, $('#avatar_img'));
     });
+    
+    function displayImage(file, imgEle){
+        var reader = new FileReader();
+        reader.onload = function(e) {
+          // Set the img src property using the data URL.
+          imgEle.prop('src', reader.result);
+        }
+
+        reader.readAsDataURL(file);
+      }
 })
 </script>
 </html>

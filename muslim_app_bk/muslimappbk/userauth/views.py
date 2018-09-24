@@ -103,6 +103,6 @@ class UpdateProfileView(View):
             user_profile = userProfileForm.save()
             user.email = userProfileForm.cleaned_data['email']
             user.save()
-            return redirect('basic:index')
+            return redirect('management:index')
         return render(request, 'userauth/update_profile.html', {'userProfileForm': userProfileForm})
     
