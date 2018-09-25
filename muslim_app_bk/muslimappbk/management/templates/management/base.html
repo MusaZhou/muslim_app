@@ -55,6 +55,9 @@
 
     <!-- Icons -->
     <script src="{% static 'feather.min.js' %}"></script>
+      
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="{% static 'upyun/upyun.min.js' %}"></script>
     <script>
       feather.replace()
       var csrftoken = Cookies.get('csrftoken');
@@ -91,6 +94,29 @@
             }
             
             return true;
+        }
+        
+        var path='';
+        function uploadFile(fileName, folderName, file){
+            path='/media/'+folderName+fileName;
+            var client = new upyun.Client(bucket, getHeaderSign);
+             client.putFile(path, file).then(function(result) {
+                console.log('put file to upyun ' + (result ? 'success' : 'failed'))
+            });
+        }
+        
+        // client side only need bucket name
+        var bucket = new upyun.Bucket('muslimapp');
+        function getHeaderSign(bucket, method, path) {
+          var params = 'bucket=' + bucket.bucketName + '&method=PUT' + '&path=' + path
+          return fetch('/sign/head?' + params)
+            .then(function(response) {
+              if (response.status !== 200) {
+                console.error('gen header sign faild!')
+                return;
+              }
+              return response.json()
+            })
         }
         
         setActiveMenu(1);
