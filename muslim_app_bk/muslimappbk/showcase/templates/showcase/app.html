@@ -38,6 +38,10 @@
                 <div class="col-5">{{ mobile_app.description }}</div>
                 <div calss="col-7" style="width:400px">
                     <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'version_number' }}</div>
+                        <div class="col">{{ app_version.version_number }}</div>
+                    </div>
+                    <div class="row">
                         <div class="col app-attr">{{ mobile_app|verbose_name:'developer' }}</div>
                         <div class="col">{{ mobile_app.developer|default_if_none:'' }}</div>
                     </div>
@@ -57,7 +61,7 @@
             </div>
             <div class="row">
                 {% for app_tag in mobile_app.tags.all %}
-                <span class="badge badge-info">{{ app_tag }} </span>
+                <span class="badge badge-info mr-1">{{ app_tag }}</span>
                 {% endfor %}
             </div>
             <div class="row align-items-center">
@@ -76,7 +80,7 @@
                     <span>Comments {{ comment_count }}</span>
                 </div>
                 <div class="col-3">
-                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')">Download APK</a>
+                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" >Download ({{ app_version.apk.size|filesizeformat }})</a>
                 </div>
             </div>
         </div>

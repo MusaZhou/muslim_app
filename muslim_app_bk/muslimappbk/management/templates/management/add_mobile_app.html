@@ -71,7 +71,7 @@
                       <div class="form-group">
                           <div class="input-group">
                               <div class="custom-file">
-                                {% render_field addAppVersionModelForm.apk class="custom-file-input" id="apk_file_input" accept=".apk" %}
+                                {% render_field addAppVersionModelForm.apk class="custom-file-input" id="apk_file_input" accept=".apk,.xapk" %}
                                 <label class="custom-file-label" for="apk_file_input">Choose APK file</label>
                               </div>
                           </div>
@@ -90,6 +90,7 @@
                                 {{ addAppModelForm.icon.errors }}
                                 </div>
                             {% endif %}
+                          <span style="font-size: 0.8em">Icon size should not exceed 1MB</span>
                       </div>
                       <div class="form-group">
                         <label>{{ addAppModelForm.developer.label }}</label>
@@ -119,6 +120,7 @@
                         {% endif %}
                       </div>
                       <button id="imgCtrBtn" type="button" class="button btn-primary btn" style="margin-bottom: 5px">Choose Screenshots</button>
+                      <span style="font-size: 0.8em">Each image size should not exceed 2MB</span>
                       <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
                   </div>
                 </div>
@@ -150,6 +152,7 @@
 	                           <div id="video_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
 	                          </div>
 	                        </div>
+                           <span style="font-size: 0.8em">Video size should not exceed 10MB</span>
                       </div>
                       <video width="100%" height="auto" controls></video>
                       <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >Add New Application</button>
@@ -180,6 +183,7 @@
 
   var imgIds = [];
   var videoUploading = false;
+  var exceedFileSize = false;
       
   $(function(){
 
@@ -191,16 +195,28 @@
       var files = this.files;
       if(imgIds.length + files.length > 10){
         alert('maximum 10 images allowed');
-        return;
+        return false;
       }
       
       // var fileList
       if(files !== null){
         var formData = new FormData();
+          exceedFileSize = false;
         $.each(files, function(i, file){
-          formData.append('images', file)
+            if(!validateFileSize(file, 2)){
+                exceedFileSize = true;
+                alert('file size exceed the limitaion');
+                return false;
+            }
+            formData.append('images', file)
         });
-
+          
+        if(exceedFileSize){
+            return false;
+        }else{
+            exceedFileSize = false;
+        }
+          
         $.ajax({
             url: "{% url 'management:add_app_images' %}",
             type: 'POST',
@@ -238,6 +254,11 @@
     $('#video_input').change(function(){
         videoUploading = true;
         var file = this.files[0];
+        
+        if(!validateFileSize(file, 10)){
+            alert('file size exceed the limitaion');
+            return;
+        }
         
         // var fileList
         if(file !== null){
@@ -294,6 +315,10 @@
     
     $('#icon_input').change(function(){
     	var file = this.files[0];
+        if(!validateFileSize(file, 1)){
+            alert('file size exceed the limitaion');
+            return;
+        }
     	displayImage(file, $('#icon_img'));
     });
 

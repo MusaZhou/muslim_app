@@ -104,6 +104,12 @@ DATABASES = {
         'USER': 'muslim_app',
         'PASSWORD': 'muslim_app'
     }
+    #'default': {
+    #    'NAME': 'muslim_app',
+    #    'ENGINE': 'django.db.backends.mysql',
+    #    'USER': 'muslim_app',
+    #    'PASSWORD': 'muslimapp2018'
+    #}
 }
 
 
@@ -199,7 +205,7 @@ LOGGING = {
         'file': {
             'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': '/home/musa/file.log',
+            'filename': '/var/log/apache2/muslimapp_debug.log',
             'formatter': 'simple'
         },
     },
@@ -272,5 +278,5 @@ REST_FRAMEWORK = {
 #     ]
 }
 
-STAR_RATINGS_RERATE = True
+STAR_RATINGS_RERATE = False
 STAR_RATINGS_ANONYMOUS = True

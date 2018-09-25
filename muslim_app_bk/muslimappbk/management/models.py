@@ -110,6 +110,9 @@ class MobileApp(models.Model):
     objects = models.Manager()
     active_apps = ActiveAppManager()
     shown_apps = ShownAppManager()
+    
+    class Meta:
+        ordering = ["-upload_date"]
 
     def slugDefault(self):
         return slugify(self.name)
@@ -187,7 +190,7 @@ class AppVersion(models.Model):
     mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, blank=True,
                                    null=True, verbose_name='Application')
     whats_new = models.TextField(blank=True, null=True, verbose_name="What's New")
-    apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk'])])
+    apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
     translator = models.CharField(max_length=100, null=True, blank=True, verbose_name="Translator")
     android_version = models.CharField(max_length=100, null=True, blank=True, verbose_name="Supported Android Version")
     

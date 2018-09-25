@@ -97,6 +97,7 @@
                 {{ userCreationForm.avatar.errors }}
                 </div>
             {% endif %}
+            <span style="font-size: 0.8em">Image size should not exceed 1MB</span>
         </div>
       <button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
     </form>
@@ -112,6 +113,10 @@ $(function(){
     $('#avatar_input').change(function(){
     	//$(this).siblings(':checkbox').prop('checked', true);
         var file = this.files[0];
+        if(validateFileSize(file, 1)){
+            alert('File exceed size limit');
+            return;
+        }
         displayImage(file, $('#avatar_img'));
     });
     

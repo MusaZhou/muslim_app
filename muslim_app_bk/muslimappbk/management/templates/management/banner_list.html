@@ -33,9 +33,7 @@
                             <td>{{ banner.title }}</td>
                             <td>{{ banner.description }}</td>
                             <td>{{ banner.link }}</td>
-                            {% thumbnail banner.image "x256" as im %}
-                            <td><img src="{{ im.url }}" ></td>
-                            {% endthumbnail %}
+                            <td><img src="{{ banner.image.url }}!banner.thumbnail" ></td>
                             <td>
                                 <a class="btn-primary btn" href="{% url 'management:edit_banner' banner.id %}">Edit</a>
                             </td>

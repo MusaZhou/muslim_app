@@ -9,7 +9,7 @@
 {% if user.is_authenticated %}
 <span style="color: white;margin-left: 5px">{{ user.username }}</span>
 <a href="{% url 'userauth:update_profile' %}">
-    {% if user.profile.avatar is not None %}
+    {% if user.profile.avatar != '' %}
     <img src="{{ user.profile.avatar.url }}"  width="48px" height="48px">
     {% else %}
     <img src="{% static 'images/avatar.png' %}" width="48px" height="48px">

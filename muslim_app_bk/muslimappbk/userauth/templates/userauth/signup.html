@@ -109,8 +109,9 @@
                 {{ userCreationForm.avatar.errors }}
                 </div>
             {% endif %}
+            <span style="font-size: 0.8em">Image size should not exceed 1MB</span>
         </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
     </form>
  <script type="text/javascript" src="{% static 'jquery-3.3.1.min.js' %}"></script> 
 </body>
@@ -122,6 +123,10 @@ $(function(){
     
     $('#avatar_input').change(function(){
     	var file = this.files[0];
+        if(validateFileSize(file, 1)){
+            alert('file size exceed limit');
+            return;
+        }
     	displayImage(file, $('#avatar_img'));
     });
     

@@ -85,6 +85,14 @@
             $('.sidebar-sticky ul li:nth-child('+index+') a').addClass('active');
         }
         
+        function validateFileSize(file, acceptSize){
+            if (file.size > acceptSize*1024*1024){
+                return false;
+            }
+            
+            return true;
+        }
+        
         setActiveMenu(1);
     </script>
     {% endblock %}

@@ -34,6 +34,13 @@
     line-height: 1.4;
   }
 }    
+    
+    .card-text {
+        font-size: 0.7em;
+        height:80px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
 </style>
 {% endblock %}
 {% block mainContent %}
@@ -97,15 +104,15 @@
                 <a href="#" class="img-a">
                     <img style="height: 128px; width: 128px; display:block;" src="/media/icons/icon_1.png">
                 </a>
-                <div class="rating star-icon color-positive label-bottom">
-                    <div class="label-value">1.5</div>
+                <div class="rating star-icon color-positive label-right">
+                    <div class="label-value mt-1" style="color: cadetblue">1.5</div>
                     {% include 'showcase/star.html' %}
                 </div>
             </div>
-            <div class="col pl-0 pr-2 py-2">
+            <div class="col pl-0 pr-4 py-2">
                 <div class="card-block">
-                  <p class="card-title"><a href="#" style="text-decoration: none">Test Title</a></p>
-                  <p class="card-text" style="font-size: 0.7em; height:70px">This is 1a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                  <p class="card-title" style="height:45px"><a href="#" style="text-decoration: none">Test Title</a></p>
+                  <p class="card-text">This is 1a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                   <div class="d-flex justify-content-between align-items-center">
                       <a type="button" class="btn btn-sm btn-outline-secondary download-btn" href="#">Download</a>
                       <small class="text-muted created_time" style="margin-left: 15px">2018/08/12</small>
