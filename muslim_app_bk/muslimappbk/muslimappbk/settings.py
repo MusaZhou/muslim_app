@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-    'management.apps.ManagementConfig',
+    'management',
     'widget_tweaks',
     'debug_toolbar',
     'basic',
@@ -280,3 +280,5 @@ REST_FRAMEWORK = {
 
 STAR_RATINGS_RERATE = False
 STAR_RATINGS_ANONYMOUS = True
+
+CELERY_BROKER_URL = 'redis://localhost:6379/0'

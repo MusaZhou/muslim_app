@@ -3,11 +3,12 @@ from management.models import MobileApp
 from api.serializers import AppSerializer
 from rest_framework import generics
 from django.db.models import F
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 import upyun
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.http import http_date
+import hashlib
 
 class AppListView(generics.ListAPIView):
     serializer_class = AppSerializer
@@ -25,12 +26,15 @@ def app_download_count(request):
 
 @csrf_exempt
 def upyun_sign_head(request):
+    date = http_date()
     data = {
             'username': settings.UPY_USERNAME,
-            'password': settings.UPY_PASSWORD,
+            'password': hashlib.md5(settings.UPY_PASSWORD.encode()).hexdigest(),
             'method': request.GET['method'],
             'uri': request.GET['uri'],
-            'date': http_date(),
+            'date': date,
         }
     
-    return HttpResponse(upyun.make_signature(**data))
+    header = {'Authorization': upyun.make_signature(**data), 'X-Date': date}
+    
+    return JsonResponse(header, safe=False)

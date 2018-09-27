@@ -92,6 +92,30 @@
                             {% endif %}
                           <span style="font-size: 0.8em">Icon size should not exceed 1MB</span>
                       </div>
+                      
+                      <button id="imgCtrBtn" type="button" class="button btn-primary btn" style="margin-bottom: 5px">Choose Screenshots</button>
+                      <span style="font-size: 0.8em">Each image size should not exceed 2MB</span>
+                      <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 pt-3">
+                      {% if addAppModelForm.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {% for error in addAppModelForm.non_field_errors %}
+                            {{ error }}
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                      {% for hidden_field in addAppModelForm.hidden_fields %}
+                       {% if hidden_field.errors %}
+                         <div class="alert alert-danger" role="alert">
+                           {% for error in hidden_field.errors %}
+                             {{ hidden_field.name }}: {{ error }}
+                           {% endfor %}
+                         </div>
+                       {% endif %}
+                      {% endfor %}
                       <div class="form-group">
                         <label>{{ addAppModelForm.developer.label }}</label>
                         {% render_field addAppModelForm.developer class="form-control" %}
@@ -119,45 +143,19 @@
                           </div>
                         {% endif %}
                       </div>
-                      <button id="imgCtrBtn" type="button" class="button btn-primary btn" style="margin-bottom: 5px">Choose Screenshots</button>
-                      <span style="font-size: 0.8em">Each image size should not exceed 2MB</span>
-                      <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
-                  </div>
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="">
-                  <div class="">
-                      {% if addAppModelForm.non_field_errors %}
-                        <div class="alert alert-danger" role="alert">
-                          {% for error in addAppModelForm.non_field_errors %}
-                            {{ error }}
-                          {% endfor %}
-                        </div>
-                      {% endif %}
-                      {% for hidden_field in addAppModelForm.hidden_fields %}
-                       {% if hidden_field.errors %}
-                         <div class="alert alert-danger" role="alert">
-                           {% for error in hidden_field.errors %}
-                             {{ hidden_field.name }}: {{ error }}
-                           {% endfor %}
-                         </div>
-                       {% endif %}
-                      {% endfor %}
                       <div class="form-group row">
 	                        <button type="button" class="button btn-primary btn col-md-2" id="video_input_btn">Upload Video</button>
 	                        <input type="file" id="video_input" accept="video/*" style="display:none">
-	                        <div class="col-md-10">
+	                        <div class="col-md-10 d-none" id="progress-div">
 	                          <div class="progress" style="height:90%; width:100%">
 	                           <div id="video_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
 	                          </div>
 	                        </div>
-                           <span style="font-size: 0.8em">Video size should not exceed 10MB</span>
+                           <br/>
+                           <div class="invalid-feedback d-block" style="color:black">Video size should not exceed 10MB</div>
                       </div>
-                      <video width="100%" height="auto" controls></video>
+<!--                      <video width="100%" height="auto" controls></video>-->
                       <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >Add New Application</button>
-                  </div>
-                </div>
               </div>
                 <div class="divSplitter" style="display:none"></div>
                   <!-- <div class="imgDivTop">
@@ -250,18 +248,28 @@
     $('#video_input_btn').click(function(){
     	$('#video_input').click();
     });
+      
+//    $('#video_input2').change(function(){
+//        videoUploading = true;
+//        var file = this.files[0];
+//        var fileName = makeid(10) + '_' + file.name;
+//        
+//        uploadFile(fileName, 'videos/', file);
+//    });
     
     $('#video_input').change(function(){
         videoUploading = true;
         var file = this.files[0];
         
-        if(!validateFileSize(file, 10)){
-            alert('file size exceed the limitaion');
-            return;
-        }
-        
         // var fileList
         if(file !== null){
+          if(!validateFileSize(file, 10)){
+            alert('file size exceed the limitaion');
+            videoUploading = false;
+            return;
+          }
+          $('#progress-div').removeClass('d-none');
+            
           var formData = new FormData();
           formData.append('video', file)
 
@@ -298,11 +306,11 @@
               },
           }).done(function(data){
             console.log(data);
-            var video_url = data.video_url;
+//            var video_url = data.video_url;
             var video_id = data.video_id;
             $('#video_id').val(video_id);
-            $('video').prop('src', video_url);
-            $('video')[0].load();
+//            $('video').prop('src', video_url);
+//            $('video')[0].load();
           }).always(function(){
                 videoUploading = false;    
           });

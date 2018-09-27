@@ -4,6 +4,7 @@ from django.http import HttpResponse, JsonResponse
 import logging
 from django.core.mail import send_mail
 from management.models import Image
+from .tasks import test_task, error_handler_task
 
 logger = logging.getLogger(__name__)
 
@@ -45,9 +46,5 @@ def email(request):
     return HttpResponse(send_mail('test', 'test from muslimapp', 'admin@muslimapp.cn', ['admin@muslimapp.cn','musazhou@gmail.com'], fail_silently=True))
 
 def test(request):
-#     profile = request.user.profile    
-# #     logger.debug(pro)
-    image = Image.objects.get(id=1)
-    logger.debug('image width:' + image.picture.width)
-    logger.debug('image height:' + image.picture.height)
-    return JsonResponse({'height': image.height, 'width': image.width})
+    test_task.apply_async()
+    return HttpResponse('done')

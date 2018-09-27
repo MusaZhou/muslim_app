@@ -60,7 +60,7 @@ class Video(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
-    file = models.FileField(upload_to="videos", blank=True)
+    file = models.FileField(upload_to="videos", blank=True, null=True)
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, verbose_name='Tag')

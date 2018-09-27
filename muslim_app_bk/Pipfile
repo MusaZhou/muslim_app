@@ -21,6 +21,8 @@ mod-wsgi = "*"
 django-star-ratings = "*"
 django-upyun = "*"
 requests = "*"
+celery = {extras = ["redis"], version = "*"}
+flower = "*"
 
 [dev-packages]
 
