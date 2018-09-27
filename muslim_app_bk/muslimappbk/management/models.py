@@ -188,9 +188,9 @@ class AppVersion(models.Model):
                                     null=True, blank=True, verbose_name='Approved By')
     approved_time = models.DateTimeField(null=True, blank=True, verbose_name='Approved Time')
     mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, blank=True,
-                                   null=True, verbose_name='Application')
+                                   null=True, verbose_name='Application', related_name='versions')
     whats_new = models.TextField(blank=True, null=True, verbose_name="What's New")
-    apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
+#     apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
     translator = models.CharField(max_length=100, null=True, blank=True, verbose_name="Translator")
     android_version = models.CharField(max_length=100, null=True, blank=True, verbose_name="Supported Android Version")
     
@@ -205,6 +205,11 @@ class AppVersion(models.Model):
             if AppVersion.objects.filter(mobile_app=self.mobile_app, version_number=self.version_number).exists():
                 raise ValidationError({'version_number': 'Version number is duplicated on this application.'})
 
+class ApkFile(models.Model):
+    app_version = models.OneToOneField(AppVersion, on_delete=models.CASCADE, null=True, related_name='apk')
+    file = models.FileField(upload_to="apk", blank=True, null=True,verbose_name="APK File", \
+                            validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
+    
 class Evaluation(models.Model):
     content = models.TextField(verbose_name='Content')
     rate = models.PositiveSmallIntegerField(verbose_name='Rate')

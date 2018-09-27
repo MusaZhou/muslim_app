@@ -12,12 +12,12 @@ from django.db import connection
 logger = get_task_logger(__name__)
 
 @shared_task
-def upload_video_task(file_name, video_id):
-    logger.info('video_id,file_name:' + str(video_id) + ', ' + file_name)
+def upload_file_task(file_name, folder, pk, table_name, file_field_name):
+    logger.info('video_id,file_name:' + str(pk) + ', ' + file_name)
     
     with open(file_name, 'rb') as f:
         base_name = os.path.basename(file_name)
-        default_storage.save(settings.MEDIA_URL + 'videos/' + base_name, f)
+        default_storage.save(settings.MEDIA_URL + folder + base_name, f)
     
     with connection.cursor() as cursor:
-        cursor.execute("UPDATE management_video SET file=%s WHERE id=%s", ['videos/' + base_name, video_id])
+        cursor.execute("UPDATE " + table_name + " SET " + file_field_name +"=%s WHERE id=%s", [folder + base_name, pk])

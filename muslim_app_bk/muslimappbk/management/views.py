@@ -2,7 +2,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from management.forms import AddAppModelForm, AddAppVersionModelForm, BannerForm
 from django.contrib.contenttypes.forms import generic_inlineformset_factory
-from management.models import Image, MobileApp, AppVersion, Banner, Video
+from management.models import Image, MobileApp, AppVersion, Banner, Video,\
+    ApkFile
 from django.http import HttpResponse, JsonResponse
 from django.views.generic import View
 from django.core.paginator import Paginator, Page
@@ -15,7 +16,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.files.storage import default_storage
 import requests
-from management.tasks import upload_video_task
+from management.tasks import upload_file_task
 
 logger = logging.getLogger(__name__)
                 
@@ -38,6 +39,9 @@ def add_mobile_app(request):
             try:
                 newAppVersion.full_clean()
                 newAppVersion.save()
+                
+                apk_id = addAppVersionModelForm.cleaned_data['apk_id']
+                ApkFile.objects.filter(id=apk_id).update(app_version=newAppVersion)
     
                 imgIds = addAppModelForm.cleaned_data['imgIds']
                 logger.debug('imgIds:' + imgIds)
@@ -106,8 +110,9 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
         last_video = mobile_app.videos.last()
         if last_video is not None:
             video_id = last_video.id
-            
-        updateAppModelForm = AddAppModelForm(instance=mobile_app, initial={'imgIds': imgIds, 'video_id': video_id})
+        
+        initial_data = {'imgIds': imgIds, 'video_id': video_id}
+        updateAppModelForm = AddAppModelForm(instance=mobile_app, initial=initial_data)
         return render(request, 'management/update_mobile_app.html', {'updateAppModelForm': updateAppModelForm,
                                                                      'imgUrls': imgUrls})
 
@@ -194,6 +199,10 @@ class AddAppVersionView(View):
                 mobile_app = updateAppModelForm.save()
                 new_app_version.save()
                 imgIds = updateAppModelForm.cleaned_data['imgIds']
+                
+                apk_id = addAppVersionModelForm.cleaned_data['apk_id']
+                ApkFile.objects.filter(id=apk_id).update(app_version=new_app_version)
+                
                 if imgIds:
                     imgIds = imgIds.split(',')
                     update_app_images(imgIds, mobile_app)
@@ -286,9 +295,28 @@ def upload_video(request):
         with open(file_name, 'wb+') as destination:
             for chunk in video_file.chunks():
                 destination.write(chunk)
-        upload_video_task.delay(file_name, video.id)
+        upload_file_task.delay(file_name, 'videos/', video.id, 'management_video', 'file')
         
         context = {'video_id': video.id}
+        return JsonResponse(context, safe=False)
+    
+@login_required    
+def upload_apk(request):
+    if request.is_ajax():
+        apk = ApkFile()
+        apk.save()
+        apk.refresh_from_db()
+        
+        apk_file = request.FILES['apk']
+        extension = apk_file.name.split('.')[-1]
+        base_name = 'apk/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
+        file_name = settings.MEDIA_ROOT + base_name
+        with open(file_name, 'wb+') as destination:
+            for chunk in apk_file.chunks():
+                destination.write(chunk)
+        upload_file_task.delay(file_name, 'apk/', apk.id, 'management_apkfile', 'file')
+        
+        context = {'apk_id': apk.id}
         return JsonResponse(context, safe=False)
         
     

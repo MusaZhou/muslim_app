@@ -21,6 +21,7 @@ urlpatterns = [
     path('update_version_status', views.update_version_status, name="update_version_status"),
     path('update_app_active', views.update_app_active, name="update_app_active"),
     path('upload_video', views.upload_video, name="upload_video"),
+    path('upload_apk', views.upload_apk, name="upload_apk"),
     path('banner_list', BannerListView.as_view(), name="banner_list"),
     path('add_banner', BannerEditView.as_view(), name="add_banner"),
     path('edit_banner/<int:id>', BannerEditView.as_view(), name="edit_banner"),

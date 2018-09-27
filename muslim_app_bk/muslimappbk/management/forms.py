@@ -14,10 +14,11 @@ class AddAppModelForm(ModelForm):
         fields = ['name', 'description', 'video_id', 'category', 'tags', 'slug', 'icon', 'developer']
 
 class AddAppVersionModelForm(ModelForm):
-
+    apk_id = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'apk_id'}))
+    
     class Meta:
         model = AppVersion
-        fields = ['version_number', 'whats_new', 'apk', 'translator', 'android_version']
+        fields = ['version_number', 'whats_new', 'apk_id', 'translator', 'android_version']
 
 class ModelChoiceFieldBeta(ModelChoiceField):
     
