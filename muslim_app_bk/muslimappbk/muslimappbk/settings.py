@@ -202,16 +202,17 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'formatter': 'simple'
         },
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': '/var/log/apache2/muslimapp_debug.log',
-            'formatter': 'simple'
-        },
+#         'file': {
+#             'level': 'DEBUG',
+#             'class': 'logging.FileHandler',
+#             'filename': '/var/log/apache2/muslimapp_debug.log',
+#             'formatter': 'simple'
+#         },
     },
     'loggers': {
         'django': {
-            'handlers': ['file'],
+#             'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
