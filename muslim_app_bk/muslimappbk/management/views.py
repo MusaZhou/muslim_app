@@ -229,7 +229,7 @@ class AppHistoryView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
     def get(self, request, *args, **kwargs):
         mobile_app = get_object_or_404(MobileApp, slug=kwargs['slug'])
-        app_version_list = mobile_app.appversion_set.all()
+        app_version_list = mobile_app.versions.all()
         context = {'mobile_app': mobile_app, 'app_version_list': app_version_list}
         return render(request, 'management/app_history.html', context)
     

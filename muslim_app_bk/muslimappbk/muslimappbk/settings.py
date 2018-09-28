@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
+#     'slugify',
     'management',
     'widget_tweaks',
     'debug_toolbar',
@@ -55,7 +56,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'mod_wsgi.server',
     'star_ratings',
-    'django_upyun'
+    'django_upyun',
 ]
 
 MIDDLEWARE = [

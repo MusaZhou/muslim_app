@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.utils.text import slugify
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
@@ -13,6 +12,7 @@ from django.urls import reverse
 from management.templatetags.custom_tags import verbose_name_filter
 from django.db.models.fields import CharField
 from star_ratings.models import Rating
+from slugify import slugify
 
 # Create your models here.
 class Profile(models.Model):
@@ -33,7 +33,7 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.user.username)
+            self.slug = slugify.slugify(self.user.username)
         super(Profile, self).save(*args, **kwargs)
     
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -115,27 +115,27 @@ class MobileApp(models.Model):
         ordering = ["-upload_date"]
 
     def slugDefault(self):
-        return slugify(self.name)
+        return slugify.slugify(self.name)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.name)
+            self.slug = slugify.slugify(self.name)
     
         super(MobileApp, self).save(*args, **kwargs)
     
     def latest_version(self):
         if self.canShow():
-            return self.appversion_set.filter(approve_status='approved')[0]
+            return self.versions.filter(approve_status='approved')[0]
         return None
     
     def get_absolute_url(self):
         return reverse('showcase:app', args=[self.slug])
     
     def has_approved_version(self):
-        if self.appversion_set.filter(approve_status='approved').count() > 0:
+        if self.versions.filter(approve_status='approved').count() > 0:
             return True
         return False
     
@@ -150,7 +150,7 @@ class MobileApp(models.Model):
     def latestAPK(self):
         latestVersion = self.latest_version()
         if latestVersion is not None:
-            return self.latest_version().apk.url
+            return self.latest_version().apk.file.url
         return None
     
     def latestTime(self):
