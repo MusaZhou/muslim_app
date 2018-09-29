@@ -147,6 +147,10 @@ class MobileApp(models.Model):
         return reverse('showcase:app', args=[self.slug])
     
     @property
+    def user_link_mobile(self):
+        return reverse('mobile:app', args=[self.slug])
+    
+    @property
     def latestAPK(self):
         latestVersion = self.latest_version()
         if latestVersion is not None:

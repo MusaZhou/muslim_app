@@ -17,9 +17,33 @@
 
     <!-- Custom styles for this template -->
     <link href="{% static 'mobile/css' %}" rel="stylesheet">
-    <link href="{% static 'mobile/blog.css' %}" rel="stylesheet">
     <link href="{% static 'star/css/star-rating.min.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+    <style>
+    h1 {
+        font-size: 1.2em;
+    }
+    
+    p {
+        font-size: 0.9em;
+    }
+    
+    .nav-link {
+        padding: 0.25rem, 0.5rem;
+    }
+        
+    main.container {
+        margin-left: 0px;
+        margin-right: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+        
+    .rating {
+        height:15px;
+        margin-bottom: 0px;
+    }
+    </style>
     {% endblock %}
   </head>
 
