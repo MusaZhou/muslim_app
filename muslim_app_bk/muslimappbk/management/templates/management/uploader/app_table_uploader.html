@@ -40,7 +40,7 @@
                         <tbody>
                         {% if page_apps|length == 0 %}
                             <tr>
-                                <td colspan="10" align="center">{% trans 'We don't have data at this moment' %}</td>
+                                <td colspan="10" align="center">{% blocktrans %}We don't have data at this moment' {% endblocktrans %}</td>
                             </tr>
                         {% else %}
                         {% for mobile_app in page_apps %}

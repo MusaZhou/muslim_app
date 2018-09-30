@@ -44,7 +44,7 @@ class SignUpView(View):
             user_profile.save()
             
             current_site = get_current_site(request)
-            subject = _('Activate Your MySite Account')
+            subject = _('Activate Your Muslim App Account')
             message = render_to_string('userauth/account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,

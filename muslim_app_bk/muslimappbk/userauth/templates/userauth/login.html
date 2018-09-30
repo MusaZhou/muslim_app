@@ -25,7 +25,7 @@
       <h1 class="h3 mb-3 font-weight-normal">{% trans 'Please sign in' %}</h1>
       {% if form.errors %}
       <div class="alert alert-danger" role="alert">
-        <p>{% trans 'Your username and password didn't match. Please try again.' %}</p>
+        <p>{% blocktrans %} Your username and password didn't match. Please try again.{% endblocktrans %}</p>
       </div>
       {% endif %}
 
