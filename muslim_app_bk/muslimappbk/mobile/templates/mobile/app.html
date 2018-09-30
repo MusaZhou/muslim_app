@@ -27,7 +27,6 @@
         text-overflow: ellipsis;
         overflow: hidden;
         margin-bottom: 0.25rem;
-        white-space: nowrap;
     }
     
     .comment .card .card-body {
@@ -35,7 +34,7 @@
     }
     
     .comment {
-        font-size: 0.9em;
+        font-size: 0.8em;
     }
     
     .comment .form-group div {
@@ -130,7 +129,7 @@
 </div>
 {% get_comment_count for mobile_app as comment_count %}
 {% if comment_count %}
-<ul class="media-list pl-1 mt-2" style="font-size: 0.9em">
+<ul class="media-list pl-1 mt-2" style="font-size: 0.8em">
   {% render_xtdcomment_tree for mobile_app %}
 </ul>
 {% endif %}
