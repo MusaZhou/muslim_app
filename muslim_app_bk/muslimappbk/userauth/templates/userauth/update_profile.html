@@ -1,5 +1,6 @@
 {% load static %}
 {% load widget_tweaks %}
+{% load i18n %}
 <!DOCTYPE html>
 <!-- saved from url=(0050)http://getbootstrap.com/docs/4.1/examples/sign-in/ -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="{% static 'images/logo.png' %}">
 
-    <title>My Profile</title>
+    <title>{% trans 'My Profile' %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -20,7 +21,7 @@
 
   <body class="text-center">
     <form class="form-signin" action="{% url 'userauth:update_profile' %}" method="POST" enctype="multipart/form-data" style="max-width: 500px">
-      <h1 class="h3 mb-3 font-weight-normal">My Profile</h1>
+      <h1 class="h3 mb-3 font-weight-normal">{% trans 'My Profile' %}</h1>
       {% csrf_token %}
         {% if userProfileForm.errors %}
         <div class="alert alert-danger" role="alert">
@@ -97,9 +98,9 @@
                 {{ userCreationForm.avatar.errors }}
                 </div>
             {% endif %}
-            <span style="font-size: 0.8em">Image size should not exceed 1MB</span>
+            <span style="font-size: 0.8em">{% trans 'Image size should not exceed 1MB' %}</span>
         </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Update</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans 'Update' %}</button>
     </form>
  <script type="text/javascript" src="{% static 'jquery-3.3.1.min.js' %}"></script> 
 </body>
@@ -114,7 +115,7 @@ $(function(){
     	//$(this).siblings(':checkbox').prop('checked', true);
         var file = this.files[0];
         if(validateFileSize(file, 1)){
-            alert('File exceed size limit');
+            alert("{% trans 'File exceed size limit' %}");
             return;
         }
         displayImage(file, $('#avatar_img'));

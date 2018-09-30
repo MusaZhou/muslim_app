@@ -1,5 +1,6 @@
 {% load static %}
 {% load widget_tweaks %}
+{% load i18n %}
 <!DOCTYPE html>
 <!-- saved from url=(0050)http://getbootstrap.com/docs/4.1/examples/sign-in/ -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -9,7 +10,7 @@
     <meta name="author" content="">
     <link rel="icon" href="{% static 'images/logo.png' %}">
 
-    <title>Sign Up</title>
+    <title>{% trans 'Sign Up' %}</title>
 
     <!-- Bootstrap core CSS -->
     <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
@@ -20,7 +21,7 @@
 
   <body class="text-center">
     <form class="form-signin" action="{% url 'userauth:signuppost' %}" method="POST" enctype="multipart/form-data" style="max-width: 500px">
-      <h1 class="h3 mb-3 font-weight-normal">Registration</h1>
+      <h1 class="h3 mb-3 font-weight-normal">{% trans 'Registration' %}</h1>
       {% csrf_token %}
         {% if userCreationForm.errors %}
         <div class="alert alert-danger" role="alert">
@@ -47,7 +48,7 @@
            {% endif %}
           {% endfor %}
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4 align-self-center">User Name</label>
+            <label class="text-normal text-dark col-md-4 align-self-center">{% trans 'User Name' %}</label>
             {% render_field userCreationForm.username class="form-control col-md-8"%}
             {% if userCreationForm.username.errors %}
                 <div class="invalid-feedback d-block">
@@ -56,7 +57,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4 align-self-center">Email Address</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{% trans 'Email Address' %}</label> 
             {% render_field userCreationForm.email class="form-control col-md-8" %}
             {% if userCreationForm.email.errors %}
                 <div class="invalid-feedback d-block">
@@ -65,7 +66,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4 align-self-center">Password</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{% trans 'Password' %}</label> 
             {% render_field userCreationForm.password1 class="form-control col-md-8" %}
             {% if userCreationForm.password1.errors %}
                 <div class="invalid-feedback d-block">
@@ -74,7 +75,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4 align-self-center">Confirm Password</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{% trans 'Confirm Password' %}</label> 
             {% render_field userCreationForm.password2 class="form-control col-md-8" %}
             {% if userCreationForm.password2.errors %}
                 <div class="invalid-feedback d-block">
@@ -83,7 +84,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4 align-self-center">Gender</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{% trans 'Gender' %}</label> 
             {% render_field userCreationForm.gender class="form-control col-md-8" %}
             {% if userCreationForm.gender.errors %}
                 <div class="invalid-feedback d-block">
@@ -92,7 +93,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <label class="text-normal text-dark col-md-4 align-self-center">Date of Birth</label> 
+            <label class="text-normal text-dark col-md-4 align-self-center">{% trans 'Date of Birth' %}</label> 
             {% render_field userCreationForm.date_of_birth class="form-control col-md-8" %}
             {% if userCreationForm.date_of_birth.errors %}
                 <div class="invalid-feedback d-block">
@@ -101,7 +102,7 @@
             {% endif %}
         </div>
         <div class="form-group row">
-            <button type="button" class="btn btn-secondary avatar-btn offset-md-2">Avatar</button>
+            <button type="button" class="btn btn-secondary avatar-btn offset-md-2">{% trans 'Avatar' %}</button>
             {% render_field userCreationForm.avatar style="display:none" id="avatar_input"%}
             <img id="avatar_img" src="{% static 'images/mobile.png' %}" width="50px" height="50px"/>
             {% if userCreationForm.avatar.errors %}
@@ -109,9 +110,9 @@
                 {{ userCreationForm.avatar.errors }}
                 </div>
             {% endif %}
-            <span style="font-size: 0.8em">Image size should not exceed 1MB</span>
+            <span style="font-size: 0.8em">{% trans 'Image size should not exceed 1MB' %}</span>
         </div>
-      <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+      <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans 'Register' %}</button>
     </form>
  <script type="text/javascript" src="{% static 'jquery-3.3.1.min.js' %}"></script> 
 </body>
@@ -124,7 +125,7 @@ $(function(){
     $('#avatar_input').change(function(){
     	var file = this.files[0];
         if(validateFileSize(file, 1)){
-            alert('file size exceed limit');
+            alert("{% trans 'file size exceed limit' %}");
             return;
         }
     	displayImage(file, $('#avatar_img'));

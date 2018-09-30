@@ -1,8 +1,10 @@
+from django.utils.translation import gettext_lazy as _
+
 APPROVE_CHOICES = (
-                   ('new', 'new'),
-                   ('approved', 'approved'),
-                   ('rejected', 'rejected'))
+                   ('new', _('new')),
+                   ('approved', _('approved')),
+                   ('rejected', _('rejected'))
+                   )
+ACTIVE_CHOICES = (('active', _('active')), ('inactive', _('inactive')))
 
-ACTIVE_CHOICES = (('active', 'active'), ('inactive', 'inactive'))
-
-GENDER_CHOICES = (('male', '男'), ('female', '女'))
+GENDER_CHOICES = (('male', _('male')), ('female', _('female')))

@@ -7,19 +7,6 @@ from django_comments_xtd.models import (TmpXtdComment,
 from django_comments_xtd.forms import XtdCommentForm
 from django.http import Http404, HttpResponseForbidden
 
-# Create your views here.
-def blog_template(request):
-    return render(request, 'mobile/blog_template.html')
-
-def dashboard_template(request):
-    return render(request, 'mobile/dashboard_template.html')
-
-def carousel_template(request):
-    return render(request, 'mobile/carousel_template.html')
-
-def album_template(request):
-    return render(request, 'mobile/album_template.html')
-
 def index(request):
     banner_list = Banner.objects.all()
     category_list = AppCategory.objects.all()
@@ -43,10 +30,9 @@ def reply(request, cid, app_slug):
         raise Http404(exc)
 
     form = XtdCommentForm(comment.content_object, comment=comment)
-    next = 'test'
 
     template_arg = [
         "mobile/reply.html",
     ]
     return render(request, template_arg,
-                  {"comment": comment, "form": form, "cid": cid, "next": next, 'app_slug': app_slug})
+                  {"comment": comment, "form": form, "cid": cid, 'app_slug': app_slug})

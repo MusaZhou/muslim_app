@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <!-- saved from url=(0053)# -->
 <html lang="en">
@@ -10,7 +11,7 @@
         <meta name="author" content="">
         <link rel="icon" href="{% static 'images/logo.png' %}">
 
-        <title>{% block title %}Muslim App{% endblock %}</title>
+        <title>{% block title %}{% trans 'Muslim App' %}{% endblock %}</title>
         
         {% block stylesheet %}
         <!-- Bootstrap core CSS -->

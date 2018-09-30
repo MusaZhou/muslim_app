@@ -1,5 +1,6 @@
 {% extends 'mobile/base.html' %}
 {% load static %}
+{% load i18n %}
 {% block stylesheet %}
     {{ block.super }}
 <style>
@@ -101,7 +102,7 @@
 
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link active" data-cateid="9999"  data-toggle="tab" href="#nav-9999" role="tab">All</a>
+    <a class="nav-item nav-link active" data-cateid="9999"  data-toggle="tab" href="#nav-9999" role="tab">{% trans 'All' %}</a>
     {% for category in category_list %}
     <a class="nav-item nav-link"  data-toggle="tab" data-cateid="{{ category.id }}" href="#nav-{{ category.id }}" role="tab">{{ category.name }}</a>
     {% endfor %}
@@ -135,7 +136,7 @@
           <div class="rating star-icon color-positive small">
             {% include 'showcase/star.html' %}
           </div>
-          <a type="button" class="btn btn-sm btn-outline-secondary download-btn" href="#" style="line-height: 1">Download</a>  
+          <a type="button" class="btn btn-sm btn-outline-secondary download-btn" href="#" style="line-height: 1">{% trans 'Download' %}</a>  
         </div>
     </div>
 {% endblock %}

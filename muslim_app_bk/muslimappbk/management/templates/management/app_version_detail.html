@@ -44,20 +44,20 @@
                   <div class="row">
                     <h4 class="col-md-6">
                         {{ mobile_app.name }}<br/>
-                      Version {{ app_version.version_number }}
+                      {% trans 'Version' %} {{ app_version.version_number }}
                     </h4>
                     <img src="{{ mobile_app.icon.url }}" width="128px" height="128px">
                   </div>
                   
                   <div style="font-size: 1.2em; margin-top: 10px">
                       <div class="row">
-                        <span class="col">Statistic(Download, Comment, Average Rate) </span>
+                        <span class="col">{% trans 'Statistic(Download, Comment, Average Rate)' %} </span>
                         {% get_comment_count for mobile_app as comment_count %}
                         <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.rating.average|default:5 }}</span>
                       </div>
                       <div class="row">
-                        <span class="col">Application Activation</span>
-                        <span class="col attr-val">{{ mobile_app.is_active|yesno:'Active, Inactive' }}</span>
+                        <span class="col">{% trans 'Application Activation' %}</span>
+                        <span class="col attr-val">{{ mobile_app.is_active|yesno:_('Active, Inactive') }}</span>
                       </div>
                       <div class="row">
                         <span class="col">{{ mobile_app|verbose_name:'description'}}</span>
@@ -100,8 +100,8 @@
                         <span class="col attr-val">{{ app_version.approve_status }}</span>
                       </div>
                       <div class="row">
-                        <span class="col">Checked By</span>
-                        <span class="col attr-val">{{ app_version.approved_by }} at {{ app_version.approved_time }}</span>
+                        <span class="col">{% trans 'Checked By' %}</span>
+                        <span class="col attr-val">{{ app_version.approved_by }} {% trans 'at' %} {{ app_version.approved_time }}</span>
                       </div>
                   </div>
                 </div>
@@ -119,10 +119,10 @@
                             {% endif %}
                         {% endwith %}
                       </video>
-                        <a type="button" href="{{ app_version.apk.url }}" class="btn button btn-secondary" style="margin-top:50px;" >Download</a>
+                        <a type="button" href="{{ app_version.apk.url }}" class="btn button btn-secondary" style="margin-top:50px;" >{% trans 'Download' %}</a>
 					    {% if perms.management.can_approve_app %}
-					        <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'approved')" class="btn button btn-success" style="margin-top:50px;" >Approve</button>
-                            <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'rejected')" class="btn button btn-warning" style="margin-top:50px;" >Reject</button>
+					        <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'approved')" class="btn button btn-success" style="margin-top:50px;" >{% trans 'Approve' %}</button>
+                            <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'rejected')" class="btn button btn-warning" style="margin-top:50px;" >{% trans 'Reject' %}</button>
 					    {% endif %}
                   </div>
                 </div>
@@ -160,7 +160,7 @@
           if (response.status = 1){
               location.reload();
           }else{
-              alert('server error');
+              alert("{% trans 'server error' %}");
           }
           
       });

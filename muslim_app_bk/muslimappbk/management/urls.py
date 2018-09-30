@@ -27,5 +27,4 @@ urlpatterns = [
     path('edit_banner/<int:id>', BannerEditView.as_view(), name="edit_banner"),
     path('delete_banner/<int:id>', BannerDeleteView.as_view(), name="delete_banner"),
     path('index', views.index, name="index"),
-    re_path(r'(?P<file>(\w*\.(eot|svg|woff|woff2|ttf))$)', basic_view.others, name='others'),
 ]

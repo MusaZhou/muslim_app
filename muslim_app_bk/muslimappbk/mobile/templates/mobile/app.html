@@ -5,6 +5,7 @@
 {% load thumbnail %}
 {% load custom_tags %}
 {% load ratings %}
+{% load i18n %}
 
 {% block stylesheet %}
     {{ block.super }}
@@ -70,11 +71,11 @@
                 </div>
             </div>
             <div class="row align-items-center mx-0">
-            <span style="font-size: 0.7em">Downoad <span class="badge badge-success">{{ mobile_app.download_count|default_if_none:0 }}</span>  Times </span>
+            <span style="font-size: 0.7em">{% trans 'Downoad' %} <span class="badge badge-success">{{ mobile_app.download_count|default_if_none:0 }}</span>  Times </span>
             </div>
             <div class="row align-items-center mx-0">
                 <div>
-                    <a class="button btn btn-primary btn-sm" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" style="font-size: 0.7em">Download ({{ app_version.apk.size|filesizeformat }})</a>
+                    <a class="button btn btn-primary btn-sm" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" style="font-size: 0.7em">{% trans 'Download' %} ({{ app_version.apk.size|filesizeformat }})</a>
                 </div>
             </div>
         </div>

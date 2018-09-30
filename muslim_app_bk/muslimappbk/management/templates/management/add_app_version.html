@@ -1,6 +1,7 @@
 {% extends "management/index.html" %}
 {% load static %}
 {% load widget_tweaks %}
+{% load i18n %}
 {% block title %}Add New Version{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
@@ -62,7 +63,7 @@
                         {% endif %}
                       </div>
                       
-                      <button id="imgCtrBtn" type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">Select Images +</button>
+                      <button id="imgCtrBtn" type="button" class="button btn-primary btn cur-p" style="margin-bottom: 5px">{% trans 'Select Images' %} +</button>
                       <input type="file" style="display:none" id="imgCtr" accept="image/*" multiple>
                   </div>
                 </div>
@@ -149,7 +150,7 @@
                   </div>
                 {% endif %}
               </div>
-              <button id="submit_btn" class="btn button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >Add New Version</button>
+              <button id="submit_btn" class="btn button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >{% trans 'Add New Version' %}</button>
               </div>
                 <div class="divSplitter" style="display:none"></div>
                 {% for imgUrl in imgUrls %}
@@ -192,7 +193,7 @@
     $('#imgCtr').change(function(){
       var files = this.files;
       if(imgIds.length + files.length > 10){
-        alert('maximum 10 images allowed');
+        alert("{% trans 'maximum 10 images allowed' %}");
         return;
       }
       // var fileList

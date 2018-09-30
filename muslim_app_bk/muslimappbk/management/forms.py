@@ -3,6 +3,7 @@ from django.forms import ModelForm
 from management.models import MobileApp, AppVersion, Banner
 from django.forms import ModelChoiceField
 from django.core.exceptions import ValidationError
+from django.utils.translation import gettext_lazy as _
 
 
 class AddAppModelForm(ModelForm):
@@ -30,7 +31,7 @@ class ModelChoiceFieldBeta(ModelChoiceField):
 class BannerForm(ModelForm):
     app_list = ModelChoiceFieldBeta(queryset=MobileApp.objects.all(), 
                                     to_field_name='userLink', 
-                                    label='Select Application as the Link',
+                                    label=_('Select Application as the Link'),
                                     required=False)
     
     class Meta:

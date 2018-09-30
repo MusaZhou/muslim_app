@@ -5,7 +5,7 @@
 {% load thumbnail %}
 {% load custom_tags %}
 {% load ratings %}
-
+{% load i18n %}
 {% block stylesheet %}
     {{ block.super }}
 <!-- Core CSS file -->
@@ -80,7 +80,7 @@
                     <span>Comments {{ comment_count }}</span>
                 </div>
                 <div class="col-3">
-                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" >Download ({{ app_version.apk.size|filesizeformat }})</a>
+                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" >{% trans 'Download' %} ({{ app_version.apk.size|filesizeformat }})</a>
                 </div>
             </div>
         </div>
@@ -106,7 +106,7 @@
   {% ratings mobile_app %}
 </div>
 <div class="comment" style="margin-top:20px">
-  <h4 class="text-center">Comments</h4>
+  <h4 class="text-center">{% trans 'Comments' %}</h4>
   <div class="card">
     {% render_comment_form for mobile_app %}
   </div>

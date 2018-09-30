@@ -1,5 +1,6 @@
 {% extends 'showcase/base.html' %}
 {% load static %}
+{% load i18n %}
 {% block stylesheet %}
     {{ block.super }}
 <style>
@@ -58,7 +59,7 @@
               <div class="carousel-caption text-left">
                 <h1>{{ banner.title }}</h1>
                 <p>{{ banner.description }}</p>
-                <p><a class="btn btn-lg btn-primary" href="{{ banner.link }}" role="button">Detail</a></p>
+                <p><a class="btn btn-lg btn-primary" href="{{ banner.link }}" role="button">{% trans 'Detail' %}</a></p>
               </div>
             </div>
         </div>
@@ -74,7 +75,7 @@
 
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
-    <a class="nav-item nav-link active" data-cateid="9999"  data-toggle="tab" href="#nav-9999" role="tab">All</a>
+    <a class="nav-item nav-link active" data-cateid="9999"  data-toggle="tab" href="#nav-9999" role="tab">{% trans 'All' %}</a>
     {% for category in category_list %}
     <a class="nav-item nav-link"  data-toggle="tab" data-cateid="{{ category.id }}" href="#nav-{{ category.id }}" role="tab">{{ category.name }}</a>
     {% endfor %}
@@ -114,7 +115,7 @@
                   <p class="card-title" style="height:45px"><a href="#" style="text-decoration: none">Test Title</a></p>
                   <p class="card-text">This is 1a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
                   <div class="d-flex justify-content-between align-items-center">
-                      <a type="button" class="btn btn-sm btn-outline-secondary download-btn" href="#">Download</a>
+                      <a type="button" class="btn btn-sm btn-outline-secondary download-btn" href="#">{% trans 'Download' %}</a>
                       <small class="text-muted created_time" style="margin-left: 15px">2018/08/12</small>
                   </div>
                 </div>

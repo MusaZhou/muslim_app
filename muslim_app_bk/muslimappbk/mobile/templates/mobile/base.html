@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <!-- saved from url=(0048)# -->
 <html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -8,7 +9,7 @@
     <meta name="author" content="">
     <link rel="icon" href="{% static 'images/logo.png' %}">
 
-    <title>{% block title %}Muslim App{% endblock %}</title>
+    <title>{% block title %}{% trans 'Muslim App' %}{% endblock %}</title>
     
     {% block stylesheet %}
     <!-- Bootstrap core CSS -->
@@ -56,7 +57,7 @@
             
           </div>
           <div class="col-6 text-center">
-            <a class="blog-header-logo text-dark" href="{% url 'mobile:index' %}">Muslim App</a>
+            <a class="blog-header-logo text-dark" href="{% url 'mobile:index' %}">{% trans 'Muslim App' %}</a>
           </div>
           <div class="col-2 d-flex justify-content-end align-items-center">
             <a class="text-muted" href="#">
@@ -82,9 +83,9 @@
     </main><!-- /.container -->
 
     <footer class="blog-footer text-center">
-      <p style="margin-bottom: 0.25rem; color: gray">Muslim App by Musa Zhou</p>
+      <p style="margin-bottom: 0.25rem; color: gray">{% trans 'Muslim App by Musa Zhou' %}</p>
       <p>
-        <a href="#">Back to top</a>
+        <a href="#">{% trans 'Back to top' %}</a>
       </p>
     </footer>
 

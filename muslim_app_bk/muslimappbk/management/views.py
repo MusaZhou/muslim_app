@@ -17,6 +17,8 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.core.files.storage import default_storage
 import requests
 from management.tasks import upload_file_task
+from django.utils.translation import gettext_lazy as _
+
 
 logger = logging.getLogger(__name__)
                 

@@ -31,11 +31,6 @@ def signin(request):
 def signup(request):
     return render(request, 'management/signup.html')
 
-def others(request, file):
-    # print('what is requesting is :' + characters)
-    return redirect(settings.STATIC_URL + 'management/' + file)
-#     return redirect(settings.STATIC_URL + file)
-
 def customLogger(request):
     logger.debug('test logger')
     return HttpResponse(__name__)

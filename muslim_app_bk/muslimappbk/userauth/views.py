@@ -15,6 +15,7 @@ from django.urls.base import reverse
 from userauth.forms import UserProfileForm
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
+from django.utils.translation import gettext_lazy as _
 
 # Create your views here.
    
@@ -43,7 +44,7 @@ class SignUpView(View):
             user_profile.save()
             
             current_site = get_current_site(request)
-            subject = 'Activate Your MySite Account'
+            subject = _('Activate Your MySite Account')
             message = render_to_string('userauth/account_activation_email.html', {
                 'user': user,
                 'domain': current_site.domain,
@@ -51,7 +52,7 @@ class SignUpView(View):
                 'token': account_activation_token.make_token(user),
             })
             user.email_user(subject, message)
-            return HttpResponse('Your activation letter has been sent, please check your email')
+            return HttpResponse(_('Your activation letter has been sent, please check your email'))
         
         context = {'userCreationForm': userCreationForm }
         return render(request, 'userauth/signup.html', context)
@@ -71,7 +72,7 @@ def activate(request, uidb64, token):
         login(request, user, 'django.contrib.auth.backends.ModelBackend')
         return redirect('management:app_table_uploader')
     else:
-        return HttpResponse('The confirmation link was invalid, possibly because it has already been used.')
+        return HttpResponse(_('The confirmation link was invalid, possibly because it has already been used.'))
 
 class Logout(View):
     def get(self, request, *args, **kwargs):
