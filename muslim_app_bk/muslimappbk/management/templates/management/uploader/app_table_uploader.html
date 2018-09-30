@@ -1,6 +1,7 @@
 {% extends "management/uploader/index_uploader.html" %}
 {% load static %}
 {% load widget_tweaks %}
+{% load i18n %}
 
 {% block title %}Applications Table{% endblock %}
 {% block stylesheet %}
@@ -17,7 +18,7 @@
 {% endblock %}
 {% block mainContent %}
           <div class="container-fluid">
-            <h4 class="">Applications</h4>
+            <h4 class="">{% trans 'Applications' %}</h4>
             <div class="row">
               <div class="col-md-12">
                 <div class="">
@@ -26,20 +27,20 @@
                     <thead>
                       <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Latest Version</th>
-                        <th scope="col">Icon</th>
-                        <th scope="col">Active</th>
-                        <th scope="col">AVG rate</th>
-                        <th scope="col">Download</th>
-                        <th scope="col">History</th>
-                        <th scope="col">Edit</th>
+                        <th scope="col">{% trans 'Name' %}</th>
+                        <th scope="col">{% trans 'Latest Version' %}</th>
+                        <th scope="col">{% trans 'Icon' %}</th>
+                        <th scope="col">{% trans 'Active' %}</th>
+                        <th scope="col">{% trans 'AVG rate' %}</th>
+                        <th scope="col">{% trans 'Download' %}</th>
+                        <th scope="col">{% trans 'History' %}</th>
+                        <th scope="col">{% trans 'Edit' %}</th>
                       </tr>
                     </thead>
                         <tbody>
                         {% if page_apps|length == 0 %}
                             <tr>
-                                <td colspan="10" align="center">We don't have data at this moment</td>
+                                <td colspan="10" align="center">{% trans 'We don't have data at this moment' %}</td>
                             </tr>
                         {% else %}
                         {% for mobile_app in page_apps %}
@@ -55,10 +56,10 @@
                                 <a href="{{ mobile_app.latestAPK }}"><i class="fas fa-download" ></i></a>
                             </td>
                             <td>
-                                <a class="button btn-primary btn" href='{% url "management:app_history_uploader" mobile_app.slug %}'>History</a>
+                                <a class="button btn-primary btn" href='{% url "management:app_history_uploader" mobile_app.slug %}'>{% trans 'History' %}</a>
                             </td>
                             <td>
-                                <a class="button btn-primary btn" href='{% url "management:update_mobile_app" mobile_app.slug %}'>Edit</a>
+                                <a class="button btn-primary btn" href='{% url "management:update_mobile_app" mobile_app.slug %}'>{% trans 'Edit' %}</a>
                             </td>
                           </tr>
                         {% endfor %}
@@ -69,15 +70,15 @@
                 <nav>
                   <ul class="pagination justify-content-end">
                     <li class="page-item">
-                      <a class="page-link" href="?page=1">First</a>
+                      <a class="page-link" href="?page=1">{% trans 'First' %}</a>
                     </li>
                     {% if not page_apps.has_previous %}
                     <li class="page-item disabled">
-                      <span class="page-link">Previous</span>
+                      <span class="page-link">{% trans 'Previous' %}</span>
                     </li>
                     {% else %}
                     <li class="page-item">
-                      <a class="page-link" href="?page={{ page_apps.previous_page_number }}">Previous</a>
+                      <a class="page-link" href="?page={{ page_apps.previous_page_number }}">{% trans 'Previous' %}</a>
                     </li>
                     {% endif %}
                     {% for page_index in page_apps.paginator.page_range %}
@@ -95,15 +96,15 @@
                     {% endfor %}
                     {% if not page_apps.has_next %}
                     <li class="page-item disabled">
-                      <span class="page-link">Next</span>
+                      <span class="page-link">{% trans 'Next' %}</span>
                     </li>
                     {% else %}
                     <li class="page-item">
-                      <a class="page-link" href="?page={{ page_apps.next_page_number }}">Next</a>
+                      <a class="page-link" href="?page={{ page_apps.next_page_number }}">{% trans 'Next' %}</a>
                     </li>
                     {% endif %}
                     <li class="page-item">
-                      <a class="page-link" href="?page={{ page_apps.paginator.num_pages }}">Last</a>
+                      <a class="page-link" href="?page={{ page_apps.paginator.num_pages }}">{% trans 'Last' %}</a>
                     </li>
                   </ul>
                 </nav>  
