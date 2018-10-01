@@ -1,4 +1,4 @@
-{% i18n %}
+{% load i18n %}
 {% trans 'A removal suggestion has been received for the following comment' %}:
 
 --- {% trans 'Comment' %}: ---
