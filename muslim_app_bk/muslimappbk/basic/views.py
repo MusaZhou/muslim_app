@@ -5,7 +5,8 @@ import logging
 from django.core.mail import send_mail
 from management.models import Image
 from .tasks import test_task, error_handler_task
-from slugify import slugify
+# from slugify import slugify
+from django.utils.text import slugify
 
 logger = logging.getLogger(__name__)
 
@@ -42,5 +43,5 @@ def email(request):
     return HttpResponse(send_mail('test', 'test from muslimapp', 'admin@muslimapp.cn', ['admin@muslimapp.cn','musazhou@gmail.com'], fail_silently=True))
 
 def test(request):
-    print(slugify.slugify('测试'))
-    return HttpResponse('done')
+    print(slugify('测试', allow_unicode=True))
+    return HttpResponse(slugify('测试', allow_unicode=True))

@@ -12,7 +12,8 @@ from django.urls import reverse
 from management.templatetags.custom_tags import verbose_name_filter
 from django.db.models.fields import CharField
 from star_ratings.models import Rating
-from slugify import slugify
+# from slugify import slugify
+from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
@@ -34,7 +35,7 @@ class Profile(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify.slugify(self.user.username)
+            self.slug = slugify(self.user.username, allow_unicode=True)
         super(Profile, self).save(*args, **kwargs)
     
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
@@ -116,14 +117,14 @@ class MobileApp(models.Model):
         ordering = ["-upload_date"]
 
     def slugDefault(self):
-        return slugify.slugify(self.name)
+        return slugify(self.name, allow_unicode=True)
 
     def __str__(self):
         return self.name
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify.slugify(self.name)
+            self.slug = slugify(self.name, allow_unicode=True)
     
         super(MobileApp, self).save(*args, **kwargs)
     

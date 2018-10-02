@@ -1,12 +1,12 @@
 {% load static %}
-{% i18n %}
+{% load i18n %}
 <style>
     a {
         margin: 5px;
     }
 </style>
 <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'showcase:index' %}">{% trans 'Muslim App' %}</a>
-<input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+<input class="form-control form-control-dark col-md-8" type="text" placeholder="Search" aria-label="Search">
 {% if user.is_authenticated %}
 <span style="color: white;margin-left: 5px">{{ user.username }}</span>
 <a href="{% url 'userauth:update_profile' %}">

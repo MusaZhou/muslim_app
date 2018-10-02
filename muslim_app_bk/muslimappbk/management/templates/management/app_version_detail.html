@@ -3,6 +3,7 @@
 {% load widget_tweaks %}
 {% load custom_tags %}
 {% load comments %}
+{% load i18n %}
 
 {% block title %}Add New Version{% endblock %}
 {% block stylesheet %}
@@ -119,7 +120,7 @@
                             {% endif %}
                         {% endwith %}
                       </video>
-                        <a type="button" href="{{ app_version.apk.url }}" class="btn button btn-secondary" style="margin-top:50px;" >{% trans 'Download' %}</a>
+                        <a type="button" href="{{ app_version.apk.file.url }}" class="btn button btn-secondary" style="margin-top:50px;" >{% trans 'Download' %}</a>
 					    {% if perms.management.can_approve_app %}
 					        <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'approved')" class="btn button btn-success" style="margin-top:50px;" >{% trans 'Approve' %}</button>
                             <button type="button" onclick="updateApprove('{{ mobile_app.slug }}', '{{ app_version.version_number }}', 'rejected')" class="btn button btn-warning" style="margin-top:50px;" >{% trans 'Reject' %}</button>

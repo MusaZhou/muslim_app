@@ -75,7 +75,7 @@
             </div>
             <div class="row align-items-center mx-0">
                 <div>
-                    <a class="button btn btn-primary btn-sm" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" style="font-size: 0.7em">{% trans 'Download' %} ({{ app_version.apk.size|filesizeformat }})</a>
+                    <a class="button btn btn-primary btn-sm" href="{{ app_version.apk.file.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" style="font-size: 0.7em">{% trans 'Download' %} ({{ app_version.apk.file.size|filesizeformat }})</a>
                 </div>
             </div>
         </div>

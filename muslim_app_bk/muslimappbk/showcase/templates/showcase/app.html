@@ -80,7 +80,7 @@
                     <span>Comments {{ comment_count }}</span>
                 </div>
                 <div class="col-3">
-                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" >{% trans 'Download' %} ({{ app_version.apk.size|filesizeformat }})</a>
+                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.file.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" >{% trans 'Download' %} ({{ app_version.apk.file.size|filesizeformat }})</a>
                 </div>
             </div>
         </div>

@@ -28,7 +28,7 @@
                         <th>{% trans 'Version Number' %}</th>
                         <th>{% trans 'Time' %}</th>
                         <th>{% trans 'Approve' %}</th>
-                        <th>{% blocktrans %} What's New {% endblocktrans %}</th>
+                        <th>{% blocktrans %}What's New{% endblocktrans %}</th>
                         <th>{% trans 'View Detail' %}</th>
                         <th>{% trans 'Download' %}</th>
                       </tr>
@@ -38,7 +38,7 @@
                         <th>{% trans 'Version Number' %}</th>
                         <th>{% trans 'Time' %}</th>
                         <th>{% trans 'Approve' %}</th>
-                        <th>{% blocktrans %} What's New {% endblocktrans %}</th>
+                        <th>{% blocktrans %}What's New{% endblocktrans %}</th>
                         <th>{% trans 'View Detail' %}</th>
                         <th>{% trans 'Download' %}</th>
                       </tr>
@@ -54,7 +54,7 @@
                             <a href="{% url 'management:version_detail' mobile_app.slug app_version.version_number %}" class="btn btn-primary">{% trans 'Detail' %}</a>
                         </td>
                         <td style="vertical-align: middle">
-                            <a href="{{ app_version.apk.url }}"><i class="fas fa-download" ></i></a>
+                            <a href="{{ app_version.apk.file.url }}"><i class="fas fa-download" ></i></a>
                         </td>
                       </tr>
                       {% endfor %}

@@ -7,7 +7,7 @@ app_name = 'mobile'
 
 urlpatterns = [
     path('index/', views.index, name='index'),
-    path('app/<slug:slug>', views.app, name='app'),
-    path('reply/<int:cid>/<slug:app_slug>', views.reply, name='reply'),
+    path('app/<str:slug>', views.app, name='app'),
+    path('reply/<int:cid>/<str:app_slug>', views.reply, name='reply'),
 ]
 
