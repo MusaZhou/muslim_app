@@ -31,7 +31,7 @@
             <img src="{{ mobile_app.icon.url }}" width="128px" height="128px">
         </div>
         <div class="col">
-            <div class="row" style="font-size: 1.2em; margin-bottom: 10px; font-weight: bold">
+            <div class="row" style="font-size: 1.3em; margin-bottom: 10px; font-weight: bold; color: cornflowerblue; padding-top: 5px; padding-left: 10px">
                 {{ mobile_app.name }}
             </div>
             <div class="row" style="font-size: 0.9em; color: gray; height:130px">
@@ -75,10 +75,6 @@
                 <div class="col-auto" style="color:cornflowerblue">
                     <span>Downloads {{ mobile_app.download_count|default_if_none:0 }}</span>
                 </div>
-                <div class="col-auto" style="color:cornflowerblue">
-                    {% get_comment_count for mobile_app as comment_count %}
-                    <span>Comments {{ comment_count }}</span>
-                </div>
                 <div class="col-3">
                     <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.file.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" >{% trans 'Download' %} ({{ app_version.apk.file.size|filesizeformat }})</a>
                 </div>
@@ -111,7 +107,7 @@
     {% render_comment_form for mobile_app %}
   </div>
 </div>
-
+{% get_comment_count for mobile_app as comment_count %}
 {% if comment_count %}
 <hr/>
 <ul class="media-list">
