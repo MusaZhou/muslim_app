@@ -6,8 +6,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 1,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 1
     }
   },
   {
@@ -17,8 +16,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 10,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 10
     }
   },
   {
@@ -28,8 +26,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 2,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 2
     }
   },
   {
@@ -39,8 +36,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 3,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 3
     }
   },
   {
@@ -50,8 +46,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 4,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 4
     }
   },
   {
@@ -61,8 +56,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 5,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 5
     }
   },
   {
@@ -72,8 +66,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 6,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 6
     }
   },
   {
@@ -83,8 +76,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 7,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 7
     }
   },
   {
@@ -94,8 +86,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 8,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 8
     }
   },
   {
@@ -105,8 +96,7 @@
       "version_number": 1,
       "created_time": "2018-09-02 04:10:11.668149",
       "approve_status": "new",
-      "mobile_app_id": 9,
-      "apk": "apk/test.apk"
+      "mobile_app_id": 9
     }
   }
 ]

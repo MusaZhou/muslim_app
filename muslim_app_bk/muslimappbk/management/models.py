@@ -115,6 +115,7 @@ class MobileApp(models.Model):
     
     class Meta:
         ordering = ["-upload_date"]
+        permissions = (("can_approve_app", "Can approve newly uploaded app"),)
 
     def slugDefault(self):
         return slugify(self.name, allow_unicode=True)

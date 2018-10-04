@@ -1,0 +1,82 @@
+[
+  {
+    "model": "management.apkfile",
+    "pk": 1,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "1"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 2,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "2"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 3,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "3"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 4,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "4"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 5,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "5"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 6,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "6"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 7,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "7"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 8,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "8"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 9,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "9"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 10,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "10"
+    }
+   }
+]

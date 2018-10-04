@@ -1,0 +1,29 @@
+[
+  {
+    "model": "management.video",
+    "pk": 1,
+    "fields": {
+      "object_id": "1",
+      "content_type_id": "14",
+      "file": "videos/test_video.mp4"
+    }
+  },
+  {
+    "model": "management.video",
+    "pk": 2,
+    "fields": {
+      "object_id": "2",
+      "content_type_id": "14",
+      "file": "videos/test_video.mp4"
+    }
+  },
+  {
+    "model": "management.video",
+    "pk": 3,
+    "fields": {
+      "object_id": "3",
+      "content_type_id": "14",
+      "file": "videos/test_video.mp4"
+    }
+  }
+]

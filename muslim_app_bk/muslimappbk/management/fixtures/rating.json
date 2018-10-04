@@ -1,0 +1,112 @@
+[
+  {
+    "model": "management.rating",
+    "pk": 1,
+    "fields": {
+      "object_id": "1",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 2,
+    "fields": {
+      "object_id": "2",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 3,
+    "fields": {
+      "object_id": "3",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 4,
+    "fields": {
+      "object_id": "4",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 5,
+    "fields": {
+      "object_id": "5",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 6,
+    "fields": {
+      "object_id": "6",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 7,
+    "fields": {
+      "object_id": "7",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 8,
+    "fields": {
+      "object_id": "8",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 9,
+    "fields": {
+      "object_id": "9",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "management.rating",
+    "pk": 10,
+    "fields": {
+      "object_id": "10",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+   }
+]

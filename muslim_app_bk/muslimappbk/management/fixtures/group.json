@@ -5,5 +5,12 @@
     "fields":{
         "name": "uploader"
     }
+   },
+   {
+    "model": "auth.Group",
+    "pk": 2,
+    "fields":{
+        "name": "mediator"
+    }
    }
 ]
