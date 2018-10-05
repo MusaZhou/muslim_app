@@ -1,6 +1,6 @@
 [
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 1,
     "fields": {
       "object_id": "1",
@@ -11,7 +11,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 2,
     "fields": {
       "object_id": "2",
@@ -22,7 +22,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 3,
     "fields": {
       "object_id": "3",
@@ -33,7 +33,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 4,
     "fields": {
       "object_id": "4",
@@ -44,7 +44,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 5,
     "fields": {
       "object_id": "5",
@@ -55,7 +55,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 6,
     "fields": {
       "object_id": "6",
@@ -66,7 +66,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 7,
     "fields": {
       "object_id": "7",
@@ -77,7 +77,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 8,
     "fields": {
       "object_id": "8",
@@ -88,7 +88,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 9,
     "fields": {
       "object_id": "9",
@@ -99,7 +99,7 @@
     }
   },
   {
-    "model": "management.rating",
+    "model": "star_ratings.rating",
     "pk": 10,
     "fields": {
       "object_id": "10",

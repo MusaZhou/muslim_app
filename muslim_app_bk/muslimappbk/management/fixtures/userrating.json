@@ -1,6 +1,6 @@
 [
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 1,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -10,7 +10,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 2,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -20,7 +20,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 3,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -30,7 +30,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 4,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -40,7 +40,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 5,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -50,7 +50,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 6,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -60,7 +60,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 7,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -70,7 +70,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 8,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -80,7 +80,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 9,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",
@@ -90,7 +90,7 @@
     }
   },
   {
-    "model": "management.userrating",
+    "model": "star_ratings.userrating",
     "pk": 10,
     "fields": {
       "created": "2018-09-25 09:14:21.016918",

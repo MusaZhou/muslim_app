@@ -1,0 +1,32 @@
+[
+  {
+    "model": "management.banner",
+    "pk": 1,
+    "fields": {
+      "title": "banner1",
+      "description": "banner1 description",
+      "image": "banners/banner_1.jpg",
+      "link": "showcase/app/food"
+    }
+  },
+  {
+    "model": "management.banner",
+    "pk": 2,
+    "fields": {
+      "title": "banner2",
+      "description": "banner2 description",
+      "image": "banners/banner_2.jpg",
+      "link": "showcase/app/hamberger"
+    }
+  },
+  {
+    "model": "management.banner",
+    "pk": 3,
+    "fields": {
+      "title": "banner3",
+      "description": "banner3 description",
+      "image": "banners/banner_3.jpg",
+      "link": "showcase/app/soya-bean"
+    }
+  }
+]
