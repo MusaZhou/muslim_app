@@ -6,7 +6,7 @@
       "title": "banner1",
       "description": "banner1 description",
       "image": "banners/banner_1.jpg",
-      "link": "showcase/app/food"
+      "link": "/showcase/app/food"
     }
   },
   {
@@ -16,7 +16,7 @@
       "title": "banner2",
       "description": "banner2 description",
       "image": "banners/banner_2.jpg",
-      "link": "showcase/app/hamberger"
+      "link": "/showcase/app/hamberger"
     }
   },
   {
@@ -26,7 +26,7 @@
       "title": "banner3",
       "description": "banner3 description",
       "image": "banners/banner_3.jpg",
-      "link": "showcase/app/soya-bean"
+      "link": "/showcase/app/soya-bean"
     }
   }
 ]

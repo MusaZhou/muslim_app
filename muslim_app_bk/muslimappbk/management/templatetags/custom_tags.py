@@ -65,6 +65,7 @@ from __future__ import unicode_literals
 import re
 from django.template import Library, TemplateSyntaxError, Node
 from django.utils.encoding import smart_text
+from django.urls import resolve, Resolver404, reverse
 
 register = Library()
 
@@ -187,3 +188,17 @@ def verbose_name_tag(obj, field_name):
 @register.filter(name="verbose_name")
 def verbose_name_filter(obj, field_name):
     return obj._meta.get_field(field_name).verbose_name
+
+@register.filter(name="mobile_link")
+def mobile_link_filter(link):
+    try:
+        # Resolve a URL
+        match = resolve(link)
+        if match.view_name == 'showcase:app':
+            app_slug = match.kwargs['slug']
+            new_mobile_link = reverse('mobile:app', kwargs={'slug': app_slug})
+            return new_mobile_link
+        else:
+            return link
+    except  Resolver404:
+        return link

@@ -254,7 +254,7 @@
                 //Upload progress
                 xhr.upload.addEventListener("progress", function(evt){
                   if (evt.lengthComputable) {
-                    var percentComplete = evt.loaded / evt.total*100 + '%';
+                    var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
                     //Do something with upload progress
                     console.log(percentComplete);
                     $('#video_upload_progress').css('width', percentComplete);

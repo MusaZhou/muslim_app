@@ -1,6 +1,8 @@
 {% extends 'mobile/base.html' %}
 {% load static %}
 {% load i18n %}
+{% load custom_tags %}
+
 {% block stylesheet %}
     {{ block.super }}
 <style>
@@ -82,13 +84,14 @@
     <div class="carousel-inner">
       {% for banner in banner_list %}
         <div class="carousel-item {{ forloop.first|yesno:'active,' }}">
-            <a href="{{ banner.link }}"><img src="{{ banner.image.url }}"></a>
-            <div class="container">
-              <div class="carousel-caption text-left">
-                <h1>{{ banner.title }}</h1>
-                <p>{{ banner.description }}</p>
-              </div>
-            </div>
+            <a href="{{ banner.link|mobile_link }}"><img src="{{ banner.image.url }}">
+                <div class="container">
+                  <div class="carousel-caption text-left">
+                    <h1>{{ banner.title }}</h1>
+                    <p>{{ banner.description }}</p>
+                  </div>
+                </div>
+            </a>
         </div>
       {% endfor %}
     </div>
