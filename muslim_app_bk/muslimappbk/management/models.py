@@ -200,6 +200,7 @@ class AppVersion(models.Model):
 #     apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
     translator = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Translator"))
     android_version = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Supported Android Version"))
+    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     
     objects = models.Manager()
     approved_manager = VersionApprovedManager()

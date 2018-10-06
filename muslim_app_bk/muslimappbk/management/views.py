@@ -269,10 +269,14 @@ def update_version_status(request):
         app_slug = request.POST['app_slug']
         app_version_number = request.POST['version_number']
         status = request.POST['approve_status']
+        remark = request.POST['remark']
         app = MobileApp.objects.get(slug=app_slug)
         
         AppVersion.objects.filter(mobile_app=app, version_number=app_version_number)\
-        .update(approve_status=status, approved_time=datetime.now(), approved_by=request.user)
+        .update(approve_status=status, 
+                approved_time=datetime.now(), 
+                approved_by=request.user, 
+                remark=remark)
         return JsonResponse({'status': 1}, safe=False)
 
 @permission_required('polls.can_vote')    

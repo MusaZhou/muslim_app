@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-01 13:55+0800\n"
+"POT-Creation-Date: 2018-10-06 19:02+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,10 +22,12 @@ msgid "new"
 msgstr "新"
 
 #: management/choices.py:5
+#: management/templates/management/app_version_detail.html:125
 msgid "approved"
 msgstr "通过"
 
 #: management/choices.py:6
+#: management/templates/management/app_version_detail.html:126
 msgid "rejected"
 msgstr "拒绝"
 
@@ -49,170 +51,181 @@ msgstr "女"
 msgid "Select Application as the Link"
 msgstr "将应用页面设置为链接"
 
-#: management/models.py:20
+#: management/models.py:21
 msgid "Nick Name"
 msgstr "昵称"
 
-#: management/models.py:21 userauth/templates/userauth/signup.html:87
+#: management/models.py:22 userauth/templates/userauth/signup.html:87
 msgid "Gender"
 msgstr "性别"
 
-#: management/models.py:23
+#: management/models.py:24
 msgid "Date of birth"
 msgstr "生日"
 
-#: management/models.py:24 userauth/templates/userauth/signup.html:105
+#: management/models.py:25 userauth/templates/userauth/signup.html:105
 msgid "Avatar"
 msgstr "头像"
 
-#: management/models.py:67
+#: management/models.py:68
 msgid "Tag"
 msgstr "标签"
 
-#: management/models.py:73
+#: management/models.py:74
 #: management/templates/management/app_table_basic.html:31
 msgid "Category"
 msgstr "类别"
 
-#: management/models.py:90
+#: management/models.py:91
 msgid "App Name"
 msgstr "应用名称"
 
-#: management/models.py:91 management/models.py:259
+#: management/models.py:92 management/models.py:262
 #: management/templates/management/banner_list.html:22
 msgid "Description"
 msgstr "描述"
 
-#: management/models.py:93
+#: management/models.py:94
 msgid "Uploader"
 msgstr "上传者"
 
-#: management/models.py:95
+#: management/models.py:96
 msgid "Upload Time"
 msgstr "上传时间"
 
-#: management/models.py:100
+#: management/models.py:101
 msgid "Comment Count"
 msgstr "评价数"
 
-#: management/models.py:101
+#: management/models.py:102
 msgid "Download Count"
 msgstr "下载数"
 
-#: management/models.py:103
+#: management/models.py:104
 msgid "Screenshots"
 msgstr "截屏"
 
-#: management/models.py:104
+#: management/models.py:105
 msgid "Tags"
 msgstr "标签"
 
-#: management/models.py:105
+#: management/models.py:106
 msgid "Active Status"
 msgstr "激活状态"
 
-#: management/models.py:107
+#: management/models.py:108
 msgid "Developer"
 msgstr "开发者"
 
-#: management/models.py:109
+#: management/models.py:110
 msgid "Video Show"
 msgstr "视频秀"
 
-#: management/models.py:186
+#: management/models.py:188
 msgid "Version No."
 msgstr "版本号"
 
-#: management/models.py:187
+#: management/models.py:189
 msgid "Created Time"
 msgstr "创建时间"
 
-#: management/models.py:190 management/models.py:226 management/models.py:242
+#: management/models.py:192 management/models.py:229 management/models.py:245
 msgid "Approve Status"
 msgstr "审核状态"
 
-#: management/models.py:193 management/models.py:229 management/models.py:245
+#: management/models.py:195 management/models.py:232 management/models.py:248
 msgid "Approved By"
 msgstr "审核人"
 
-#: management/models.py:194
+#: management/models.py:196
 msgid "Approved Time"
 msgstr "审核时间"
 
-#: management/models.py:196 management/models.py:221 management/models.py:237
-#: management/models.py:255
+#: management/models.py:198 management/models.py:224 management/models.py:240
+#: management/models.py:258
 msgid "Application"
 msgstr "应用"
 
-#: management/models.py:197
+#: management/models.py:199 management/templates/management/app_history.html:32
+#: management/templates/management/app_history.html:43
+#: management/templates/management/uploader/app_history_uploader.html:32
+#: management/templates/management/uploader/app_history_uploader.html:43
 msgid "What's New"
 msgstr "新特性"
 
-#: management/models.py:199
+#: management/models.py:201
 msgid "Translator"
 msgstr "翻译"
 
-#: management/models.py:200
+#: management/models.py:202
 msgid "Supported Android Version"
 msgstr "支持Android版本"
 
-#: management/models.py:211
+#: management/models.py:203 management/templates/management/app_history.html:31
+#: management/templates/management/app_history.html:42
+#: management/templates/management/app_version_detail.html:152
+#: management/templates/management/uploader/app_history_uploader.html:31
+#: management/templates/management/uploader/app_history_uploader.html:42
+msgid "Remark"
+msgstr ""
+
+#: management/models.py:214
 msgid "Version number is duplicated on this application."
 msgstr "版本号重复"
 
-#: management/models.py:215
+#: management/models.py:218
 msgid "APK File"
 msgstr "APK文件"
 
-#: management/models.py:219 management/models.py:235
+#: management/models.py:222 management/models.py:238
 msgid "Content"
 msgstr "内容"
 
-#: management/models.py:220
+#: management/models.py:223
 msgid "Rate"
 msgstr "评分"
 
-#: management/models.py:223
+#: management/models.py:226
 msgid "Comment By"
 msgstr "评价人"
 
-#: management/models.py:224
+#: management/models.py:227
 msgid "Comment At"
 msgstr "评价于"
 
-#: management/models.py:236
+#: management/models.py:239
 msgid "Evaluation"
 msgstr "评价"
 
-#: management/models.py:239
+#: management/models.py:242
 msgid "Created By"
 msgstr "创建人"
 
-#: management/models.py:240
+#: management/models.py:243
 msgid "Created At"
 msgstr "创建于"
 
-#: management/models.py:251
+#: management/models.py:254
 msgid "Download At"
 msgstr "下载与"
 
-#: management/models.py:252
+#: management/models.py:255
 msgid "Operating System"
 msgstr "操作系统"
 
-#: management/models.py:253
+#: management/models.py:256
 msgid "Mobile Phone"
 msgstr "移动电话"
 
-#: management/models.py:258 management/templates/management/banner_list.html:21
+#: management/models.py:261 management/templates/management/banner_list.html:21
 msgid "Title"
 msgstr "标题"
 
-#: management/models.py:260
+#: management/models.py:263
 msgid "Banner Image"
 msgstr "宣传图片"
 
-#: management/models.py:261 management/templates/management/banner_list.html:23
+#: management/models.py:264 management/templates/management/banner_list.html:23
 msgid "Link"
 msgstr "链接"
 
@@ -306,57 +319,49 @@ msgid "Version History"
 msgstr "版本历史"
 
 #: management/templates/management/app_history.html:28
-#: management/templates/management/app_history.html:38
+#: management/templates/management/app_history.html:39
 #: management/templates/management/uploader/app_history_uploader.html:28
-#: management/templates/management/uploader/app_history_uploader.html:38
+#: management/templates/management/uploader/app_history_uploader.html:39
 msgid "Version Number"
 msgstr "版本号"
 
 #: management/templates/management/app_history.html:29
-#: management/templates/management/app_history.html:39
+#: management/templates/management/app_history.html:40
 #: management/templates/management/uploader/app_history_uploader.html:29
-#: management/templates/management/uploader/app_history_uploader.html:39
+#: management/templates/management/uploader/app_history_uploader.html:40
 msgid "Time"
 msgstr "时间"
 
 #: management/templates/management/app_history.html:30
-#: management/templates/management/app_history.html:40
-#: management/templates/management/app_version_detail.html:124
+#: management/templates/management/app_history.html:41
+#: management/templates/management/app_version_detail.html:125
 #: management/templates/management/uploader/app_history_uploader.html:30
-#: management/templates/management/uploader/app_history_uploader.html:40
+#: management/templates/management/uploader/app_history_uploader.html:41
 msgid "Approve"
 msgstr "通过"
 
-#: management/templates/management/app_history.html:31
-#: management/templates/management/app_history.html:41
-#: management/templates/management/uploader/app_history_uploader.html:31
-#: management/templates/management/uploader/app_history_uploader.html:41
-#, fuzzy
-#| msgid "What's New"
-msgid " What's New "
-msgstr "新特性"
-
-#: management/templates/management/app_history.html:32
-#: management/templates/management/app_history.html:42
-#: management/templates/management/uploader/app_history_uploader.html:32
-#: management/templates/management/uploader/app_history_uploader.html:42
+#: management/templates/management/app_history.html:33
+#: management/templates/management/app_history.html:44
+#: management/templates/management/uploader/app_history_uploader.html:33
+#: management/templates/management/uploader/app_history_uploader.html:44
 msgid "View Detail"
 msgstr "详情"
 
-#: management/templates/management/app_history.html:33
-#: management/templates/management/app_history.html:43
-#: management/templates/management/app_version_detail.html:122
-#: management/templates/management/uploader/app_history_uploader.html:33
-#: management/templates/management/uploader/app_history_uploader.html:43
+#: management/templates/management/app_history.html:34
+#: management/templates/management/app_history.html:45
+#: management/templates/management/app_version_detail.html:123
+#: management/templates/management/uploader/app_history_uploader.html:34
+#: management/templates/management/uploader/app_history_uploader.html:45
 #: management/templates/management/uploader/app_table_uploader.html:35
-#: mobile/templates/mobile/app.html:78 mobile/templates/mobile/index.html:139
-#: showcase/templates/showcase/app.html:83
+#: mobile/templates/mobile/app.html:74 mobile/templates/mobile/app.html:78
+#: mobile/templates/mobile/index.html:142
+#: showcase/templates/showcase/app.html:79
 #: showcase/templates/showcase/index.html:118
 msgid "Download"
 msgstr "下载"
 
-#: management/templates/management/app_history.html:54
-#: management/templates/management/uploader/app_history_uploader.html:54
+#: management/templates/management/app_history.html:57
+#: management/templates/management/uploader/app_history_uploader.html:57
 #: showcase/templates/showcase/index.html:62
 msgid "Detail"
 msgstr "详情"
@@ -456,37 +461,51 @@ msgid "Last"
 msgstr "末页"
 
 #: management/templates/management/app_table_basic.html:145
-#: management/templates/management/app_version_detail.html:163
+#: management/templates/management/app_version_detail.html:199
 msgid "server error"
 msgstr "后台问题"
 
-#: management/templates/management/app_version_detail.html:47
+#: management/templates/management/app_version_detail.html:48
 msgid "Version"
 msgstr "版本"
 
-#: management/templates/management/app_version_detail.html:54
+#: management/templates/management/app_version_detail.html:55
 msgid "Statistic(Download, Comment, Average Rate)"
 msgstr "数据(下载,评价,得分)"
 
-#: management/templates/management/app_version_detail.html:59
+#: management/templates/management/app_version_detail.html:60
 msgid "Application Activation"
 msgstr "应用激活状态"
 
-#: management/templates/management/app_version_detail.html:60
+#: management/templates/management/app_version_detail.html:61
 msgid "Active, Inactive"
 msgstr "激活,禁用"
 
-#: management/templates/management/app_version_detail.html:103
+#: management/templates/management/app_version_detail.html:104
 msgid "Checked By"
 msgstr "审核人"
 
-#: management/templates/management/app_version_detail.html:104
+#: management/templates/management/app_version_detail.html:105
 msgid "at"
 msgstr "于"
 
-#: management/templates/management/app_version_detail.html:125
+#: management/templates/management/app_version_detail.html:126
 msgid "Reject"
 msgstr "拒绝"
+
+#: management/templates/management/app_version_detail.html:146
+msgid "Remark for"
+msgstr "审核备注"
+
+#: management/templates/management/app_version_detail.html:155
+msgid "Close"
+msgstr "关闭"
+
+#: management/templates/management/app_version_detail.html:156
+#, fuzzy
+#| msgid "Confirm Password"
+msgid "Confirm"
+msgstr "确认密码"
 
 #: management/templates/management/banner_list.html:12
 msgid "Banner List"
@@ -994,10 +1013,6 @@ msgstr "回复评价"
 msgid "Reply to comment"
 msgstr "回复评价"
 
-#: mobile/templates/mobile/app.html:74
-msgid "Downoad"
-msgstr "下载"
-
 #: mobile/templates/mobile/base.html:86
 #: showcase/templates/showcase/base.html:60
 msgid "Muslim App by Musa Zhou"
@@ -1008,7 +1023,7 @@ msgstr "穆斯林应用 By موسى"
 msgid "Back to top"
 msgstr "回到顶部"
 
-#: mobile/templates/mobile/index.html:105
+#: mobile/templates/mobile/index.html:108
 #: showcase/templates/showcase/index.html:78
 msgid "All"
 msgstr "所有"
@@ -1051,7 +1066,7 @@ msgstr "中文"
 msgid "English"
 msgstr "英文"
 
-#: showcase/templates/showcase/app.html:109
+#: showcase/templates/showcase/app.html:105
 msgid "Comments"
 msgstr "评价"
 
@@ -1167,3 +1182,11 @@ msgstr "您的确认邮件已经发出, 请去邮箱确认,谢谢"
 msgid ""
 "The confirmation link was invalid, possibly because it has already been used."
 msgstr "链接已失效,请重新注册, 谢谢"
+
+#, fuzzy
+#~| msgid "What's New"
+#~ msgid " What's New "
+#~ msgstr "新特性"
+
+#~ msgid "Downoad"
+#~ msgstr "下载"
