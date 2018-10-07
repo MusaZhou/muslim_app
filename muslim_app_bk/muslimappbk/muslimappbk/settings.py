@@ -57,7 +57,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'mod_wsgi.server',
     'star_ratings',
-    'django_upyun'
+    'django_upyun',
+    'ordered_model'
 ]
 
 MIDDLEWARE = [

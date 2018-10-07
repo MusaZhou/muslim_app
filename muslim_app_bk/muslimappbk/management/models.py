@@ -15,6 +15,7 @@ from star_ratings.models import Rating
 # from slugify import slugify
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+from ordered_model.models import OrderedModel
 
 # Create your models here.
 class Profile(models.Model):
@@ -84,9 +85,13 @@ class ShownAppManager(ActiveAppManager):
     def get_queryset(self):
         qs_appversion = AppVersion.approved_manager.values_list('mobile_app', flat=True).distinct()
         return super().get_queryset().filter(id__in=qs_appversion)
+    
+class UploadOrderManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().order_by('-upload_date')
         
 
-class MobileApp(models.Model):
+class MobileApp(OrderedModel):
     name = models.CharField(max_length=100,unique=True,
                             db_index=True, verbose_name=_('App Name'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
@@ -109,12 +114,15 @@ class MobileApp(models.Model):
     ratings = GenericRelation(Rating, related_query_name='rating_apps')
     videos = GenericRelation(Video, related_query_name='video_app', verbose_name=_('Video Show'))
     
+    order_with_respect_to = 'category'
+    
     objects = models.Manager()
     active_apps = ActiveAppManager()
     shown_apps = ShownAppManager()
+    upload_order = UploadOrderManager()
     
-    class Meta:
-        ordering = ["-upload_date"]
+    class Meta(OrderedModel.Meta):
+#         ordering = ["-upload_date"]
         permissions = (("can_approve_app", "Can approve newly uploaded app"),)
 
     def slugDefault(self):
@@ -204,6 +212,9 @@ class AppVersion(models.Model):
     
     objects = models.Manager()
     approved_manager = VersionApprovedManager()
+    
+    class Meta:
+        ordering = ["-created_time"]
     
     def __str__(self):
         return self.version_number

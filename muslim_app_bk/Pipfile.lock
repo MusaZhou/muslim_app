@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "784d590b475f6797affd631afe3207da9081bcc2f7b0b03c233fae8e012782e9"
+            "sha256": "b75c508ec59c4dd60e5de329e068bdfb8435c9242a06144580f95d94d8bfe766"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -67,18 +67,18 @@
         },
         "django": {
             "hashes": [
-                "sha256:04f2e423f2e60943c02bd2959174b844f7d1bcd19eabb7f8e4282999958021fd",
-                "sha256:e1cc1cd6b658aa4e052f5f2b148bfda08091d7c3558529708342e37e4e33f72c"
+                "sha256:acdcc1f61fdb0a0c82a1d3bf1879a414e7732ea894a7632af7f6d66ec7ab5bb3",
+                "sha256:efbcad7ebb47daafbcead109b38a5bd519a3c3cd92c6ed0f691ff97fcdd16b45"
             ],
             "index": "pypi",
-            "version": "==2.1.1"
+            "version": "==2.1.2"
         },
         "django-allauth": {
             "hashes": [
-                "sha256:02175aa1c2ddfd935a54011d1196d70c976647fc46f603f8b8758fc395b9d277"
+                "sha256:45661b6fe308466154adf54461679fab6f0c6850b10c56dc322fbbb9d47e03d9"
             ],
             "index": "pypi",
-            "version": "==0.37.1"
+            "version": "==0.38.0"
         },
         "django-braces": {
             "hashes": [
@@ -89,11 +89,11 @@
         },
         "django-comments-xtd": {
             "hashes": [
-                "sha256:11ed9ed05a68c0d9729e3575650f1ec93d39beb266d7582db408f6759313973f",
-                "sha256:721b6b0cad1e45ba0de36c82c04fff9b982f136423651a710054b6243e54f9f1"
+                "sha256:1e6860f775072f9ac373c5e6c52c9ced6d8012335147ba8c9e8b52420b46ab2f",
+                "sha256:c71c6263e02364f0dcba2c946d9e6caf1b54be1aa30e1298c4351177c91f11cf"
             ],
             "index": "pypi",
-            "version": "==2.2.0"
+            "version": "==2.2.1"
         },
         "django-contrib-comments": {
             "hashes": [
@@ -117,6 +117,13 @@
             ],
             "index": "pypi",
             "version": "==3.1.2"
+        },
+        "django-ordered-model": {
+            "hashes": [
+                "sha256:8a9de1a9ca212b86bf972542e40f62a5e2fc729590419cb789ee5ff850d38bb6"
+            ],
+            "index": "pypi",
+            "version": "==3.0.0"
         },
         "django-star-ratings": {
             "hashes": [
@@ -305,6 +312,7 @@
                 "sha256:8886bfec5ad7afb391ed5443b1f697c6f4ae98d0e5620839d8b4499c032ada3f",
                 "sha256:e21232e2465808c0e892e0e4dbb8c2faafec16ac6dc067dd546e9b466f3deac8"
             ],
+            "markers": "python_version != '3.1.*' and python_version < '4' and python_version != '3.0.*' and python_version >= '2.6' and python_version != '3.3.*' and python_version != '3.2.*'",
             "version": "==1.0.0"
         },
         "six": {
@@ -345,7 +353,7 @@
                 "sha256:d4b3e5329f572f055b587efc57d29bd051589fb5a43ec8898c77a47ec2fa2bbb",
                 "sha256:e5f2585afccbff22390cddac29849df463b252b711aa2ce7c5f3f342a5b3b444"
             ],
-            "markers": "python_version != '3.3.*' and python_version != '3.1.*' and python_version != '3.0.*' and python_version >= '2.7' and python_version != '3.2.*'",
+            "markers": "python_version >= '2.7' and python_version != '3.1.*' and python_version != '3.0.*' and python_version != '3.3.*' and python_version != '3.2.*'",
             "version": "==5.1.1"
         },
         "unidecode": {
@@ -360,6 +368,7 @@
                 "sha256:48c3950647578697bc5aabd65420b8a8e560e7866e5105452fa0d6e656a69f47",
                 "sha256:80ccdd3761183f1bc094b074b489e30e4c0516a775d75eae150bd33a97056301"
             ],
+            "markers": "python_version != '3.1.*' and python_version < '4' and python_version != '3.0.*' and python_version >= '2.6' and python_version != '3.3.*' and python_version != '3.2.*'",
             "version": "==2.5.2"
         },
         "urllib3": {
@@ -367,7 +376,7 @@
                 "sha256:a68ac5e15e76e7e5dd2b8f94007233e01effe3e50e8daddf69acfd81cb686baf",
                 "sha256:b5725a0bd4ba422ab0e66e89e030c806576753ea3ee08554382c14e685d117b5"
             ],
-            "markers": "python_version != '3.1.*' and python_version < '4' and python_version >= '2.6' and python_version != '3.0.*' and python_version != '3.3.*' and python_version != '3.2.*'",
+            "markers": "python_version != '3.1.*' and python_version < '4' and python_version != '3.0.*' and python_version >= '2.6' and python_version != '3.3.*' and python_version != '3.2.*'",
             "version": "==1.23"
         },
         "vine": {

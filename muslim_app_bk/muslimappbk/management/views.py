@@ -160,7 +160,7 @@ class AppTableBasicView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
     
     def get(self, request, *args, **kwargs):
-        all_apps = MobileApp.objects.all()
+        all_apps = MobileApp.upload_order.all()
         paginator = Paginator(all_apps, 5)
         page = request.GET.get('page')
         page_apps = paginator.get_page(page)

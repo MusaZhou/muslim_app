@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import PermissionRequiredMixin
 @method_decorator(login_required, name='dispatch')             
 class AppTableUploaderView(View):
     def get(self, request, *args, **kwargs):
-        app_list = MobileApp.objects.filter(upload_by=request.user)
+        app_list = MobileApp.upload_order.filter(upload_by=request.user)
         paginator = Paginator(app_list, 5)
         page = request.GET.get('page')
         page_apps = paginator.get_page(page)

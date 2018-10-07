@@ -23,6 +23,7 @@ django-upyun = "*"
 requests = "*"
 celery = {extras = ["redis"], version = "*"}
 flower = "*"
+django-ordered-model = "*"
 
 [dev-packages]
 
