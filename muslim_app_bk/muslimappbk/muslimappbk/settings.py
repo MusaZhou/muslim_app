@@ -150,7 +150,7 @@ AUTHENTICATION_BACKENDS = (
 LANGUAGE_CODE = 'en-us'
 
 LANGUAGES = [
-    ('zh', _('Chinese')),
+    ('zh-cn', _('Chinese')),
     ('en', _('English')),
 ]
 

@@ -33,6 +33,7 @@ urlpatterns = [
     path('api/', include('api.urls')),
     path('mobile/', include('mobile.urls')),
     path('ratings/', include('star_ratings.urls', namespace='ratings')),
+    path('i18n/', include('django.conf.urls.i18n')),
 ]
 
 

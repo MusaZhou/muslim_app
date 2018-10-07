@@ -10,6 +10,7 @@ urlpatterns = [
     path('carousel_template/', views.carousel_template, name='carousel_template'),
     path('album_template/', views.album_template, name='album_template'),
     path('index/', views.index, name='index'),
-    path('app/<str:slug>', views.app, name='app')
+    path('app/<str:slug>', views.app, name='app'),
+    path('search', views.search, name="search")
 ]
 
