@@ -6,6 +6,7 @@ from django_comments_xtd.models import (TmpXtdComment,
                                         LIKEDIT_FLAG, DISLIKEDIT_FLAG)
 from django_comments_xtd.forms import XtdCommentForm
 from django.http import Http404, HttpResponseForbidden
+from django.db.models import Q
 
 def index(request):
     banner_list = Banner.objects.all()
@@ -36,3 +37,11 @@ def reply(request, cid, app_slug):
     ]
     return render(request, template_arg,
                   {"comment": comment, "form": form, "cid": cid, 'app_slug': app_slug})
+    
+def search(request):
+    search_word = request.POST.get('search_word', 'Quran')
+    app_list = MobileApp.shown_apps.filter(Q(name__icontains=search_word)|\
+                                           Q(description__icontains=search_word)|\
+                                           Q(category__name__icontains=search_word))
+    context = {'app_list': app_list}
+    return render(request, 'mobile/search.html', context)

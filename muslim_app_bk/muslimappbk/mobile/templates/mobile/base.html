@@ -53,27 +53,24 @@
     <div class="container">
       <header class="blog-header py-1">
         <div class="row flex-nowrap justify-content-between align-items-center">
-          <div class="col-2 pt-1">
+          <div class="col-4">
             
           </div>
-          <div class="col-6 text-center">
+          <div class="col-4 text-center">
             <a class="blog-header-logo text-dark" href="{% url 'mobile:index' %}">{% trans 'Muslim App' %}</a>
           </div>
-          <div class="col-2 d-flex justify-content-end align-items-center">
-            <a class="text-muted" href="#">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-3"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>
-            </a>
-<!--
-            {% if user.is_authenticated %}
-              <a class="badge badge-pill badge-light" href="{% url 'management:index' %}" style="font-size: 1.1em; margin-right: 3px">{{ user.username }}</a>
-              <a class="btn btn-sm btn-outline-secondary" href="{% url 'userauth:logout' %}">Logout</a>
-            {% else %}
-              <a class="btn btn-sm btn-outline-secondary mr-2" href="{% url 'userauth:login' %}">Login</a>
-              <a class="btn btn-sm btn-outline-secondary" href="{% url 'userauth:signup' %}">Sign up</a>
-            {% endif %}
--->
-            
-            
+          <div class="col-4 d-flex justify-content-end align-items-center px-0">
+            <form action="{% url 'mobile:search' %}" method="POST">
+            {% csrf_token %}
+              <div class="input-group">
+              <input type="text" name="search_word" class="form-control p-0" style="height:1.4rem" placeholder="{% trans 'Search' %}" required>
+              <div class="input-group-append">
+                <button class="btn btn-light btn-sm p-0" type="submit" id="button-addon2">
+                    <svg class="mx-1" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mx-3"><circle cx="10.5" cy="10.5" r="7.5"></circle><line x1="21" y1="21" x2="15.8" y2="15.8"></line></svg>
+                </button>
+              </div>
+            </div>
+            </form>  
           </div>
         </div>
       </header>

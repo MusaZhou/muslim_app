@@ -9,5 +9,6 @@ urlpatterns = [
     path('index/', views.index, name='index'),
     path('app/<str:slug>', views.app, name='app'),
     path('reply/<int:cid>/<str:app_slug>', views.reply, name='reply'),
+    path('search', views.search, name="search")
 ]
 

@@ -1,0 +1,84 @@
+{% extends 'mobile/base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+
+{% block stylesheet %}
+    {{ block.super }}
+<style>
+    .app-attr {
+        color: black; 
+    }
+    
+    .description-text {
+        height:60px;
+        font-size: 0.8em;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        margin-bottom: 0.25rem;
+    }
+    
+    .app-item {
+        border: 1px solid gray;
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block mainContent %}
+<div class="container">
+    {% for mobile_app in app_list %}
+    {% with mobile_app.latest_version as app_version %}
+    <div class="row align-items-center app-item mb-1">
+        <div class="col-5 px-0">
+            <a href="{% url 'mobile:app' mobile_app.slug %}">
+                <img src="{{ mobile_app.icon.url }}" width="100px" height="100px">
+            </a>
+            <div class="row mx-0">
+                {% for app_tag in mobile_app.tags.all %}
+                <span class="badge badge-info mr-1 my-1" style="font-size: 0.5em;">{{ app_tag }}</span>
+                {% endfor %}
+                
+            </div>
+            <div class="row align-items-center mx-0">
+                <div class="rating star-icon value-{{ mobile_app.ratings.last.average|default:'5'|floatformat:'0' }} color-positive">
+                    {% include 'showcase/star.html' %}
+                </div>
+            </div>
+            
+        </div>
+        <div class="col-7 px-0" style="color: gray; font-size: 0.8em">
+            <div class="row px-2" style="font-size: 1.1em; margin-bottom: 2px; font-weight: bold; text-align: center; color:brown">
+                {{ mobile_app.name }}
+            </div>
+            <div class="row px-2">
+                <div class="px-1 description-text" style="color: black; word-break: break-all">{{ mobile_app.description }}</div>
+            </div>
+            <div class="row">
+                <div class="col app-attr">{{ app_version|verbose_name:'version_number' }}</div>
+                <div class="col">{{ app_version.version_number }}</div>
+            </div>
+            <div class="row align-items-center mx-0">
+                <span style="font-size: 0.7em">{% trans 'Download' %} <span class="badge badge-success">{{ mobile_app.download_count|default_if_none:0 }}</span>  Times </span>
+            </div>
+            <div class="row align-items-center mx-0 px-2">
+                <a class="button btn btn-primary btn-sm w-100" href="{{ app_version.apk.file.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" style="font-size: 0.7em">{% trans 'Download' %} ({{ app_version.apk.file.size|filesizeformat }})</a>
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+
+<script>
+
+$(function(){
+    
+    
+})
+</script>
+{% endblock %}
