@@ -108,5 +108,225 @@
       "total": "5",
       "average": "5.0"
     }
+   },
+   {
+    "model": "star_ratings.rating",
+    "pk": 11,
+    "fields": {
+      "object_id": "11",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 12,
+    "fields": {
+      "object_id": "12",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 13,
+    "fields": {
+      "object_id": "13",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 14,
+    "fields": {
+      "object_id": "14",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 15,
+    "fields": {
+      "object_id": "15",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 16,
+    "fields": {
+      "object_id": "16",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 17,
+    "fields": {
+      "object_id": "17",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 18,
+    "fields": {
+      "object_id": "18",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 19,
+    "fields": {
+      "object_id": "19",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 20,
+    "fields": {
+      "object_id": "20",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+   },
+   {
+    "model": "star_ratings.rating",
+    "pk": 21,
+    "fields": {
+      "object_id": "21",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 22,
+    "fields": {
+      "object_id": "22",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 23,
+    "fields": {
+      "object_id": "23",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 24,
+    "fields": {
+      "object_id": "24",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 25,
+    "fields": {
+      "object_id": "25",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 26,
+    "fields": {
+      "object_id": "26",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 27,
+    "fields": {
+      "object_id": "27",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 28,
+    "fields": {
+      "object_id": "28",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 29,
+    "fields": {
+      "object_id": "29",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
+  },
+  {
+    "model": "star_ratings.rating",
+    "pk": 30,
+    "fields": {
+      "object_id": "30",
+      "content_type_id": "14",
+      "count": "1",
+      "total": "5",
+      "average": "5.0"
+    }
    }
 ]

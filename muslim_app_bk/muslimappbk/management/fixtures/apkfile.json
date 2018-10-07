@@ -78,5 +78,165 @@
       "file": "apk/test.apk",
       "app_version_id": "10"
     }
+   },
+   {
+    "model": "management.apkfile",
+    "pk": 11,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "11"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 12,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "12"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 13,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "13"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 14,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "14"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 15,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "15"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 16,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "16"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 17,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "17"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 18,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "18"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 19,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "19"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 20,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "20"
+    }
+   },
+   {
+    "model": "management.apkfile",
+    "pk": 21,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "21"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 22,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "22"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 23,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "23"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 24,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "24"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 25,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "25"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 26,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "26"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 27,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "27"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 28,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "28"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 29,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "29"
+    }
+  },
+  {
+    "model": "management.apkfile",
+    "pk": 30,
+    "fields": {
+      "file": "apk/test.apk",
+      "app_version_id": "30"
+    }
    }
 ]
