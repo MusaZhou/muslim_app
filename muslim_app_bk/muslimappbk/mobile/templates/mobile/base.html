@@ -54,10 +54,10 @@
       <header class="blog-header py-1">
         <div class="row flex-nowrap justify-content-between align-items-center">
           <div class="col-4">
-            
+            <a class="badge badge-pill badge-light"  data-toggle="modal" data-target="#helpModal" href="{% url 'management:index' %}" style="font-size: 1em;">{% trans 'Help' %}</a>
           </div>
           <div class="col-4 text-center">
-            <a class="blog-header-logo text-dark" href="{% url 'mobile:index' %}">{% trans 'Muslim App' %}</a>
+            <a class="blog-header-logo text-dark" href="{% url 'mobile:index' %}" style="font-weight: bold">{% trans 'Muslim App' %}</a>
           </div>
           <div class="col-4 d-flex justify-content-end align-items-center px-0">
             <form action="{% url 'mobile:search' %}" method="POST">
@@ -85,7 +85,28 @@
         <a href="#">{% trans 'Back to top' %}</a>
       </p>
     </footer>
-
+    <!-- Modal -->
+    <div class="modal fade" id="helpModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">{% trans 'Guidance' %}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            {% blocktrans %}
+            Ansailamalaikum, brothers and sisters.<br/> 
+            Welcome to Muslim App. I hope you can find helpful apps here and may Allah increase our Iman through them. If you have some good apps which are not shown here. You can register as an user on our site from pc end at the website: http://www.muslimapp.cn/showcase/index , upload the app therein. If you find it difficult. You can also send the name of the app to my email which is admin@muslimapp.cn ,send the problem you'd encountered to that email as well. Let's make this site more beneficial to us. May Allah reward us, Amin. 
+            {% endblocktrans %}
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans 'I got it' %}</button>
+          </div>
+        </div>
+      </div>
+    </div>
     {% block javascript %}
     <!-- Bootstrap core JavaScript
     ================================================== -->

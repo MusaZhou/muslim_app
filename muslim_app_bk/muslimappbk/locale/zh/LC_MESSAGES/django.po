@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-07 17:48+0800\n"
+"POT-Creation-Date: 2018-10-08 14:56+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -542,7 +542,7 @@ msgid "Muslim App"
 msgstr "穆斯林应用"
 
 #: management/templates/management/navbar.html:20
-#: showcase/templates/showcase/base.html:62
+#: showcase/templates/showcase/base.html:63
 msgid "Logout"
 msgstr "退出"
 
@@ -1018,20 +1018,72 @@ msgstr "回复评价"
 msgid "Reply to comment"
 msgstr "回复评价"
 
+#: mobile/templates/mobile/base.html:57
+#: showcase/templates/showcase/base.html:47
+msgid "Help"
+msgstr "帮助"
+
 #: mobile/templates/mobile/base.html:66
 #: showcase/templates/showcase/base.html:36
 msgid "Search"
 msgstr "搜索"
 
 #: mobile/templates/mobile/base.html:83
-#: showcase/templates/showcase/base.html:78
+#: showcase/templates/showcase/base.html:79
 msgid "Muslim App by Musa Zhou"
 msgstr "穆斯林应用 By موسى"
 
 #: mobile/templates/mobile/base.html:85
-#: showcase/templates/showcase/base.html:80
+#: showcase/templates/showcase/base.html:81
 msgid "Back to top"
 msgstr "回到顶部"
+
+#: mobile/templates/mobile/base.html:93
+#: showcase/templates/showcase/base.html:90
+msgid "Guidance"
+msgstr "使用指南"
+
+#: mobile/templates/mobile/base.html:99
+#: showcase/templates/showcase/base.html:96
+#, fuzzy
+#| msgid ""
+#| "\n"
+#| "            Ansailamalaikum, brothers and sister.<br/> \n"
+#| "            Welcome to Muslim App. I hope you can find helpful apps here "
+#| "and may Allah increase our Iman through them. If you have some good apps "
+#| "which are not shown here. You can register as an user on our site from pc "
+#| "end at the website: http://www.muslimapp.cn/showcase/index , upload the "
+#| "app therein. If you find it difficult. You can also send the name of the "
+#| "app to my email which is admin@muslimapp.cn ,send the problem you'd "
+#| "encountered to that email as well. Let's make this site more beneficial "
+#| "to us. May Allah reward us, Amin. \n"
+#| "            "
+msgid ""
+"\n"
+"            Ansailamalaikum, brothers and sisters.<br/> \n"
+"            Welcome to Muslim App. I hope you can find helpful apps here and "
+"may Allah increase our Iman through them. If you have some good apps which "
+"are not shown here. You can register as an user on our site from pc end at "
+"the website: http://www.muslimapp.cn/showcase/index , upload the app "
+"therein. If you find it difficult. You can also send the name of the app to "
+"my email which is admin@muslimapp.cn ,send the problem you'd encountered to "
+"that email as well. Let's make this site more beneficial to us. May Allah "
+"reward us, Amin. \n"
+"            "
+msgstr ""
+"\n"
+" 瑟兰， 兄弟姐妹们。<br/> \n"
+" 欢迎来到穆斯林App. 希望大家可以在这里找到喜欢的应用，希望安拉通过它们增加我"
+"们的信仰。如果你有好的应用，并且在这个网站里没有找到它。您可以用电脑登录这个"
+"地址: http://www.muslimapp.cn/showcase/index 。注册成为一名会员，然后将应用上"
+"传。如果你觉得这很复杂，也可以将应用的名称发到我的邮箱 admin@muslimapp.cn .如"
+"果在使用该网站时您遇到了问题，也可以发邮件咨询。让我们一起让大家受益。愿真主"
+"回赐我们，阿敏。"
+
+#: mobile/templates/mobile/base.html:105
+#: showcase/templates/showcase/base.html:102
+msgid "I got it"
+msgstr "我知道了"
 
 #: mobile/templates/mobile/index.html:108
 #: showcase/templates/showcase/index.html:78
@@ -1080,11 +1132,11 @@ msgstr "英文"
 msgid "Comments"
 msgstr "评价"
 
-#: showcase/templates/showcase/base.html:64
+#: showcase/templates/showcase/base.html:65
 msgid "Login"
 msgstr "登录"
 
-#: showcase/templates/showcase/base.html:65
+#: showcase/templates/showcase/base.html:66
 msgid "Sign up"
 msgstr "注册"
 
