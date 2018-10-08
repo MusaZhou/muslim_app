@@ -147,43 +147,76 @@
 {% block javascript %}
     {{ block.super }}
 <script>
+    
+var page = 1;
+var emptyPage = false;
+var cateid = 9999;
+var blockPagination = false;
+var tabPane;
+    
 $(function(){
     $('#nav-tab a').on('click', function(){
-        var cateid = $(this).data('cateid');
+        cateid = $(this).data('cateid');
+        page = 1;
+        emptyPage = false;
+        tabPane = $('#nav-'+cateid+' .app-card-container');
+        tabPane.empty();
+        getAppList();
+    });
+    
+    $('#nav-tab a:first-child').click();
+    
+    $(window).scroll(function(){
+        var margin = $(document).height() - $(window).height() - 200;
+//        console.log('margin=' + margin);
+//        console.log('window scrollTop=' + $(window).scrollTop());
+        if ($(window).scrollTop() > margin){
+            getAppList();
+        }
+    });
+});
+    
+function getAppList(){
+    if(!emptyPage && !blockPagination){
+        blockPagination = true;
+        
         $.ajax({
            url: '{% url "api:app_list" %}',
            method: 'GET',
            data: {
                     'cate_id': cateid,
+                    'page': page
                  },
            contentType: 'application/json'
         }).done(function(response){
-            console.log(response);
-            var tabPane = $('#nav-'+cateid+' .app-card-container');
-            tabPane.empty();
-            response.forEach(function(data, index){
-                var appCard = $('.app-card-template').clone().removeClass('app-card-template').addClass('app-card');
-                appCard.find('img').prop('src', data.icon);
-                appCard.find('.img-a').prop('href', data.url_mobile);
-                appCard.find('.rating').addClass('value-'+Math.round(data.avg_rate));
-                appCard.find('.rating .label-value').text(data.avg_rate);
-                appCard.find('.card-title a').text(data.name);
-                appCard.find('.card-title a').prop('href', data.url_mobile);
-                appCard.find('.card-text').text(data.description);
-                appCard.find('.download-btn').prop('href', data.apk);
-                appCard.find('.download-btn').on('click', function(){
-                   downloadCount(data.slug); 
+            if(response == ''){
+                emptyPage = true;
+            }else{
+                console.log(response);
+                response.forEach(function(data, index){
+                    var appCard = $('.app-card-template').clone().removeClass('app-card-template').addClass('app-card');
+                    appCard.find('img').prop('src', data.icon);
+                    appCard.find('.img-a').prop('href', data.url_mobile);
+                    appCard.find('.rating').addClass('value-'+Math.round(data.avg_rate));
+                    appCard.find('.rating .label-value').text(data.avg_rate);
+                    appCard.find('.card-title a').text(data.name);
+                    appCard.find('.card-title a').prop('href', data.url_mobile);
+                    appCard.find('.card-text').text(data.description);
+                    appCard.find('.download-btn').prop('href', data.apk);
+                    appCard.find('.download-btn').on('click', function(){
+                       downloadCount(data.slug); 
+                    });
+                    appCard.find('.created_time').text(data.time);
+    //                console.log(appCard.html());
+                    tabPane.append(appCard);
                 });
-                appCard.find('.created_time').text(data.time);
-//                console.log(appCard.html());
-                tabPane.append(appCard);
-            });
-            
-            $('.app-card').show();
+
+                $('.app-card').show();
+                page++;
+            }
+            blockPagination = false;
         });
-    });
-    
-    $('#nav-tab a:first-child').click();
-})
+    }
+}
 </script>    
 {% endblock %}
