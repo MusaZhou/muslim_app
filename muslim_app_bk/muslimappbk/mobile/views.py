@@ -15,7 +15,7 @@ def index(request):
     return render(request, 'mobile/index.html', context)
 
 def app(request, slug):
-    mobile_app = get_object_or_404(MobileApp, slug=slug)
+    mobile_app = get_object_or_404(MobileApp.objects.prefetch_related('images', 'videos', 'ratings', 'tags'), slug=slug)
     app_version = mobile_app.latest_version()
     context = {'mobile_app': mobile_app, 'app_version': app_version}
     return render(request, 'mobile/app.html', context)

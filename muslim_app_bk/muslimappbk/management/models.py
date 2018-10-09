@@ -139,7 +139,7 @@ class MobileApp(OrderedModel):
     
     def latest_version(self):
         if self.canShow():
-            return self.versions.filter(approve_status='approved')[0]
+            return self.versions.filter(approve_status='approved').select_related('apk')[0]
         return None
     
     def get_absolute_url(self):

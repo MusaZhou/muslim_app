@@ -257,8 +257,8 @@ def update_app_images(imgIds, mobile_app):
                 
 class VersionDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        app = get_object_or_404(MobileApp, slug=kwargs['app_slug'])
-        app_version = get_object_or_404(AppVersion, mobile_app=app, version_number=kwargs['version_number'])
+        app = get_object_or_404(MobileApp.objects.prefetch_related('images', 'videos', 'tags'), slug=kwargs['app_slug'])
+        app_version = get_object_or_404(AppVersion.objects.select_related('apk'), mobile_app=app, version_number=kwargs['version_number'])
 #         app_version = AppVersion.objects.filter(mobile_app=app, version_number=kwargs['version_number']).first()
         context = {'app_version': app_version, 'mobile_app': app}
         return render(request, 'management/app_version_detail.html', context)
