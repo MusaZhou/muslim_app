@@ -98,14 +98,14 @@ class MobileApp(OrderedModel):
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   verbose_name=_('Uploader'))
 #     video_url = models.CharField(max_length=200, blank=True, null=True, verbose_name='Video')
-    upload_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'))
+    upload_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
    # avg_rate = models.DecimalField(max_digits=2, default=5.0,
    #                                decimal_places=1,
    #                                null=True, verbose_name='Average Rate')
     comment_count = models.PositiveIntegerField(null=True, verbose_name=_('Comment Count'), default=0)
     download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
-    slug = models.SlugField(unique=True, null=True, blank=True)
+    slug = models.SlugField(unique=True, null=True, blank=True, db_index=True)
     images = GenericRelation(Image, related_query_name='imaged_app', verbose_name=_('Screenshots'))
     tags = models.ManyToManyField(Tag, verbose_name=_('Tags'))
     is_active = models.BooleanField(default=False, verbose_name=_('Active Status'))
@@ -165,7 +165,7 @@ class MobileApp(OrderedModel):
     def latestAPK(self):
         latestVersion = self.latest_version()
         if latestVersion is not None:
-            return self.latest_version().apk.file.url
+            return latestVersion.apk.file.url
         return None
     
     def latestTime(self):
@@ -194,7 +194,7 @@ class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,
                                       validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")],
                                       verbose_name=_('Version No.'))
-    created_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Created Time'))
+    created_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Created Time'), db_index=True)
     approve_status = models.CharField(max_length=10,
                                       choices=APPROVE_CHOICES,
                                       default='new', verbose_name=_('Approve Status'))
