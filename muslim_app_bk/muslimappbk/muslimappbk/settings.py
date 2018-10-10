@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'jmo%i=431(gx*2(*rn)c%f9@c!(22fzy$-s-*p#*w(a!i%hip9'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'muslimapp.cn', 'www.muslimapp.cn', 'testmuslimapp.com']
 

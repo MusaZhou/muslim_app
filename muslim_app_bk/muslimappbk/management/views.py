@@ -18,6 +18,8 @@ from django.core.files.storage import default_storage
 import requests
 from management.tasks import upload_file_task
 from django.utils.translation import gettext_lazy as _
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.core.files.uploadhandler import TemporaryFileUploadHandler
 
 
 logger = logging.getLogger(__name__)
@@ -287,44 +289,59 @@ def update_app_active(request):
         app.save()
         return JsonResponse({'status': 1}, safe=False)
     
-@login_required    
+@login_required  
+@csrf_exempt  
 def upload_video(request):
+    request.upload_handlers = [TemporaryFileUploadHandler(request)]
+    videoId = _upload_video(request)
+    context = {'video_id': videoId}
+    return JsonResponse(context, safe=False)
+
+@csrf_protect
+def _upload_video(request):
     if request.is_ajax():
         video = Video()
         video.save()
         video.refresh_from_db()
         
         video_file = request.FILES['video']
+        file_path = video_file.temporary_file_path()
+        logger.info('temporary file path:' + file_path)
         extension = video_file.name.split('.')[-1]
         base_name = 'videos/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
         file_name = settings.MEDIA_ROOT + base_name
-        with open(file_name, 'wb+') as destination:
-            for chunk in video_file.chunks():
-                destination.write(chunk)
-        upload_file_task.delay(file_name, 'videos/', video.id, 'management_video', 'file')
+        os.rename(file_path, file_name)
+        os.chmod(file_name, 0o755)
         
-        context = {'video_id': video.id}
-        return JsonResponse(context, safe=False)
+        upload_file_task.delay(file_name, 'videos/', video.id, 'management_video', 'file')
+
+        return video.id
     
-@login_required    
+@login_required 
+@csrf_exempt   
 def upload_apk(request):
+    request.upload_handlers = [TemporaryFileUploadHandler(request)]
+    return _upload_apk(request)
+
+@csrf_protect
+def _upload_apk(request):        
     if request.is_ajax():
         apk = ApkFile()
         apk.save()
         apk.refresh_from_db()
         
         apk_file = request.FILES['apk']
+        file_path = apk_file.temporary_file_path()
+        logger.info('temporary file path:' + file_path)
         extension = apk_file.name.split('.')[-1]
         base_name = 'apk/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
         file_name = settings.MEDIA_ROOT + base_name
-        with open(file_name, 'wb+') as destination:
-            for chunk in apk_file.chunks():
-                destination.write(chunk)
+        os.rename(file_path, file_name)
+        os.chmod(file_name, 0o755)
         upload_file_task.delay(file_name, 'apk/', apk.id, 'management_apkfile', 'file')
         
         context = {'apk_id': apk.id}
         return JsonResponse(context, safe=False)
-        
     
 class BannerListView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
