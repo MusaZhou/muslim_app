@@ -1,0 +1,65 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<!-- saved from url=(0048)http://getbootstrap.com/docs/4.1/examples/cover/ -->
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="{% static 'images/logo.png' %}">
+
+        <title>404</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="{% static '404.css' %}" rel="stylesheet">
+    </head>
+  <body class="text-center">
+
+    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column" style="justify-content: center">
+<!--
+      <header class="masthead mb-auto">
+        <div class="inner">
+-->
+<!--          <h3 class="masthead-brand">404</h3>-->
+<!--
+          <nav class="nav nav-masthead justify-content-center">
+            <a class="nav-link active" href="http://getbootstrap.com/docs/4.1/examples/cover/#">Home</a>
+            <a class="nav-link" href="http://getbootstrap.com/docs/4.1/examples/cover/#">Features</a>
+            <a class="nav-link" href="http://getbootstrap.com/docs/4.1/examples/cover/#">Contact</a>
+          </nav>
+-->
+<!--
+        </div>
+      </header>
+-->
+
+      <main role="main" class="inner cover">
+        <h1 class="cover-heading">404 {% trans 'Page not found' %}</h1>
+        <p class="lead">
+            <img src="{% static 'images/verse_61_8.png' %}"/>
+        </p>
+        <p class="lead">{% trans 'They want to extinguish the light of Allah with their mouths, but Allah will perfect His light, although the disbelievers dislike it.' %}</p>
+<!--
+        <p class="lead">
+          <a href="http://getbootstrap.com/docs/4.1/examples/cover/#" class="btn btn-lg btn-secondary">Learn more</a>
+        </p>
+-->
+      </main>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+  
+
+</body></html>

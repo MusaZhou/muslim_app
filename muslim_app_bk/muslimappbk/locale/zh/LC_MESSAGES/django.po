@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-08 15:02+0800\n"
+"POT-Creation-Date: 2018-10-10 12:57+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1126,6 +1126,17 @@ msgstr "登录"
 #: showcase/templates/showcase/base.html:66
 msgid "Sign up"
 msgstr "注册"
+
+#: templates/404.html:43
+msgid "Page not found"
+msgstr "页面没有找到"
+
+#: templates/404.html:47
+msgid ""
+"They want to extinguish the light of Allah with their mouths, but Allah will "
+"perfect His light, although the disbelievers dislike it."
+msgstr ""
+"他们想吹灭安拉的光明，但安拉要完美自己的光明，即使不信道的人不愿意"
 
 #: userauth/forms.py:11
 msgid "Format: YYYY-MM-DD"

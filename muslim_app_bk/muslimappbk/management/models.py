@@ -146,7 +146,7 @@ class MobileApp(OrderedModel):
         return reverse('showcase:app', args=[self.slug])
     
     def has_approved_version(self):
-        if self.versions.filter(approve_status='approved').count() > 0:
+        if self.versions.filter(approve_status='approved').exists():
             return True
         return False
     
@@ -183,7 +183,7 @@ class MobileApp(OrderedModel):
     
 @receiver(post_save, sender=MobileApp)
 def add_rating(sender, instance, **kwargs):
-     if Rating.objects.filter(rating_apps=instance).count() == 0:
+     if Rating.objects.filter(rating_apps=instance).exists():
             Rating.objects.rate(instance, 5, '127.0.0.1')
          
 class VersionApprovedManager(models.Manager):
