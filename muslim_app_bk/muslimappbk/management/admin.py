@@ -1,6 +1,7 @@
 from django.contrib import admin
-from .models import AppCategory, Tag, MobileApp
-# from ordered_model.admin import OrderedModelAdmin
+from .models import AppCategory, Tag, MobileApp, Profile
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.auth.models import User
 from ordered_model.admin import OrderedTabularInline, OrderedInlineModelAdminMixin
 
 # Register your models here.
@@ -20,4 +21,15 @@ class AppCategoryAdmin(OrderedInlineModelAdminMixin, admin.ModelAdmin):
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     pass
+
+class ProfileInline(admin.StackedInline):
+    model = Profile
+    can_delete = False
+    verbose_name_plural = 'profile'
+    
+class UserAdmin(BaseUserAdmin):
+    inlines = (ProfileInline,)
+    
+admin.site.unregister(User)
+admin.site.register(User, UserAdmin)
 

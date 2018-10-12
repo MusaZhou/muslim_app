@@ -6,6 +6,7 @@ from management.choices import GENDER_CHOICES
 from django.forms.models import ModelForm
 from management.models import Profile
 from django.utils.translation import gettext_lazy as _
+from django.contrib.auth import password_validation
 
 class SignUpForm(UserCreationForm):  
     date_of_birth = forms.DateField(help_text=_('Format: YYYY-MM-DD'), required=False)
@@ -16,6 +17,13 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'date_of_birth', 'password1', 'password2', 'gender', 'avatar')
+        
+    def clean_password2(self):
+        password2 = super().clean_password2()
+        password_validation.validate_password(
+            self.cleaned_data['password2']
+        )
+        return password2 
         
 class UserProfileForm(ModelForm):
     email = forms.EmailField(label=_("Email Address"), required=False)

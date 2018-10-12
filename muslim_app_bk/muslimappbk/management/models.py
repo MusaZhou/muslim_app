@@ -32,7 +32,7 @@ class Profile(models.Model):
     email_confirmed = models.BooleanField(default=False)
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
     def save(self, *args, **kwargs):
         if not self.slug:
