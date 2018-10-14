@@ -1,5 +1,6 @@
 {% extends "management/index.html" %}
 {% load i18n %}
+{% load l10n %}
 {% block title %}Application Table{% endblock %}
 {% block stylesheet %}
     {{ block.super }}
@@ -49,7 +50,7 @@
                       {% for app_version in app_version_list %}
                       <tr>
                         <td>{{ app_version.version_number }}</td>
-                        <td>{{ app_version.created_time }}</td>
+                        <td>{{ app_version.created_time|localize }}</td>
                         <td>{{ app_version.approve_status }}</td>
                         <td>{{ app_version.remark }}</td>
                         <td>{{ app_version.whats_new }}</td>

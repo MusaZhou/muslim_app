@@ -34,3 +34,6 @@ def search(request):
                                            Q(category__name__icontains=search_word))
     context = {'app_list': app_list}
     return render(request, 'showcase/search.html', context)
+
+def disqus(request):
+    return render(request, 'showcase/disqus.html')

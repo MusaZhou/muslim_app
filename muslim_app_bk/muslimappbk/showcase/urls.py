@@ -10,8 +10,9 @@ urlpatterns = [
 #     path('dashboard_template/', views.dashboard_template, name='dashboard_template'),
 #     path('carousel_template/', views.carousel_template, name='carousel_template'),
 #     path('album_template/', views.album_template, name='album_template'),
-    path('index/', cache_page(24 * 60 * 60 * 15)(views.index, name='index')),
+    path('index/', cache_page(24 * 60 * 60 * 15)(views.index), name='index'),
     path('app/<str:slug>', cache_page(60 * 60 * 15)(views.app), name='app'),
-    path('search', views.search, name="search")
+    path('search', views.search, name="search"),
+    path('disqus', views.disqus, name="disqus")
 ]
 

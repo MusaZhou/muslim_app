@@ -221,16 +221,20 @@ LOGGING = {
 #             'filename': '/var/log/apache2/muslimapp_debug.log',
 #             'formatter': 'simple'
 #         },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        }
     },
     'loggers': {
         'django': {
 #             'handlers': ['file'],
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'management': {
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': True,
         }
@@ -272,6 +276,10 @@ COMMENTS_XTD_CONTACT_EMAIL = "admin@muslimapp.cn"
 MANAGERS = (
     ('Administrator', 'admin@muslimapp.cn'),
     ('Ali Zhou', 'alizhou@muslimapp.cn')
+)
+
+ADMINS = (
+    ('Administrator', 'admin@muslimapp.cn')
 )
 
 COMMENTS_XTD_CONFIRM_EMAIL = False
