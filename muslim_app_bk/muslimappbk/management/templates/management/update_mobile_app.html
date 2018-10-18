@@ -53,6 +53,11 @@
                             {{ tag_cb.tag }}
                         </div>
                         {% endfor %}
+                        {% if updateAppModelForm.tags.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ updateAppModelForm.tags.errors }}
+                          </div>
+                        {% endif %}
                       </div>
                       <div class="form-group row" style="margin-left: 0">
                         <button type="button" class="btn btn-primary icon-btn">{% trans 'Icon' %}</button>

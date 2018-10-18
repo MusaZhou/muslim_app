@@ -40,33 +40,33 @@ def add_mobile_app(request):
 
             newAppVersion = addAppVersionModelForm.save(commit=False)
             newAppVersion.mobile_app = newApp
-            try:
-                newAppVersion.full_clean()
-                newAppVersion.save()
+#             try:
+#                 newAppVersion.full_clean()
+            newAppVersion.save()
+            
+            apk_id = addAppVersionModelForm.cleaned_data['apk_id']
+            ApkFile.objects.filter(id=apk_id).update(app_version=newAppVersion)
+
+            imgIds = addAppModelForm.cleaned_data['imgIds']
+            logger.debug('imgIds:' + imgIds)
+            if imgIds:
+                imgIds = imgIds.split(',')
+                for img in Image.objects.filter(id__in=imgIds):
+                    img.content_object = newApp
+                    img.save()
+            
+            video_id = addAppModelForm.cleaned_data['video_id']
+            if video_id:
+                video = Video.objects.get(id=video_id)
+                video.content_object = newApp
+                video.save()
                 
-                apk_id = addAppVersionModelForm.cleaned_data['apk_id']
-                ApkFile.objects.filter(id=apk_id).update(app_version=newAppVersion)
-    
-                imgIds = addAppModelForm.cleaned_data['imgIds']
-                logger.debug('imgIds:' + imgIds)
-                if imgIds:
-                    imgIds = imgIds.split(',')
-                    for img in Image.objects.filter(id__in=imgIds):
-                        img.content_object = newApp
-                        img.save()
-                
-                video_id = addAppModelForm.cleaned_data['video_id']
-                if video_id:
-                    video = Video.objects.get(id=video_id)
-                    video.content_object = newApp
-                    video.save()
-                    
-                return redirect('management:app_table_basic')\
-                     if user.has_perm('management.can_approve_app')\
-                     else redirect('management:app_table_uploader')
-            except ValidationError as error:
-                addAppVersionModelForm.add_error(None, error)
-                newApp.delete()
+            return redirect('management:app_table_basic')\
+                 if user.has_perm('management.can_approve_app')\
+                 else redirect('management:app_table_uploader')
+#             except ValidationError as error:
+#                 addAppVersionModelForm.add_error(None, error)
+#                 newApp.delete()
     else:
         addAppModelForm = AddAppModelForm()
         addAppVersionModelForm = AddAppVersionModelForm()
@@ -198,25 +198,25 @@ class AddAppVersionView(View):
             new_app_version = addAppVersionModelForm.save(commit=False)
             new_app_version.upload_by = user
             new_app_version.mobile_app = mobile_app
-            try:
-                new_app_version.full_clean()
-                mobile_app = updateAppModelForm.save()
-                new_app_version.save()
-                imgIds = updateAppModelForm.cleaned_data['imgIds']
+#             try:
+#                 new_app_version.full_clean()
+            mobile_app = updateAppModelForm.save()
+            new_app_version.save()
+            imgIds = updateAppModelForm.cleaned_data['imgIds']
+            
+            apk_id = addAppVersionModelForm.cleaned_data['apk_id']
+            ApkFile.objects.filter(id=apk_id).update(app_version=new_app_version)
+            
+            if imgIds:
+                imgIds = imgIds.split(',')
+                update_app_images(imgIds, mobile_app)
                 
-                apk_id = addAppVersionModelForm.cleaned_data['apk_id']
-                ApkFile.objects.filter(id=apk_id).update(app_version=new_app_version)
-                
-                if imgIds:
-                    imgIds = imgIds.split(',')
-                    update_app_images(imgIds, mobile_app)
-                    
-                return redirect('management:app_history', slug=mobile_app.slug)\
-                     if user.has_perm('management.can_approve_app')\
-                     else redirect('management:app_history_uploader', slug=mobile_app.slug)
+            return redirect('management:app_history', slug=mobile_app.slug)\
+                 if user.has_perm('management.can_approve_app')\
+                 else redirect('management:app_history_uploader', slug=mobile_app.slug)
         
-            except ValidationError as error:
-                addAppVersionModelForm.add_error(None, error)
+#             except ValidationError as error:
+#                 addAppVersionModelForm.add_error(None, error)
             
         appImages = mobile_app.images.all()
         imgUrls = []

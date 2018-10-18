@@ -73,6 +73,11 @@
                             {{ tag_cb.tag }}
                         </div>
                         {% endfor %}
+                        {% if addAppModelForm.tags.errors %}
+                          <div class="invalid-feedback d-block">
+                            {{ addAppModelForm.tags.errors }}
+                          </div>
+                        {% endif %}
                       </div>
                       <div class="form-group row pl-3">
 	                        <button type="button" class="button btn-primary btn col-md-2" id="apk_input_btn">APK</button>

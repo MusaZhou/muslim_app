@@ -215,15 +215,15 @@ class AppVersion(models.Model):
     
     class Meta:
         ordering = ["-created_time"]
-#         unique_together = ('mobile_app', 'version_number')
+        unique_together = (('mobile_app', 'version_number'),)
     
     def __str__(self):
         return self.version_number
 
-    def clean(self):
-        if self.mobile_app is not None:
-            if AppVersion.objects.filter(mobile_app=self.mobile_app, version_number=self.version_number).exists():
-                raise ValidationError({'version_number': _('Version number is duplicated on this application.')})
+#     def clean(self):
+#         if self.mobile_app is not None:
+#             if AppVersion.objects.filter(mobile_app=self.mobile_app, version_number=self.version_number).exists():
+#                 raise ValidationError({'version_number': _('Version number is duplicated on this application.')})
 
 class ApkFile(models.Model):
     app_version = models.OneToOneField(AppVersion, on_delete=models.CASCADE, null=True, related_name='apk')
