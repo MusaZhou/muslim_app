@@ -215,6 +215,7 @@ class AppVersion(models.Model):
     
     class Meta:
         ordering = ["-created_time"]
+#         unique_together = ('mobile_app', 'version_number')
     
     def __str__(self):
         return self.version_number
