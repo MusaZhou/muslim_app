@@ -9,7 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import password_validation
 
 class SignUpForm(UserCreationForm):  
-    date_of_birth = forms.DateField(help_text=_('Format: YYYY-MM-DD'), required=False)
+    date_of_birth = forms.DateField(required=False, widget=forms.SelectDateWidget(years=range(1950, 2019)))
     gender =forms.ChoiceField(choices=GENDER_CHOICES)
     avatar = forms.ImageField(required=False)
     email = forms.EmailField(max_length=254, help_text=_('Required. Inform a valid email address.'))
@@ -27,7 +27,9 @@ class SignUpForm(UserCreationForm):
         
 class UserProfileForm(ModelForm):
     email = forms.EmailField(label=_("Email Address"), required=False)
+    date_of_birth = forms.DateField(required=False, widget=forms.SelectDateWidget(years=range(1950, 2019)))
+
 #     avatar = forms.ImageField(label="Avatar", required=False, error_messages={'invalid': "image files only"}, widget=forms.FileInput)
     class Meta:
         model = Profile
-        fields = ('nick_name', 'gender', 'email', 'date_of_birth', 'avatar') 
+        fields = ('nick_name', 'gender', 'email', 'avatar', 'date_of_birth') 
