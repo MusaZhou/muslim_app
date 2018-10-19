@@ -20,6 +20,7 @@ from management.tasks import upload_file_task
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
+from pip._vendor.colorama import initialise
 
 
 logger = logging.getLogger(__name__)
@@ -40,8 +41,6 @@ def add_mobile_app(request):
 
             newAppVersion = addAppVersionModelForm.save(commit=False)
             newAppVersion.mobile_app = newApp
-#             try:
-#                 newAppVersion.full_clean()
             newAppVersion.save()
             
             apk_id = addAppVersionModelForm.cleaned_data['apk_id']
@@ -64,9 +63,6 @@ def add_mobile_app(request):
             return redirect('management:app_table_basic')\
                  if user.has_perm('management.can_approve_app')\
                  else redirect('management:app_table_uploader')
-#             except ValidationError as error:
-#                 addAppVersionModelForm.add_error(None, error)
-#                 newApp.delete()
     else:
         addAppModelForm = AddAppModelForm()
         addAppVersionModelForm = AddAppVersionModelForm()
@@ -173,7 +169,7 @@ class AppTableBasicView(PermissionRequiredMixin, View):
 class AddAppVersionView(View):
     def get(self, request, *args, **kwargs):
         mobile_app = MobileApp.objects.get(slug=kwargs['slug'])
-        addAppVersionModelForm = AddAppVersionModelForm()
+        addAppVersionModelForm = AddAppVersionModelForm(initial={'mobile_app': mobile_app})
         appImages = mobile_app.images.all()
         imgIds = []
         imgUrls = []
@@ -191,15 +187,13 @@ class AddAppVersionView(View):
     def post(self, request, *args, **kwargs):
         mobile_app = MobileApp.objects.get(slug=kwargs['slug'])
         updateAppModelForm = AddAppModelForm(request.POST, instance=mobile_app)
-        addAppVersionModelForm = AddAppVersionModelForm(request.POST, request.FILES)
+        addAppVersionModelForm = AddAppVersionModelForm(request.POST, request.FILES, initial={'mobile_app': mobile_app})
         
         if updateAppModelForm.is_valid() and addAppVersionModelForm.is_valid():
             user = request.user
             new_app_version = addAppVersionModelForm.save(commit=False)
             new_app_version.upload_by = user
             new_app_version.mobile_app = mobile_app
-#             try:
-#                 new_app_version.full_clean()
             mobile_app = updateAppModelForm.save()
             new_app_version.save()
             imgIds = updateAppModelForm.cleaned_data['imgIds']
@@ -215,8 +209,6 @@ class AddAppVersionView(View):
                  if user.has_perm('management.can_approve_app')\
                  else redirect('management:app_history_uploader', slug=mobile_app.slug)
         
-#             except ValidationError as error:
-#                 addAppVersionModelForm.add_error(None, error)
             
         appImages = mobile_app.images.all()
         imgUrls = []

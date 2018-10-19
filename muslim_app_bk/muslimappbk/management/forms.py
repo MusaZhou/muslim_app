@@ -4,7 +4,7 @@ from management.models import MobileApp, AppVersion, Banner
 from django.forms import ModelChoiceField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from .models import Tag
+from .models import Tag, MobileApp
 
 
 class AddAppModelForm(ModelForm):
@@ -18,10 +18,11 @@ class AddAppModelForm(ModelForm):
 
 class AddAppVersionModelForm(ModelForm):
     apk_id = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'apk_id'}))
+    mobile_app = forms.ModelChoiceField(required=False, queryset=MobileApp.objects.all())
     
     class Meta:
         model = AppVersion
-        fields = ['version_number', 'whats_new', 'apk_id', 'translator', 'android_version']
+        fields = ['version_number', 'whats_new', 'apk_id', 'translator', 'android_version', 'mobile_app']
 
 class ModelChoiceFieldBeta(ModelChoiceField):
     
