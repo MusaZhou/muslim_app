@@ -4,13 +4,13 @@ from management.models import MobileApp, AppVersion, Banner
 from django.forms import ModelChoiceField
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
-from .models import Tag, MobileApp
+from taggit_labels.widgets import LabelWidget
 
 
 class AddAppModelForm(ModelForm):
     imgIds = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'imgIds'}))
     video_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_id'}))
-    tags = forms.ModelMultipleChoiceField(widget=forms.CheckboxSelectMultiple, queryset=Tag.objects.all())
+    tags = forms.CharField(required=False, widget=LabelWidget)
     
     class Meta:
         model = MobileApp

@@ -24,6 +24,7 @@ requests = "*"
 celery = {extras = ["redis"], version = "*"}
 flower = "*"
 django-ordered-model = "*"
+django-taggit-labels = "*"
 
 [dev-packages]
 

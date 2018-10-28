@@ -12,10 +12,10 @@ from django.urls import reverse
 from management.templatetags.custom_tags import verbose_name_filter
 from django.db.models.fields import CharField
 from star_ratings.models import Rating
-# from slugify import slugify
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from ordered_model.models import OrderedModel
+from taggit.managers import TaggableManager
 
 # Create your models here.
 class Profile(models.Model):
@@ -65,11 +65,11 @@ class Video(models.Model):
     content_object = GenericForeignKey()
     file = models.FileField(upload_to="videos", blank=True, null=True)
 
-class Tag(models.Model):
-    name = models.CharField(max_length=100, verbose_name=_('Tag'))
-
-    def __str__(self):
-        return self.name
+# class tag(models.Model):
+#     name = models.CharField(max_length=100, verbose_name=_('Tag'))
+#  
+#     def __str__(self):
+#         return self.name
 
 class AppCategory(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Category'))
@@ -107,7 +107,7 @@ class MobileApp(OrderedModel):
     download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
     slug = models.SlugField(unique=True, null=True, blank=True, db_index=True)
     images = GenericRelation(Image, related_query_name='imaged_app', verbose_name=_('Screenshots'))
-    tags = models.ManyToManyField(Tag, verbose_name=_('Tags'))
+    tags = TaggableManager()
     is_active = models.BooleanField(default=False, verbose_name=_('Active Status'))
     icon = models.ImageField(upload_to="icons")
     developer = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("Developer"))

@@ -59,7 +59,9 @@ INSTALLED_APPS = [
     'mod_wsgi.server',
     'star_ratings',
     'django_upyun',
-    'ordered_model'
+    'ordered_model',
+    'taggit',
+    'taggit_labels',
 ]
 
 MIDDLEWARE = [
@@ -324,3 +326,9 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+    }
+}
