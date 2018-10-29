@@ -47,15 +47,7 @@
                         {% render_field updateAppModelForm.category class="form-control" %}
                       </div>
                       <div class="form-group">
-                        <label for="appTags">{{ updateAppModelForm.tags.label }}</label><br/>
-                        {% comment %}
-                        {% for tag_cb in updateAppModelForm.tags %}
-                        <div class="form-check form-check-inline">
-                            <label class="form-check-label mr-1" for="{{ tag_cb.id_for_label }}">{{ tag_cb.choice_label }}</label>
-                            {{ tag_cb.tag }}
-                        </div>
-                        {% endfor %}
-                        {% endcomment %}
+                        {{ updateAppModelForm.tags.label }}
                         {{ updateAppModelForm.tags }}
                         {% if updateAppModelForm.tags.errors %}
                           <div class="invalid-feedback d-block">

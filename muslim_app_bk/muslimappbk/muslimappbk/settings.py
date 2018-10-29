@@ -332,3 +332,5 @@ CACHES = {
         'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
     }
 }
+
+TAGGIT_CASE_INSENSITIVE = True

@@ -145,7 +145,7 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
             for img in appImages:
                 imgUrls.append(img.picture.url)
             
-            last_video = mobile_app.videos().last()
+            last_video = mobile_app.videos.last()
             if last_video is not None:
                 video_id = last_video.id
                 
