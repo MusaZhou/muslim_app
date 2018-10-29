@@ -149,6 +149,9 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
             if last_video is not None:
                 video_id = last_video.id
                 
+            if(updateAppModelForm.errors):
+                    logger.info('form errors: %s', updateAppModelForm.errors.as_data())
+                
         return render(request, 'management/update_mobile_app.html', 
                           {'updateAppModelForm': updateAppModelForm,
                              'imgUrls': imgUrls,

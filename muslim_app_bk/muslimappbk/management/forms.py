@@ -6,6 +6,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from taggit_labels.widgets import LabelWidget
 from taggit.forms import TagField
+from django.core import validators
 
 
 class AddAppModelForm(ModelForm):

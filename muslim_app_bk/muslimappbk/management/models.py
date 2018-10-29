@@ -105,7 +105,8 @@ class MobileApp(OrderedModel):
    #                                null=True, verbose_name='Average Rate')
     comment_count = models.PositiveIntegerField(null=True, verbose_name=_('Comment Count'), default=0)
     download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
-    slug = models.SlugField(unique=True, null=True, blank=True, db_index=True)
+    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
+                            validators=[validators.validate_unicode_slug])
     images = GenericRelation(Image, related_query_name='imaged_app', verbose_name=_('Screenshots'))
     tags = TaggableManager()
     is_active = models.BooleanField(default=False, verbose_name=_('Active Status'))
