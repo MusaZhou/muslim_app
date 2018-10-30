@@ -1,0 +1,88 @@
+{% extends "management/index.html" %}
+{% load i18n %}
+{% load l10n %}
+{% block title %}PDF Table{% endblock %}
+{% block stylesheet %}
+    {{ block.super }}
+    <style>
+        .add-new-version {
+            height: 60%;
+        }
+    </style>
+    
+{% endblock %}
+{% block mainContent %}
+    <div class="container-fluid">
+            <h4 class="">{% trans 'PDF List' %}</h4>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="">
+                  <div class="row">
+                    <a class=" btn btn-primary cur-p add-new-version" href="{% url 'management:add_pdf' %}">
+                        {% trans 'Upload New PDF' %}
+                    </a>
+                  </div>
+                  <table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                    <thead>
+                      <tr>
+                        <th>{% trans 'ID' %}</th>
+                        <th>{% trans 'Title' %}</th>
+                        <th>{% trans 'Description' %}</th>
+                        <th>{% trans 'Download' %}</th>
+                        <th>{% trans 'Approve' %}</th>
+                        <th>{% trans 'Remark' %}</th>
+                        <th>{% trans 'Detail' %}</th>
+                        <th>{% trans 'Edit' %}</th>
+                        <th>{% trans 'Delete' %}</th>
+                      </tr>
+                    </thead>
+                    <tfoot>
+                      <tr>
+                        <th>{% trans 'ID' %}</th>
+                        <th>{% trans 'Title' %}</th>
+                        <th>{% trans 'Description' %}</th>
+                        <th>{% trans 'Download' %}</th>
+                        <th>{% trans 'Approve' %}</th>
+                        <th>{% trans 'Remark' %}</th>
+                        <th>{% trans 'Detail' %}</th>
+                        <th>{% trans 'Edit' %}</th>
+                        <th>{% trans 'Delete' %}</th>
+                      </tr>
+                    </tfoot>
+                    <tbody>
+                      {% for pdf in pdf_list %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ pdf.title }}</td>
+                        <td>{{ pdf.description|truncatechars:20 }}</td>
+                        <td style="vertical-align: middle">
+                            <a href="{{ pdf.pdf_file.url }}"><i class="fas fa-download" ></i></a>
+                        </td>
+                        <td>{{ pdf.approve_status }}</td>
+                        <td>{{ pdf.remark }}</td>
+                        <td>
+                            <a href="{% url 'management:pdf_detail' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'management:pdf_edit' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
+                        </td>
+                        <td>
+                            <a href="{% url 'management:pdf_delete' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+{% endblock %}
+{% block javascript %}
+    {{ block.super }} 
+<script>
+    $(function(){
+        var dataTable = $('#dataTable').DataTable();        
+    });
+</script>
+{% endblock %}

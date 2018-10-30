@@ -47,14 +47,12 @@ def update_user_profile(sender, instance, created, **kwargs):
         instance.profile.save()
 
 class Image(models.Model):
-    #id, content_type, object_id, content_object, url
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
     picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True)
     width = models.CharField(null=True, max_length=8, blank=True)
     height = models.CharField(null=True, max_length=8, blank=True)
-#     test = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return self.content_object
@@ -64,12 +62,6 @@ class Video(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
     file = models.FileField(upload_to="videos", blank=True, null=True)
-
-# class tag(models.Model):
-#     name = models.CharField(max_length=100, verbose_name=_('Tag'))
-#  
-#     def __str__(self):
-#         return self.name
 
 class AppCategory(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Category'))
@@ -97,12 +89,8 @@ class MobileApp(OrderedModel):
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   verbose_name=_('Uploader'))
-#     video_url = models.CharField(max_length=200, blank=True, null=True, verbose_name='Video')
     upload_date = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
-   # avg_rate = models.DecimalField(max_digits=2, default=5.0,
-   #                                decimal_places=1,
-   #                                null=True, verbose_name='Average Rate')
     comment_count = models.PositiveIntegerField(null=True, verbose_name=_('Comment Count'), default=0)
     download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
@@ -123,7 +111,6 @@ class MobileApp(OrderedModel):
     upload_order = UploadOrderManager()
     
     class Meta(OrderedModel.Meta):
-#         ordering = ["-upload_date"]
         permissions = (("can_approve_app", "Can approve newly uploaded app"),)
 
     def slugDefault(self):
@@ -206,7 +193,6 @@ class AppVersion(models.Model):
     mobile_app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, blank=True,
                                    null=True, verbose_name=_('Application'), related_name='versions')
     whats_new = models.TextField(blank=True, null=True, verbose_name=_("What's New"))
-#     apk = models.FileField(upload_to='apk', verbose_name="APK File", validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
     translator = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Translator"))
     android_version = models.CharField(max_length=100, null=True, blank=True, verbose_name=_("Supported Android Version"))
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
@@ -225,38 +211,6 @@ class ApkFile(models.Model):
     app_version = models.OneToOneField(AppVersion, on_delete=models.CASCADE, null=True, related_name='apk')
     file = models.FileField(upload_to="apk", blank=True, null=True,verbose_name=_("APK File"), \
                             validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
-    
-class Evaluation(models.Model):
-    content = models.TextField(verbose_name=_('Content'))
-    rate = models.PositiveSmallIntegerField(verbose_name=_('Rate'))
-    app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, verbose_name=_('Application'))
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                   related_name='createdEvaluations', verbose_name=_('Comment By'))
-    created_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Comment At'))
-    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
-                                      default='new', verbose_name=_('Approve Status'))
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                    related_name='checkedEvaluations',
-                                    null=True, verbose_name=_('Approved By'))
-
-    def __str__(self):
-        return self.content
-
-class Comment(models.Model):
-    content = models.TextField(verbose_name=_('Content'))
-    evluation = models.ForeignKey(Evaluation, on_delete=models.CASCADE, verbose_name=_('Evaluation'))
-    app = models.ForeignKey(MobileApp, on_delete=models.CASCADE, verbose_name=_('Application'))
-    created_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                   related_name='createdComments', verbose_name=_('Created By'))
-    created_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Created At'))
-    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
-                                      default='new', verbose_name=_('Approve Status'))
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                    related_name='checkedComments',
-                                    null=True, verbose_name=_('Approved By'))
-
-    def __str__(self):
-        return self.content
 
 class Download(models.Model):
     download_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Download At'))
@@ -276,3 +230,24 @@ class AppCommentModerator(XtdCommentModerator):
     email_notification = True
 
 moderator.register(MobileApp, AppCommentModerator)
+
+class PDFDoc(models.Model):
+    title = models.CharField(verbose_name=_('Title'), max_length=200)
+    description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
+    pdf_file = models.FileField(upload_to='pdf', verbose_name=_("PDF File"), \
+                            validators=[validators.FileExtensionValidator(['pdf'])])
+    tags = TaggableManager()
+    upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
+    approve_status = models.CharField(max_length=10,
+                                      choices=APPROVE_CHOICES,
+                                      default='new', verbose_name=_('Approve Status'))
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
+                                    null=True, blank=True, verbose_name=_('Approved By'),\
+                                    related_name='pdf_approved')
+    approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
+    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                  verbose_name=_('Uploader'), related_name='pdf_uploaded')
+    download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
+    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
+                            validators=[validators.validate_unicode_slug])
+    ratings = GenericRelation(Rating, related_query_name='rating_pdf')

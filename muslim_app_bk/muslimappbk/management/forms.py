@@ -1,12 +1,10 @@
 from django import forms
 from django.forms import ModelForm
-from management.models import MobileApp, AppVersion, Banner
+from management.models import MobileApp, AppVersion, Banner, PDFDoc
 from django.forms import ModelChoiceField
-from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from taggit_labels.widgets import LabelWidget
 from taggit.forms import TagField
-from django.core import validators
 
 
 class AddAppModelForm(ModelForm):
@@ -47,6 +45,11 @@ class BannerForm(ModelForm):
         data = self.cleaned_data['app_list']
         return data
     
-
+class PDFDocModelForm(ModelForm):
+    tags = TagField(required=False, widget=LabelWidget)
+    
+    class Meta:
+        model = PDFDoc
+        fields = ['title', 'description', 'tags', 'slug', 'pdf_file']
         
 

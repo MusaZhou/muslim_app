@@ -1,12 +1,11 @@
 from django.urls import path, include, re_path
-from django.conf import settings
 from . import views
-from basic import views as basic_view
 from .views import ImageFieldView, UpdateMobileAppView,  AppTableBasicView,\
 AddAppVersionView, AppHistoryView, VersionDetailView
 from .views_uploader import AppTableUploaderView, AppHistoryUploaderView
 from .views import BannerListView, BannerEditView, BannerDeleteView
 from django.views.decorators.cache import cache_page
+from .views_pdf import PDFListView, PDFEditView, PDFDeleteView
 
 app_name = 'management'
 
@@ -29,4 +28,8 @@ urlpatterns = [
     path('edit_banner/<int:id>', BannerEditView.as_view(), name="edit_banner"),
     path('delete_banner/<int:id>', BannerDeleteView.as_view(), name="delete_banner"),
     path('index', views.index, name="index"),
+    path('pdf_list', PDFListView.as_view(), name="pdf_list"),
+    path('add_pdf', cache_page(24 * 60 * 60 * 15)(PDFEditView.as_view()), name="add_pdf"),
+    path('edit_pdf/<str:slug>', PDFEditView.as_view(), name="edit_pdf"),
+    path('delete_pdf/<str:slug>', PDFDeleteView.as_view(), name="delete_pdf"),
 ]
