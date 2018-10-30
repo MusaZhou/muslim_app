@@ -9,11 +9,15 @@
 {% endblock %}
 {% block mainContent %}
           <div class="container-fluid">
-            <h4 class="">{% trans 'Banner List' %}</h4>
+            <div class="row">
+                <h4 class="col-auto" style="margin-top: 5px">{% trans 'Banner List' %}</h4>
+                <a class="button btn btn-primary btn-sm" href="{% url 'management:add_banner' %}">{% trans 'Add Banner' %}</a>
+            </div>
+            
             <div class="row">
               <div class="col-md-12">
                 <div class="table-responsive">
-                  <a class="button btn btn-primary" href="{% url 'management:add_banner' %}">{% trans 'Add Banner' %}</a>
+                  
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -104,25 +108,8 @@
             $(this).text(page_start_index + row_index);
         });
         
-        setActiveMenu(2);
+        setActiveMenu(3);
     });
-//    
-//    function update_active(app_slug, status){
-//    	$.ajax({
-//    		url: '{% url "management:update_app_active" %}',
-//    		method: 'POST',
-//    		data: {
-//    			app_slug: app_slug,
-//    			status: status
-//    		}
-//    	}).done(function(response){
-//    		if(response.status == 1){
-//    			location.reload();
-//    		}else{
-//    			alert('server error');
-//    		}
-//    	});
-//    }
 </script>
 {% endblock %}
 

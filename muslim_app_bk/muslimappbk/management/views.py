@@ -1,10 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from management.forms import AddAppModelForm, AddAppVersionModelForm, BannerForm
-from django.contrib.contenttypes.forms import generic_inlineformset_factory
 from management.models import Image, MobileApp, AppVersion, Banner, Video,\
     ApkFile
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.views.generic import View
 from django.core.paginator import Paginator, Page
 from django.core.exceptions import ValidationError
@@ -14,13 +13,11 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.core.files.storage import default_storage
 import requests
 from management.tasks import upload_file_task
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
-from pip._vendor.colorama import initialise
 
 
 logger = logging.getLogger(__name__)

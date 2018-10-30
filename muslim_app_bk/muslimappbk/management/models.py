@@ -231,11 +231,10 @@ class AppCommentModerator(XtdCommentModerator):
 
 moderator.register(MobileApp, AppCommentModerator)
 
+ 
 class PDFDoc(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=200)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
-    pdf_file = models.FileField(upload_to='pdf', verbose_name=_("PDF File"), \
-                            validators=[validators.FileExtensionValidator(['pdf'])])
     tags = TaggableManager()
     upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
     approve_status = models.CharField(max_length=10,
@@ -251,3 +250,8 @@ class PDFDoc(models.Model):
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
                             validators=[validators.validate_unicode_slug])
     ratings = GenericRelation(Rating, related_query_name='rating_pdf')
+
+class PDFFile(models.Model):
+    app_version = models.OneToOneField(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf')
+    file = models.FileField(upload_to="pdf", blank=True, null=True,verbose_name=_("PDF File"), \
+                            validators=[validators.FileExtensionValidator(['pdf'])])
