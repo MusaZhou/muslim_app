@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-10 12:57+0800\n"
+"POT-Creation-Date: 2018-10-31 14:22+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,11 +23,13 @@ msgstr "新"
 
 #: management/choices.py:5
 #: management/templates/management/app_version_detail.html:125
+#: management/templates/management/pdf_detail.html:125
 msgid "approved"
 msgstr "通过"
 
 #: management/choices.py:6
 #: management/templates/management/app_version_detail.html:126
+#: management/templates/management/pdf_detail.html:126
 msgid "rejected"
 msgstr "拒绝"
 
@@ -47,7 +49,7 @@ msgstr "男"
 msgid "female"
 msgstr "女"
 
-#: management/forms.py:34
+#: management/forms.py:37
 msgid "Select Application as the Link"
 msgstr "将应用页面设置为链接"
 
@@ -67,181 +69,154 @@ msgstr "生日"
 msgid "Avatar"
 msgstr "头像"
 
-#: management/models.py:69
-msgid "Tag"
-msgstr "标签"
-
-#: management/models.py:75
-#: management/templates/management/app_table_basic.html:31
+#: management/models.py:67
+#: management/templates/management/app_table_basic.html:34
 msgid "Category"
 msgstr "类别"
 
-#: management/models.py:96
+#: management/models.py:88
 msgid "App Name"
 msgstr "应用名称"
 
-#: management/models.py:97 management/models.py:273
-#: management/templates/management/banner_list.html:22
+#: management/models.py:89 management/models.py:224 management/models.py:237
+#: management/templates/management/banner_list.html:26
+#: management/templates/management/pdf_table.html:34
+#: management/templates/management/pdf_table.html:47
 msgid "Description"
 msgstr "描述"
 
-#: management/models.py:99
+#: management/models.py:91 management/models.py:248
 msgid "Uploader"
 msgstr "上传者"
 
-#: management/models.py:101
+#: management/models.py:92 management/models.py:239
 msgid "Upload Time"
 msgstr "上传时间"
 
-#: management/models.py:106
+#: management/models.py:94
 msgid "Comment Count"
 msgstr "评价数"
 
-#: management/models.py:107
+#: management/models.py:95 management/models.py:249
 msgid "Download Count"
 msgstr "下载数"
 
-#: management/models.py:109
+#: management/models.py:98
 msgid "Screenshots"
 msgstr "截屏"
 
-#: management/models.py:110
-msgid "Tags"
-msgstr "标签"
-
-#: management/models.py:111
+#: management/models.py:100
 msgid "Active Status"
 msgstr "激活状态"
 
-#: management/models.py:113
+#: management/models.py:102
 msgid "Developer"
 msgstr "开发者"
 
-#: management/models.py:115
+#: management/models.py:104
 msgid "Video Show"
 msgstr "视频秀"
 
-#: management/models.py:196
+#: management/models.py:184
 msgid "Version No."
 msgstr "版本号"
 
-#: management/models.py:197
+#: management/models.py:185
 msgid "Created Time"
 msgstr "创建时间"
 
-#: management/models.py:200 management/models.py:240 management/models.py:256
+#: management/models.py:188 management/models.py:242
 msgid "Approve Status"
 msgstr "审核状态"
 
-#: management/models.py:203 management/models.py:243 management/models.py:259
+#: management/models.py:191 management/models.py:244
 msgid "Approved By"
 msgstr "审核人"
 
-#: management/models.py:204
+#: management/models.py:192 management/models.py:246
 msgid "Approved Time"
 msgstr "审核时间"
 
-#: management/models.py:206 management/models.py:235 management/models.py:251
-#: management/models.py:269
+#: management/models.py:194 management/models.py:220
 msgid "Application"
 msgstr "应用"
 
-#: management/models.py:207 management/templates/management/app_history.html:32
-#: management/templates/management/app_history.html:43
+#: management/models.py:195 management/templates/management/app_history.html:33
+#: management/templates/management/app_history.html:44
 #: management/templates/management/uploader/app_history_uploader.html:32
 #: management/templates/management/uploader/app_history_uploader.html:43
 msgid "What's New"
 msgstr "新特性"
 
-#: management/models.py:209
+#: management/models.py:196
 msgid "Translator"
 msgstr "翻译"
 
-#: management/models.py:210
+#: management/models.py:197
 msgid "Supported Android Version"
 msgstr "支持Android版本"
 
-#: management/models.py:211 management/templates/management/app_history.html:31
-#: management/templates/management/app_history.html:42
+#: management/models.py:198 management/templates/management/app_history.html:32
+#: management/templates/management/app_history.html:43
 #: management/templates/management/app_version_detail.html:152
+#: management/templates/management/pdf_detail.html:152
+#: management/templates/management/pdf_table.html:37
+#: management/templates/management/pdf_table.html:50
 #: management/templates/management/uploader/app_history_uploader.html:31
 #: management/templates/management/uploader/app_history_uploader.html:42
 msgid "Remark"
 msgstr "备注"
 
-#: management/models.py:225
-msgid "Version number is duplicated on this application."
-msgstr "版本号重复"
-
-#: management/models.py:229
+#: management/models.py:212
 msgid "APK File"
 msgstr "APK文件"
 
-#: management/models.py:233 management/models.py:249
-msgid "Content"
-msgstr "内容"
-
-#: management/models.py:234
-msgid "Rate"
-msgstr "评分"
-
-#: management/models.py:237
-msgid "Comment By"
-msgstr "评价人"
-
-#: management/models.py:238
-msgid "Comment At"
-msgstr "评价于"
-
-#: management/models.py:250
-msgid "Evaluation"
-msgstr "评价"
-
-#: management/models.py:253
-msgid "Created By"
-msgstr "创建人"
-
-#: management/models.py:254
-msgid "Created At"
-msgstr "创建于"
-
-#: management/models.py:265
+#: management/models.py:216
 msgid "Download At"
 msgstr "下载与"
 
-#: management/models.py:266
+#: management/models.py:217
 msgid "Operating System"
 msgstr "操作系统"
 
-#: management/models.py:267
+#: management/models.py:218
 msgid "Mobile Phone"
 msgstr "移动电话"
 
-#: management/models.py:272 management/templates/management/banner_list.html:21
+#: management/models.py:223 management/models.py:236
+#: management/templates/management/banner_list.html:25
+#: management/templates/management/pdf_table.html:33
+#: management/templates/management/pdf_table.html:46
 msgid "Title"
 msgstr "标题"
 
-#: management/models.py:274
+#: management/models.py:225
 msgid "Banner Image"
 msgstr "宣传图片"
 
-#: management/models.py:275 management/templates/management/banner_list.html:23
+#: management/models.py:226 management/templates/management/banner_list.html:27
 msgid "Link"
 msgstr "链接"
 
-#: management/templates/management/add_app_version.html:66
+#: management/models.py:256
+#, fuzzy
+#| msgid "APK File"
+msgid "PDF File"
+msgstr "APK文件"
+
+#: management/templates/management/add_app_version.html:71
 msgid "Select Images"
 msgstr "选择图片"
 
-#: management/templates/management/add_app_version.html:153
-#: management/templates/management/app_history.html:22
+#: management/templates/management/add_app_version.html:159
+#: management/templates/management/app_history.html:23
 #: management/templates/management/uploader/app_history_uploader.html:22
 msgid "Add New Version"
 msgstr "添加新版本"
 
-#: management/templates/management/add_app_version.html:196
-#: management/templates/management/add_mobile_app.html:201
-#: management/templates/management/update_mobile_app.html:176
+#: management/templates/management/add_app_version.html:202
+#: management/templates/management/add_mobile_app.html:209
+#: management/templates/management/update_mobile_app.html:183
 msgid "maximum 10 images allowed"
 msgstr "最多允许10张图片"
 
@@ -254,6 +229,7 @@ msgid "Image size should not exceed 3MB"
 msgstr "图片大小不得超过3MB"
 
 #: management/templates/management/add_banner.html:66
+#: management/templates/management/add_pdf.html:59
 msgid "Submit"
 msgstr "提交"
 
@@ -261,95 +237,105 @@ msgstr "提交"
 msgid "File size exceed limit"
 msgstr "文件太大了"
 
-#: management/templates/management/add_mobile_app.html:38
+#: management/templates/management/add_mobile_app.html:39
 msgid "Add Appliction"
 msgstr "添加应用"
 
-#: management/templates/management/add_mobile_app.html:82
-#: management/templates/management/app_table_basic.html:32
-#: management/templates/management/update_mobile_app.html:53
+#: management/templates/management/add_mobile_app.html:88
+#: management/templates/management/app_table_basic.html:35
+#: management/templates/management/update_mobile_app.html:59
 #: management/templates/management/uploader/app_table_uploader.html:32
 msgid "Icon"
 msgstr "图标"
 
-#: management/templates/management/add_mobile_app.html:90
-#: management/templates/management/update_mobile_app.html:67
+#: management/templates/management/add_mobile_app.html:96
+#: management/templates/management/update_mobile_app.html:73
 msgid "Icon size should not exceed 1MB"
 msgstr "图标大小不得超过1MB"
 
-#: management/templates/management/add_mobile_app.html:93
-#: management/templates/management/update_mobile_app.html:73
+#: management/templates/management/add_mobile_app.html:99
+#: management/templates/management/update_mobile_app.html:79
 msgid "Choose Screenshots"
 msgstr "选择截图"
 
-#: management/templates/management/add_mobile_app.html:94
-#: management/templates/management/update_mobile_app.html:74
+#: management/templates/management/add_mobile_app.html:100
+#: management/templates/management/update_mobile_app.html:80
 msgid "Each image size should not exceed 2MB"
 msgstr "每张图片不得超过2MB"
 
-#: management/templates/management/add_mobile_app.html:153
+#: management/templates/management/add_mobile_app.html:159
 msgid "Video Upload"
 msgstr "上传视频"
 
-#: management/templates/management/add_mobile_app.html:160
-#: management/templates/management/update_mobile_app.html:117
+#: management/templates/management/add_mobile_app.html:166
+#: management/templates/management/update_mobile_app.html:123
 msgid "Video size should not exceed 10MB"
 msgstr "视频大小不得超过10MB"
 
-#: management/templates/management/add_mobile_app.html:163
+#: management/templates/management/add_mobile_app.html:169
 msgid "Add New Application"
 msgstr "添加新应用"
 
-#: management/templates/management/add_mobile_app.html:212
-#: management/templates/management/add_mobile_app.html:265
-#: management/templates/management/add_mobile_app.html:378
-#: management/templates/management/update_mobile_app.html:185
-#: management/templates/management/update_mobile_app.html:231
-#: management/templates/management/update_mobile_app.html:294
+#: management/templates/management/add_mobile_app.html:220
+#: management/templates/management/add_mobile_app.html:273
+#: management/templates/management/add_mobile_app.html:386
+#: management/templates/management/update_mobile_app.html:192
+#: management/templates/management/update_mobile_app.html:238
+#: management/templates/management/update_mobile_app.html:301
 msgid "file size exceed the limitaion"
 msgstr "文件太大了"
 
-#: management/templates/management/add_mobile_app.html:246
+#: management/templates/management/add_mobile_app.html:254
 msgid "sorry, please wait for a while, the video uploading has not complte yet"
 msgstr "请稍等,视频还没有上传完"
 
-#: management/templates/management/app_history.html:15
+#: management/templates/management/add_pdf.html:26
+msgid "PDF"
+msgstr "PDF"
+
+#: management/templates/management/app_history.html:16
 #: management/templates/management/uploader/app_history_uploader.html:15
 msgid "Version History"
 msgstr "版本历史"
 
-#: management/templates/management/app_history.html:28
-#: management/templates/management/app_history.html:39
+#: management/templates/management/app_history.html:29
+#: management/templates/management/app_history.html:40
 #: management/templates/management/uploader/app_history_uploader.html:28
 #: management/templates/management/uploader/app_history_uploader.html:39
 msgid "Version Number"
 msgstr "版本号"
 
-#: management/templates/management/app_history.html:29
-#: management/templates/management/app_history.html:40
+#: management/templates/management/app_history.html:30
+#: management/templates/management/app_history.html:41
 #: management/templates/management/uploader/app_history_uploader.html:29
 #: management/templates/management/uploader/app_history_uploader.html:40
 msgid "Time"
 msgstr "时间"
 
-#: management/templates/management/app_history.html:30
-#: management/templates/management/app_history.html:41
+#: management/templates/management/app_history.html:31
+#: management/templates/management/app_history.html:42
 #: management/templates/management/app_version_detail.html:125
+#: management/templates/management/pdf_detail.html:125
+#: management/templates/management/pdf_table.html:36
+#: management/templates/management/pdf_table.html:49
 #: management/templates/management/uploader/app_history_uploader.html:30
 #: management/templates/management/uploader/app_history_uploader.html:41
 msgid "Approve"
 msgstr "通过"
 
-#: management/templates/management/app_history.html:33
-#: management/templates/management/app_history.html:44
+#: management/templates/management/app_history.html:34
+#: management/templates/management/app_history.html:45
 #: management/templates/management/uploader/app_history_uploader.html:33
 #: management/templates/management/uploader/app_history_uploader.html:44
 msgid "View Detail"
 msgstr "详情"
 
-#: management/templates/management/app_history.html:34
-#: management/templates/management/app_history.html:45
+#: management/templates/management/app_history.html:35
+#: management/templates/management/app_history.html:46
 #: management/templates/management/app_version_detail.html:123
+#: management/templates/management/pdf_detail.html:123
+#: management/templates/management/pdf_table.html:35
+#: management/templates/management/pdf_table.html:48
 #: management/templates/management/uploader/app_history_uploader.html:34
 #: management/templates/management/uploader/app_history_uploader.html:45
 #: management/templates/management/uploader/app_table_uploader.html:35
@@ -365,171 +351,191 @@ msgstr "详情"
 msgid "Download"
 msgstr "下载"
 
-#: management/templates/management/app_history.html:57
+#: management/templates/management/app_history.html:58
+#: management/templates/management/pdf_table.html:38
+#: management/templates/management/pdf_table.html:51
+#: management/templates/management/pdf_table.html:68
 #: management/templates/management/uploader/app_history_uploader.html:57
 #: showcase/templates/showcase/index.html:62
 msgid "Detail"
 msgstr "详情"
 
-#: management/templates/management/app_table_basic.html:20
+#: management/templates/management/app_table_basic.html:21
 #: management/templates/management/uploader/app_table_uploader.html:21
 msgid "Applications"
 msgstr "应用"
 
-#: management/templates/management/app_table_basic.html:24
+#: management/templates/management/app_table_basic.html:22
 msgid "Upload Application"
 msgstr "上传应用"
 
-#: management/templates/management/app_table_basic.html:29
+#: management/templates/management/app_table_basic.html:32
 #: management/templates/management/uploader/app_table_uploader.html:30
 msgid "Name"
 msgstr "名字"
 
-#: management/templates/management/app_table_basic.html:30
-#: management/templates/management/app_table_basic.html:66
+#: management/templates/management/app_table_basic.html:33
+#: management/templates/management/app_table_basic.html:69
 #: management/templates/management/uploader/app_table_uploader.html:33
 msgid "Active"
 msgstr "激活"
 
-#: management/templates/management/app_table_basic.html:33
+#: management/templates/management/app_table_basic.html:36
 msgid "avg rate"
 msgstr "平均得分"
 
-#: management/templates/management/app_table_basic.html:34
+#: management/templates/management/app_table_basic.html:37
 msgid "download"
 msgstr "下载"
 
-#: management/templates/management/app_table_basic.html:35
+#: management/templates/management/app_table_basic.html:38
 msgid "history"
 msgstr "历史"
 
-#: management/templates/management/app_table_basic.html:36
+#: management/templates/management/app_table_basic.html:39
 msgid "edit"
 msgstr "编辑"
 
-#: management/templates/management/app_table_basic.html:37
+#: management/templates/management/app_table_basic.html:40
 msgid "Active/Disable"
 msgstr "激活/禁用"
 
-#: management/templates/management/app_table_basic.html:43
+#: management/templates/management/app_table_basic.html:46
 #, fuzzy
 #| msgid " We don't have data at this moment "
 msgid "We don't have data at this moment "
 msgstr "目前还没有数据"
 
-#: management/templates/management/app_table_basic.html:59
+#: management/templates/management/app_table_basic.html:62
 #: management/templates/management/uploader/app_table_uploader.html:36
 #: management/templates/management/uploader/app_table_uploader.html:59
 msgid "History"
 msgstr "历史"
 
-#: management/templates/management/app_table_basic.html:62
-#: management/templates/management/banner_list.html:25
-#: management/templates/management/banner_list.html:38
+#: management/templates/management/app_table_basic.html:65
+#: management/templates/management/banner_list.html:29
+#: management/templates/management/banner_list.html:42
+#: management/templates/management/pdf_table.html:39
+#: management/templates/management/pdf_table.html:52
+#: management/templates/management/pdf_table.html:71
 #: management/templates/management/uploader/app_table_uploader.html:37
 #: management/templates/management/uploader/app_table_uploader.html:62
 msgid "Edit"
 msgstr "编辑"
 
-#: management/templates/management/app_table_basic.html:68
+#: management/templates/management/app_table_basic.html:71
 msgid "Disable"
 msgstr "禁用"
 
-#: management/templates/management/app_table_basic.html:80
-#: management/templates/management/banner_list.html:55
+#: management/templates/management/app_table_basic.html:83
+#: management/templates/management/banner_list.html:59
 #: management/templates/management/uploader/app_table_uploader.html:73
 msgid "First"
 msgstr "首页"
 
-#: management/templates/management/app_table_basic.html:84
-#: management/templates/management/app_table_basic.html:88
-#: management/templates/management/banner_list.html:59
+#: management/templates/management/app_table_basic.html:87
+#: management/templates/management/app_table_basic.html:91
 #: management/templates/management/banner_list.html:63
+#: management/templates/management/banner_list.html:67
 #: management/templates/management/uploader/app_table_uploader.html:77
 #: management/templates/management/uploader/app_table_uploader.html:81
 msgid "Previous"
 msgstr "前一页"
 
-#: management/templates/management/app_table_basic.html:106
-#: management/templates/management/app_table_basic.html:110
-#: management/templates/management/banner_list.html:81
+#: management/templates/management/app_table_basic.html:109
+#: management/templates/management/app_table_basic.html:113
 #: management/templates/management/banner_list.html:85
+#: management/templates/management/banner_list.html:89
 #: management/templates/management/uploader/app_table_uploader.html:99
 #: management/templates/management/uploader/app_table_uploader.html:103
 msgid "Next"
 msgstr "后一页"
 
-#: management/templates/management/app_table_basic.html:114
-#: management/templates/management/banner_list.html:89
+#: management/templates/management/app_table_basic.html:117
+#: management/templates/management/banner_list.html:93
 #: management/templates/management/uploader/app_table_uploader.html:107
 msgid "Last"
 msgstr "末页"
 
-#: management/templates/management/app_table_basic.html:145
+#: management/templates/management/app_table_basic.html:148
 #: management/templates/management/app_version_detail.html:199
+#: management/templates/management/pdf_detail.html:199
 msgid "server error"
 msgstr "后台问题"
 
 #: management/templates/management/app_version_detail.html:48
+#: management/templates/management/pdf_detail.html:48
 msgid "Version"
 msgstr "版本"
 
 #: management/templates/management/app_version_detail.html:55
+#: management/templates/management/pdf_detail.html:55
 msgid "Statistic(Download, Comment, Average Rate)"
 msgstr "数据(下载,评价,得分)"
 
 #: management/templates/management/app_version_detail.html:60
+#: management/templates/management/pdf_detail.html:60
 msgid "Application Activation"
 msgstr "应用激活状态"
 
 #: management/templates/management/app_version_detail.html:61
+#: management/templates/management/pdf_detail.html:61
 msgid "Active, Inactive"
 msgstr "激活,禁用"
 
 #: management/templates/management/app_version_detail.html:104
+#: management/templates/management/pdf_detail.html:104
 msgid "Checked By"
 msgstr "审核人"
 
 #: management/templates/management/app_version_detail.html:105
+#: management/templates/management/pdf_detail.html:105
 msgid "at"
 msgstr "于"
 
 #: management/templates/management/app_version_detail.html:126
+#: management/templates/management/pdf_detail.html:126
 msgid "Reject"
 msgstr "拒绝"
 
 #: management/templates/management/app_version_detail.html:146
+#: management/templates/management/pdf_detail.html:146
 msgid "Remark for"
 msgstr "审核备注"
 
 #: management/templates/management/app_version_detail.html:155
+#: management/templates/management/pdf_detail.html:155
 msgid "Close"
 msgstr "关闭"
 
 #: management/templates/management/app_version_detail.html:156
+#: management/templates/management/pdf_detail.html:156
 #, fuzzy
 #| msgid "Confirm Password"
 msgid "Confirm"
 msgstr "确认密码"
 
-#: management/templates/management/banner_list.html:12
+#: management/templates/management/banner_list.html:13
 msgid "Banner List"
 msgstr "宣传列表"
 
-#: management/templates/management/banner_list.html:16
+#: management/templates/management/banner_list.html:14
 msgid "Add Banner"
 msgstr "添加宣传"
 
-#: management/templates/management/banner_list.html:24
+#: management/templates/management/banner_list.html:28
 msgid "Picture"
 msgstr "图片"
 
-#: management/templates/management/banner_list.html:26
-#: management/templates/management/banner_list.html:41
+#: management/templates/management/banner_list.html:30
+#: management/templates/management/banner_list.html:45
+#: management/templates/management/pdf_table.html:40
+#: management/templates/management/pdf_table.html:53
+#: management/templates/management/pdf_table.html:74
 msgid "Delete"
 msgstr "删除"
 
-#: management/templates/management/banner_list.html:46
+#: management/templates/management/banner_list.html:50
 msgid " We don't have data at this moment "
 msgstr "目前还没有数据"
 
@@ -556,24 +562,45 @@ msgstr "登录"
 msgid "Sign Up"
 msgstr "注册"
 
+#: management/templates/management/pdf_table.html:17
+msgid "PDF List"
+msgstr "PDF列表"
+
+#: management/templates/management/pdf_table.html:19
+#, fuzzy
+#| msgid "Upload Time"
+msgid "Upload New PDF"
+msgstr "上传PDF"
+
+#: management/templates/management/pdf_table.html:32
+#: management/templates/management/pdf_table.html:45
+msgid "ID"
+msgstr "ID"
+
 #: management/templates/management/sidebar.html:8
 #: management/templates/management/uploader/sidebar_uploader.html:7
 msgid "Manage App"
 msgstr "管理应用"
 
 #: management/templates/management/sidebar.html:14
+#, fuzzy
+#| msgid "Manage App"
+msgid "Manage PDF"
+msgstr "管理应用"
+
+#: management/templates/management/sidebar.html:20
 msgid "Banners"
 msgstr "宣传列表"
 
-#: management/templates/management/update_mobile_app.html:110
+#: management/templates/management/update_mobile_app.html:116
 msgid "Upload Video"
 msgstr "上传视频"
 
-#: management/templates/management/update_mobile_app.html:127
+#: management/templates/management/update_mobile_app.html:133
 msgid "Update Application"
 msgstr "更新应用"
 
-#: management/templates/management/update_mobile_app.html:279
+#: management/templates/management/update_mobile_app.html:286
 msgid ""
 "The video has updated successfully, the backend still processing, so it "
 "cannot be review at this moment. Thank you!"
@@ -1107,11 +1134,11 @@ msgstr "没有评分"
 msgid "Please log in to rate."
 msgstr "请登录评分"
 
-#: muslimappbk/settings.py:153
+#: muslimappbk/settings.py:156
 msgid "Chinese"
 msgstr "中文"
 
-#: muslimappbk/settings.py:154
+#: muslimappbk/settings.py:157
 msgid "English"
 msgstr "英文"
 
@@ -1135,18 +1162,13 @@ msgstr "页面没有找到"
 msgid ""
 "They want to extinguish the light of Allah with their mouths, but Allah will "
 "perfect His light, although the disbelievers dislike it."
-msgstr ""
-"他们想吹灭安拉的光明，但安拉要完美自己的光明，即使不信道的人不愿意"
+msgstr "他们想吹灭安拉的光明，但安拉要完美自己的光明，即使不信道的人不愿意"
 
-#: userauth/forms.py:11
-msgid "Format: YYYY-MM-DD"
-msgstr "格式: 2000-12-1"
-
-#: userauth/forms.py:14
+#: userauth/forms.py:15
 msgid "Required. Inform a valid email address."
 msgstr "必填. 一个正确的电子邮箱地址"
 
-#: userauth/forms.py:21 userauth/templates/userauth/signup.html:60
+#: userauth/forms.py:29 userauth/templates/userauth/signup.html:60
 msgid "Email Address"
 msgstr "电子邮箱地址"
 
@@ -1242,6 +1264,39 @@ msgstr "您的确认邮件已经发出, 请去邮箱确认,谢谢"
 msgid ""
 "The confirmation link was invalid, possibly because it has already been used."
 msgstr "链接已失效,请重新注册, 谢谢"
+
+#~ msgid "Tag"
+#~ msgstr "标签"
+
+#~ msgid "Tags"
+#~ msgstr "标签"
+
+#~ msgid "Version number is duplicated on this application."
+#~ msgstr "版本号重复"
+
+#~ msgid "Content"
+#~ msgstr "内容"
+
+#~ msgid "Rate"
+#~ msgstr "评分"
+
+#~ msgid "Comment By"
+#~ msgstr "评价人"
+
+#~ msgid "Comment At"
+#~ msgstr "评价于"
+
+#~ msgid "Evaluation"
+#~ msgstr "评价"
+
+#~ msgid "Created By"
+#~ msgstr "创建人"
+
+#~ msgid "Created At"
+#~ msgstr "创建于"
+
+#~ msgid "Format: YYYY-MM-DD"
+#~ msgstr "格式: 2000-12-1"
 
 #, fuzzy
 #~| msgid "What's New"

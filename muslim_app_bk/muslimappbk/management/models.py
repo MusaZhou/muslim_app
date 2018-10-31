@@ -113,9 +113,6 @@ class MobileApp(OrderedModel):
     class Meta(OrderedModel.Meta):
         permissions = (("can_approve_app", "Can approve newly uploaded app"),)
 
-    def slugDefault(self):
-        return slugify(self.name, allow_unicode=True)
-
     def __str__(self):
         return self.name
 
@@ -233,7 +230,7 @@ moderator.register(MobileApp, AppCommentModerator)
 
  
 class PDFDoc(models.Model):
-    title = models.CharField(verbose_name=_('Title'), max_length=200)
+    title = models.CharField(verbose_name=_('Title'), max_length=200, unique=True)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
     tags = TaggableManager()
     upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
@@ -250,8 +247,31 @@ class PDFDoc(models.Model):
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
                             validators=[validators.validate_unicode_slug])
     ratings = GenericRelation(Rating, related_query_name='rating_pdf')
+    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
+    author = models.CharField(max_length=100, null=True, blank=True, verbose_name=_('Author'))
+    publish_year = models.DateField(null=True, blank=True, verbose_name=_('Publish Year'))
+    
+    class Meta:
+        ordering = ["-upload_time"]
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title, allow_unicode=True)
+    
+        super(PDFDoc, self).save(*args, **kwargs)
+        
+    def latest_pdf(self):
+        return self.pdf_files.last()
+    
+    def canShow(self):
+        return self.approve_status == 'approved'
+    
+#     def get_absolute_url(self):
+#         return reverse('showcase:app', args=[self.slug])
+    
+
 
 class PDFFile(models.Model):
-    app_version = models.OneToOneField(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf')
+    pdf_doc = models.ForeignKey(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf_files')
     file = models.FileField(upload_to="pdf", blank=True, null=True,verbose_name=_("PDF File"), \
                             validators=[validators.FileExtensionValidator(['pdf'])])

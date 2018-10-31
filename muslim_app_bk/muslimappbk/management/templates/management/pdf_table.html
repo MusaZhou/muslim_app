@@ -60,18 +60,18 @@
                         <td>{{ pdf.title }}</td>
                         <td>{{ pdf.description|truncatechars:20 }}</td>
                         <td style="vertical-align: middle">
-                            <a href="{{ pdf.pdf_file.url }}"><i class="fas fa-download" ></i></a>
+                            <a href="{{ pdf.latest_pdf.file.url }}"><i class="fas fa-download" ></i></a>
                         </td>
                         <td>{{ pdf.approve_status }}</td>
                         <td>{{ pdf.remark }}</td>
                         <td>
-                            <a href="{% url 'management:pdf_detail' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
+                            <a href="{% url 'management:detail_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:pdf_edit' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
+                            <a href="{% url 'management:edit_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:pdf_delete' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
+                            <a href="{% url 'management:delete_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
                         </td>
                       </tr>
                       {% endfor %}

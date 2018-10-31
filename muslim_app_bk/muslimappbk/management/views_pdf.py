@@ -5,7 +5,7 @@ from management.models import PDFDoc, PDFFile
 from django.core.paginator import Paginator, Page
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from management.forms import PDFDocModelForm
+from management.forms import PDFDocForm
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 import logging, os, random, string
@@ -27,39 +27,49 @@ class PDFEditView(View):
     def get(self, request, *args, **kwargs):
         if 'slug' in kwargs:
             slug = kwargs['slug']
-            pdf = get_object_or_404(PDFDoc, slug=slug)
-            pdf_form = PDFDocModelForm(instance=pdf)
+            pdf_doc = get_object_or_404(PDFDoc, slug=slug)
+            initial_data = {'pdf_id': pdf_doc.latest_pdf().id}
+            pdf_form = PDFDocForm(instance=pdf_doc, initial=initial_data)
         else:
+            initial_data = {'upload_by': request.user}
             slug = None
-            pdf_form = PDFDocModelForm()
+            pdf_form = PDFDocForm(initial=initial_data)
         
-        context = {'pdfForm': pdf_form, 'slug': slug}
+        context = {'pdf_form': pdf_form, 'slug': slug}
         return render(request, 'management/add_pdf.html', context)
     
     def post(self, request, *args, **kwargs):
         if 'slug' in kwargs:
-            pdf = get_object_or_404(PDFDoc, id=kwargs['slug'])
+            slug = kwargs['slug']
+            pdf_doc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
+            initial_data = {'pdf_id': pdf_doc.latest_pdf().id}
+            pdfForm = PDFDocForm(request.POST, request.FILES, instance=pdf_doc, initial=initial_data)
         else:
-            pdf = PDFDoc()    
-            
-        pdfForm = PDFDocModelForm(request.POST, request.FILES, instance=pdf)
+            slug = None
+            initial_data = {'upload_by': request.user}
+            pdf_doc = PDFDoc()
+            pdfForm = PDFDocForm(request.POST, request.FILES, initial=initial_data)
             
         if pdfForm.is_valid():
-            pdfForm.save()
+            pdf_doc = pdfForm.save()
+            pdf_id = pdfForm.cleaned_data['pdf_id']
+            PDFFile.objects.filter(id=pdf_id).update(pdf_doc=pdf_doc)
             return redirect('management:pdf_list')
-        return render(request, 'management/add_pdf.html', {'pdfForm': pdfForm})
+        
+        context = {'pdf_form': pdfForm, 'slug': slug}
+        return render(request, 'management/add_pdf.html', context)
     
 @method_decorator(login_required, name='dispatch')     
 class PDFDeleteView(View):    
     def get(self, request, *args, **kwargs):
-        pdf = get_object_or_404(PDFDoc, id=kwargs['slug'])
+        pdf = get_object_or_404(PDFDoc, slug=kwargs['slug'])
         pdf.delete()
         return redirect('management:pdf_list')
     
 @method_decorator(login_required, name='dispatch')     
 class PDFDetailView(View):    
     def get(self, request, *args, **kwargs):
-        pdf = get_object_or_404(PDFDoc, id=kwargs['slug'])
+        pdf = get_object_or_404(PDFDoc, slug=kwargs['slug'])
         context = {'pdf': pdf}
         return redirect('management:pdf_detail', context)
 

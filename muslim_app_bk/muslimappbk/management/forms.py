@@ -5,6 +5,9 @@ from django.forms import ModelChoiceField
 from django.utils.translation import gettext_lazy as _
 from taggit_labels.widgets import LabelWidget
 from taggit.forms import TagField
+from django.core.exceptions import ValidationError
+import re
+from datetime import date
 
 
 class AddAppModelForm(ModelForm):
@@ -44,12 +47,26 @@ class BannerForm(ModelForm):
     def clean_app_list(self):
         data = self.cleaned_data['app_list']
         return data
+
+class YearField(forms.DateField):
+    def to_python(self, value):
+        year_re = re.compile('^\d{4}$')
     
-class PDFDocModelForm(ModelForm):
+        if not year_re.match(str(value)):
+            raise ValidationError('%s is not a valid year.' % value)
+                                  
+        return date(int(value), 1, 1)
+    
+    def prepare_value(self, value):
+        return value.year
+        
+class PDFDocForm(ModelForm):
     tags = TagField(required=False, widget=LabelWidget)
+    pdf_id = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'pdf_id'}))
+    publish_year = YearField(required=False)
     
     class Meta:
         model = PDFDoc
-        fields = ['title', 'description', 'tags', 'slug', 'pdf_file']
+        fields = ['title', 'description', 'tags', 'slug', 'pdf_id', 'upload_by', 'author', 'publish_year']
         
 

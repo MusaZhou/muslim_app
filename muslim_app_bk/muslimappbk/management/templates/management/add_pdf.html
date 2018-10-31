@@ -2,9 +2,18 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
-{% block title %}Add PDF{% endblock %}
+{% load custom_tags %}
+
+{% block title %}
+{% if not slug %}
+    {% trans 'Add PDF' %}
+{% else %}
+    {% trans 'Edit PDF' %}
+{% endif %}
+{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
+  <link href="{% static 'taggit_labels/css/taggit_labels.css' %}" rel="stylesheet">
   <style>
     #submit_btn {
       position: relative;
@@ -14,7 +23,7 @@
   </style>
 {% endblock %}
 {% block mainContent %}
-          {% if !slug %}
+          {% if not slug %}
             <form id="pdf_form" method="POST" action="{% url 'management:add_pdf' %}" enctype="multipart/form-data">
           {% else %}
             <form id="pdf_form" method="POST" action="{% url 'management:edit_pdf' slug %}" enctype="multipart/form-data">
@@ -24,6 +33,23 @@
               <div class="col-md-6">
                 <div class="">
                   <h6 class="">{% trans 'PDF' %}</h6>
+                  {% if pdf_form.non_field_errors %}
+                    <div class="alert alert-danger" role="alert">
+                      {% for error in pdf_form.non_field_errors %}
+                        {{ error }}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+
+                  {% for hidden_field in pdf_form.hidden_fields %}
+                   {% if hidden_field.errors %}
+                     <div class="alert alert-danger" role="alert">
+                       {% for error in hidden_field.errors %}
+                         {{ hidden_field.name }}: {{ error }}
+                       {% endfor %}
+                     </div>
+                   {% endif %}
+                  {% endfor %}
                   <div class="">
                       <div class="form-group">
                         <label>{{ pdf_form.title.label }}</label>
@@ -37,9 +63,14 @@
                       <div class="form-group">
                         <label>{{ pdf_form.description.label }}</label>
                         {% render_field pdf_form.description class="form-control" %}
+                        {% if pdf_form.description.errors %}
+                          <div class="invalid-feedback d-block">
+                              {{ pdf_form.description.errors }}
+                          </div>
+                        {% endif %}
                       </div>
                       <div class="form-group">
-                        {{ pdf_form.tags.label }}
+                        {% trans 'tag' %}
                         {{ pdf_form.tags }}
                         {% if pdf_form.tags.errors %}
                           <div class="invalid-feedback d-block">
@@ -48,39 +79,50 @@
                         {% endif %}
                       </div>
                       <div class="form-group row pl-3">
-                        <button type="button" class="button btn-primary btn col-md-2" id="pdf_input_btn">Upload PDF</button>
+                        <button type="button" class="button btn-primary btn col-auto" id="pdf_input_btn">{% trans 'Upload PDF' %}</button>
                         <input type="file" id="pdf_input" accept=".pdf" style="display:none">
-                        <div class="col-md-10 d-none" id="pdf-progress-div">
+                        <div class="col d-none" id="pdf-progress-div">
                           <div class="progress" style="height:90%; width:100%">
                            <div id="pdf_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
                           </div>
                         </div>
+                      </div>
+                      <div class="form-group">
+                        <label>{{ pdf_form.author.label }}</label>
+                        {% render_field pdf_form.author class="form-control" %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ pdf_form.publish_year.label }}</label>
+                        {% render_field pdf_form.publish_year class="form-control" %}
+                        {% if pdf_form.publish_year.errors %}
+                          <div class="invalid-feedback d-block">
+                              {{ pdf_form.publish_year.errors }}
+                          </div>
+                        {% endif %}
                       </div>
                       <button class="button btn-primary btn" style="margin-bottom: 5px">{% trans 'Submit' %}</button>
                   </div>
                 </div>
               </div>
               <div class="col-md-6">
-                 <img id="image_img" src="{% static 'images/mobile.png' %}" width="100%" height="auto" style="margin-left: 10px"/>
+<!--                 <img id="image_img" src="{% static 'images/mobile.png' %}" width="100%" height="auto" style="margin-left: 10px"/>-->
+              {{ pdf_form.pdf_id }}
+              {{ pdf_form.upload_by.as_hidden }}
               </div>
             </div>
           </form>
 {% endblock %}
 {% block javascript %}
   {{ block.super }}
+  <script src="{% static 'taggit_labels/js/taggit_labels.js' %}" type="text/javascript"></script>
   <script>
-  var imgSrc = $('#image_input').siblings('a').prop('href');
+//  var imgSrc = $('#image_input').siblings('a').prop('href');
   var videoUploading = false;    
   $(function(){
       
-    $('#app_list').change(function(){
-       var selected_value = $(this).val();
-       $('#banner_link').val(selected_value);
-    });
-      
-    if ( imgSrc!== undefined){
-        $('#image_img').prop('src', imgSrc);
-    }
+//    if ( imgSrc!== undefined){
+//        $('#image_img').prop('src', imgSrc);
+//    }
       
      $('#pdf_input_btn').click(function(){
     	$('#pdf_input').click();
@@ -113,8 +155,8 @@
                     var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
                     //Do something with upload progress
                     console.log(percentComplete);
-                    $('#apk_upload_progress').css('width', percentComplete);
-                    $('#apk_upload_progress').text(percentComplete);
+                    $('#pdf_upload_progress').css('width', percentComplete);
+                    $('#pdf_upload_progress').text(percentComplete);
                   }
                 }, false);
                 //Download progress
@@ -129,8 +171,8 @@
               },
           }).done(function(data){
             console.log(data);
-            var apk_id = data.apk_id;
-            $('#apk_id').val(apk_id);
+            var pdf_id = data.pdf_id;
+            $('#pdf_id').val(pdf_id);
           });
         }
       });
