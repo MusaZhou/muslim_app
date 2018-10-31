@@ -7,7 +7,7 @@ from taggit_labels.widgets import LabelWidget
 from taggit.forms import TagField
 from django.core.exceptions import ValidationError
 import re
-from datetime import date
+from datetime import date, datetime
 
 
 class AddAppModelForm(ModelForm):
@@ -58,7 +58,9 @@ class YearField(forms.DateField):
         return date(int(value), 1, 1)
     
     def prepare_value(self, value):
-        return value.year
+        if isinstance(value, date):
+            return value.year
+        return value
         
 class PDFDocForm(ModelForm):
     tags = TagField(required=False, widget=LabelWidget)
