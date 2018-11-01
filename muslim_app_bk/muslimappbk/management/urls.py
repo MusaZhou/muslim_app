@@ -34,4 +34,5 @@ urlpatterns = [
     path('delete_pdf/<str:slug>', PDFDeleteView.as_view(), name="delete_pdf"),
     path('detail_pdf/<str:slug>', PDFDetailView.as_view(), name="detail_pdf"),
     path('upload_pdf', views_pdf.upload_pdf, name="upload_pdf"),
+    path('update_pdf_status', views_pdf.update_pdf_status, name="update_pdf_status"),
 ]

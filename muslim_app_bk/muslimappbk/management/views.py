@@ -257,7 +257,7 @@ class VersionDetailView(LoginRequiredMixin, View):
         context = {'app_version': app_version, 'mobile_app': app}
         return render(request, 'management/app_version_detail.html', context)
 
-@permission_required('polls.can_vote')    
+@permission_required('management.can_approve_app')    
 def update_version_status(request):
     if request.is_ajax():
         app_slug = request.POST['app_slug']
@@ -273,7 +273,7 @@ def update_version_status(request):
                 remark=remark)
         return JsonResponse({'status': 1}, safe=False)
 
-@permission_required('polls.can_vote')    
+@permission_required('management.can_approve_app')    
 def update_app_active(request):
     if request.is_ajax():
         app = get_object_or_404(MobileApp, slug=request.POST['app_slug'])

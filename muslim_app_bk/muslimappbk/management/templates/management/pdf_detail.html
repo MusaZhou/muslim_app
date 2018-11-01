@@ -5,7 +5,7 @@
 {% load comments %}
 {% load i18n %}
 
-{% block title %}Add New Version{% endblock %}
+{% block title %}{% trans 'PDF Detail' %}{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
   <style>
@@ -24,9 +24,9 @@
       transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
     }
     
-      .attr-val {
-          color:blueviolet
-      }
+  .attr-val {
+      color:blueviolet
+  }
   </style>
 {% endblock %}
 {% block sidebar %}
@@ -44,65 +44,60 @@
     <div class="">
       <div class="row">
         <h4 class="col-md-6">
-            {{ mobile_app.name }}<br/>
-          {% trans 'Version' %} {{ app_version.version_number }}
+            {{ pdfdoc.title }}<br/>
         </h4>
-        <img src="{{ mobile_app.icon.url }}" width="128px" height="128px">
       </div>
 
       <div style="font-size: 1.2em; margin-top: 10px">
           <div class="row">
             <span class="col">{% trans 'Statistic(Download, Comment, Average Rate)' %} </span>
-            {% get_comment_count for mobile_app as comment_count %}
-            <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.rating.average|default:5 }}</span>
+            {% get_comment_count for pdfdoc as comment_count %}
+            <span class="col attr-val">{{ pdfdoc.download_count }}, {{ comment_count }}, {{ pdfdoc.rating.average|default:5 }}</span>
           </div>
           <div class="row">
-            <span class="col">{% trans 'Application Activation' %}</span>
-            <span class="col attr-val">{{ mobile_app.is_active|yesno:_('Active, Inactive') }}</span>
+            <span class="col">{{ pdfdoc|verbose_name:'approve_status' }}</span>
+            <span class="col attr-val">{{ pdfdoc.get_approve_status_display }}</span>
           </div>
           <div class="row">
-            <span class="col">{{ mobile_app|verbose_name:'description'}}</span>
-            <span class="col attr-val">{{ mobile_app.description }}</span>
+            <span class="col">{{ pdfdoc|verbose_name:'description'}}</span>
+            <span class="col attr-val">{{ pdfdoc.description }}</span>
           </div>
           <div class="row">
-            <span class="col">{{ app_version|verbose_name:'whats_new' }}</span>
-            <span class="col attr-val">{{ app_version.whats_new }}</span>
+            <span class="col">{{ pdfdoc|verbose_name:'author' }}</span>
+            <span class="col attr-val">{{ pdfdoc.author }}</span>
           </div>
           <div class="row">
-            <span class="col">{{ mobile_app|verbose_name:'category' }}</span>
-            <span class="col attr-val">{{ mobile_app.category }}</span>
+            <span class="col">{{ pdfdoc|verbose_name:'publish_year' }}</span>
+            <span class="col attr-val">{{ pdfdoc.publish_year }}</span>
           </div>
           <div class="row">
-            <span class="col">{{ mobile_app|verbose_name:'tags' }}</span>
-            <span class="col attr-val">{{ mobile_app.tags.all|join:' ' }}</span>
+            <span class="col">{{ pdfdoc|verbose_name:'tags' }}</span>
+            <span class="col attr-val">{{ pdfdoc.tags.all|join:' ' }}</span>
           </div>
           <div class="row">
-            <span class="col">{{ mobile_app|verbose_name:'upload_by' }}</span>
-            <span class="col attr-val">{{ mobile_app.upload_by }}</span>
+            <span class="col">{{ pdfdoc|verbose_name:'upload_by' }}</span>
+            <span class="col attr-val">{{ pdfdoc.upload_by }}</span>
           </div>
           <div class="row">
-            <span class="col">{{ app_version|verbose_name:'created_time' }}</span>
-            <span class="col attr-val">{{ mobile_app.upload_date }}</span>
-          </div>
-          <div class="row">
-            <span class="col">{{ mobile_app|verbose_name:'developer'}}</span>
-            <span class="col attr-val">{{ mobile_app.developer }}</span>
-          </div>
-          <div class="row">
-            <span class="col">{{ app_version|verbose_name:'translator'}}</span>
-            <span class="col attr-val">{{ app_version.translator }}</span>
-          </div>
-          <div class="row">
-            <span class="col">{{ app_version|verbose_name:'android_version'}}</span>
-            <span class="col attr-val">{{ app_version.android_version }}</span>
-          </div>
-          <div class="row">
-            <span class="col">{{ app_version|verbose_name:'approve_status' }}</span>
-            <span class="col attr-val">{{ app_version.approve_status }}</span>
+            <span class="col">{{ pdfdoc|verbose_name:'upload_time' }}</span>
+            <span class="col attr-val">{{ pdfdoc.upload_time }}</span>
           </div>
           <div class="row">
             <span class="col">{% trans 'Checked By' %}</span>
-            <span class="col attr-val">{{ app_version.approved_by }} {% trans 'at' %} {{ app_version.approved_time }}</span>
+            <span class="col attr-val">{{ pdfdoc.approved_by }} {% trans 'at' %} {{ pdfdoc.approved_time }}</span>
+          </div>
+          <div class="row justify-content-md-center align-items-center mt-2">
+            <div class="col-3">
+                <a href="{{ pdfdoc.latest_pdf.file.url }}" class="btn btn-secondary w-100" style="" >{% trans 'Download' %}</a>
+            </div>
+            {% if perms.management.can_approve_app %}
+                <div class="col-3" style="">
+                    <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'approved' %}" class="btn btn-success w-100" style="" >{% trans 'Approve' %}</button>
+                </div>
+                <div class="col-3" style="">
+                    <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'rejected' %}" class="btn btn-warning w-100" style="" >{% trans 'Reject' %}</button>
+                </div>
+            {% endif %}
           </div>
       </div>
     </div>
@@ -111,31 +106,11 @@
     <div class="">
       <div class="mT-30">
           <div class="row">
-            <h5>{{ mobile_app|verbose_name:'videos'}}</h5>
+            <h5></h5>
           </div>
-          <video width="100%" height="auto" controls>
-            {% with video=mobile_app.videos.last %}
-                {% if video is not None %}
-                    <source src="{{ video.file.url }}">
-                {% endif %}
-            {% endwith %}
-          </video>
-            <a type="button" href="{{ app_version.apk.file.url }}" class="btn button btn-secondary" style="margin-top:50px;" >{% trans 'Download' %}</a>
-            {% if perms.management.can_approve_app %}
-                <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'approved' %}" data-slug="{{ mobile_app.slug }}" data-version="{{ app_version.version_number }}" class="btn button btn-success" style="margin-top:50px;" >{% trans 'Approve' %}</button>
-                <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'rejected' %}" data-slug="{{ mobile_app.slug }}" data-version="{{ app_version.version_number }}" class="btn button btn-warning" style="margin-top:50px;" >{% trans 'Reject' %}</button>
-            {% endif %}
       </div>
     </div>
   </div>
-    <div class="divSplitter" style="display:none"></div>
-    {% for imgUrl in mobile_app.images.all %}
-      <div class="imgDivTop">
-          <img src="{{ imgUrl.picture.url }}" width="auto" height="200px" class="appImg rounded">
-          <input type="checkbox" class="delImgCheckbox" style="display:none">
-          <input type="number" class="orderImg" style="display:none">
-      </div>
-    {% endfor %}
 </div>
 </form>
 
@@ -162,33 +137,28 @@
 {% block javascript %}
   {{ block.super }}
   <script>
-  var app_slug = "{{ mobile_app.slug }}";
-  var version_number = "{{ app_version.version_number }}";
+  var pdf_slug = "{{ pdfdoc.slug }}";
   
   $(function(){
       $('#remarkModal').on('show.bs.modal', function (event) {
           var button = $(event.relatedTarget); // Button that triggered the modal
-          var result = button.data('result'); 
-          var slug = button.data('slug');
-          var version_number = button.data('version');
-          
+          var result = button.data('result');           
           var modal = $(this)
           modal.find('.modal-title span').text(result);
           
           $('#modal-btn-confirm').on('click', function(){
               var remark = $('#modal-remark').val().trim();
-              updateApprove(slug, version_number, result, remark);
+              updateApprove(result, remark);
           });
         });
   });
 
-  function updateApprove(app_slug, version_number, approve_status, remark){
+  function updateApprove(approve_status, remark){
 	  $.ajax({
-          url: "{% url 'management:update_version_status' %}",
+          url: "{% url 'management:update_pdf_status' %}",
           method: 'POST',
           data: {
-              'app_slug': app_slug,
-              'version_number': version_number,
+              'pdf_slug': pdf_slug,
               'approve_status': approve_status,
               'remark': remark,
           }

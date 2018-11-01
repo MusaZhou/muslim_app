@@ -7,7 +7,7 @@ from taggit_labels.widgets import LabelWidget
 from taggit.forms import TagField
 from django.core.exceptions import ValidationError
 import re
-from datetime import date, datetime
+from datetime import date
 
 
 class AddAppModelForm(ModelForm):

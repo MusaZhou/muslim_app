@@ -5,7 +5,7 @@
 {% load comments %}
 {% load i18n %}
 
-{% block title %}Add New Version{% endblock %}
+{% block title %}{% trans 'Version Detai' %}{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
   <style>
@@ -82,7 +82,7 @@
           </div>
           <div class="row">
             <span class="col">{{ app_version|verbose_name:'created_time' }}</span>
-            <span class="col attr-val">{{ mobile_app.upload_date }}</span>
+            <span class="col attr-val">{{ app_version.created_time }}</span>
           </div>
           <div class="row">
             <span class="col">{{ mobile_app|verbose_name:'developer'}}</span>
@@ -98,7 +98,7 @@
           </div>
           <div class="row">
             <span class="col">{{ app_version|verbose_name:'approve_status' }}</span>
-            <span class="col attr-val">{{ app_version.approve_status }}</span>
+            <span class="col attr-val">{{ app_version.get_approve_status_display }}</span>
           </div>
           <div class="row">
             <span class="col">{% trans 'Checked By' %}</span>

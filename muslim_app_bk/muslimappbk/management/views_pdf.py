@@ -1,5 +1,5 @@
 from django.utils.decorators import method_decorator
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import View
 from management.models import PDFDoc, PDFFile
 from django.core.paginator import Paginator, Page
@@ -12,6 +12,7 @@ import logging, os, random, string
 from django.conf import settings
 from management.tasks import upload_file_task
 from django.http import JsonResponse
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +70,9 @@ class PDFDeleteView(View):
 @method_decorator(login_required, name='dispatch')     
 class PDFDetailView(View):    
     def get(self, request, *args, **kwargs):
-        pdf = get_object_or_404(PDFDoc, slug=kwargs['slug'])
-        context = {'pdf': pdf}
-        return redirect('management:pdf_detail', context)
+        pdfdoc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
+        context = {'pdfdoc': pdfdoc}
+        return render(request, 'management/pdf_detail.html', context)
 
 @login_required 
 @csrf_exempt   
@@ -97,3 +98,15 @@ def _upload_pdf(request):
         
         context = {'pdf_id': pdf.id}
         return JsonResponse(context, safe=False)
+    
+@permission_required('management.can_approve_app')    
+def update_pdf_status(request):
+    if request.is_ajax():
+        pdf_slug = request.POST['pdf_slug']
+        status = request.POST['approve_status']
+        remark = request.POST['remark']
+        pdfdoc = PDFDoc.objects.filter(slug=pdf_slug).update(approve_status=status, 
+                                                            approved_time=datetime.now(), 
+                                                            approved_by=request.user, 
+                                                            remark=remark)
+        return JsonResponse({'status': 1}, safe=False)
