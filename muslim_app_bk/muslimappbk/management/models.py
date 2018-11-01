@@ -9,13 +9,12 @@ from django.db.models.signals import post_save
 from .choices import ACTIVE_CHOICES, APPROVE_CHOICES, GENDER_CHOICES
 from django_comments_xtd.moderation import moderator, XtdCommentModerator
 from django.urls import reverse
-from management.templatetags.custom_tags import verbose_name_filter
-from django.db.models.fields import CharField
 from star_ratings.models import Rating
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
 from ordered_model.models import OrderedModel
 from taggit.managers import TaggableManager
+from django.db.models import Q
 
 # Create your models here.
 class Profile(models.Model):
@@ -165,11 +164,6 @@ class MobileApp(OrderedModel):
         if last_rating is not None:
             return last_rating.average
         return 5.0
-    
-@receiver(post_save, sender=MobileApp)
-def add_rating(sender, instance, **kwargs):
-     if Rating.objects.filter(rating_apps=instance).exists():
-            Rating.objects.rate(instance, 5, '127.0.0.1')
          
 class VersionApprovedManager(models.Manager):
     def get_queryset(self):
@@ -250,6 +244,7 @@ class PDFDoc(models.Model):
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     author = models.CharField(max_length=100, null=True, blank=True, verbose_name=_('Author'))
     publish_year = models.DateField(null=True, blank=True, verbose_name=_('Publish Year'))
+    ratings = GenericRelation(Rating, related_query_name='rating_pdf')
     
     class Meta:
         ordering = ["-upload_time"]
@@ -269,7 +264,16 @@ class PDFDoc(models.Model):
 #     def get_absolute_url(self):
 #         return reverse('showcase:app', args=[self.slug])
     
-
+@receiver(post_save, sender=MobileApp)
+@receiver(post_save, sender=PDFDoc)
+def add_rating(sender, instance, **kwargs):
+    if sender.__name__ == 'MobileApp':
+        if not Rating.objects.filter(rating_apps=instance).exists():
+            Rating.objects.rate(instance, 5, '127.0.0.1')
+            
+    if sender.__name__ == 'PDFDoc':
+        if not Rating.objects.filter(rating_pdf=instance).exists():
+            Rating.objects.rate(instance, 5, '127.0.0.1')
 
 class PDFFile(models.Model):
     pdf_doc = models.ForeignKey(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf_files')

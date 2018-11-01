@@ -105,9 +105,11 @@
                 </div>
               </div>
               <div class="col-md-6">
-<!--                 <img id="image_img" src="{% static 'images/mobile.png' %}" width="100%" height="auto" style="margin-left: 10px"/>-->
-              {{ pdf_form.pdf_id }}
-              {{ pdf_form.upload_by.as_hidden }}
+                  {% if slug %}
+                  <embed src="{{ pdf_form.instance.latest_pdf.file.url }}" type="application/pdf" width="100%" height="900px" />
+                  {% endif %}
+                  {{ pdf_form.pdf_id }}
+                  {{ pdf_form.upload_by.as_hidden }}
               </div>
             </div>
           </form>
