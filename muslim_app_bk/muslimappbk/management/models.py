@@ -255,8 +255,8 @@ class PDFDoc(models.Model):
     
         super(PDFDoc, self).save(*args, **kwargs)
         
-    def latest_pdf(self):
-        return self.pdf_files.last()
+#     def latest_pdf(self):
+#         return self.pdf_files.last()
     
     def canShow(self):
         return self.approve_status == 'approved'

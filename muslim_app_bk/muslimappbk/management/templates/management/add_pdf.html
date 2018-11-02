@@ -80,7 +80,7 @@
                       </div>
                       <div class="form-group row pl-3">
                         <button type="button" class="button btn-primary btn col-auto" id="pdf_input_btn">{% trans 'Upload PDF' %}</button>
-                        <input type="file" id="pdf_input" accept=".pdf" style="display:none">
+                        <input type="file" id="pdf_input" accept=".pdf" style="display:none" multiple>
                         <div class="col d-none" id="pdf-progress-div">
                           <div class="progress" style="height:90%; width:100%">
                            <div id="pdf_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
@@ -108,7 +108,7 @@
                   {% if slug %}
                   <embed src="{{ pdf_form.instance.latest_pdf.file.url }}" type="application/pdf" width="100%" height="900px" />
                   {% endif %}
-                  {{ pdf_form.pdf_id }}
+                  {{ pdf_form.pdf_files }}
                   {{ pdf_form.upload_by.as_hidden }}
               </div>
             </div>
@@ -131,15 +131,17 @@
     });
     
     $('#pdf_input').change(function(){
-        var file = this.files[0];
+        var files = this.files;
         
         // var fileList
-        if(file !== null){
+        if(files.length !== 0){
           $('#pdf-progress-div').removeClass('d-none');
             
           var formData = new FormData();
-          formData.append('pdf', file)
-
+          $.each(files, function(i, file){
+              formData.append('pdf', file)
+          });
+          
           $.ajax({
               url: "{% url 'management:upload_pdf' %}",
               type: 'POST',
@@ -173,11 +175,16 @@
               },
           }).done(function(data){
             console.log(data);
-            var pdf_id = data.pdf_id;
-            $('#pdf_id').val(pdf_id);
+            var pdf_ids = data.pdf_ids;
+            $('#pdf_files').val(pdf_ids.join());
           });
         }
       });
+      
+      $('#pdf_form').submit(function(){
+            $('#pdf_input').prop('disabled', true);
+        });
+      
       
     setActiveMenu(2);
   });

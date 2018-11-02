@@ -75,7 +75,7 @@ class ImageFieldView(LoginRequiredMixin, View):
     def post(self, request):
         if request.is_ajax():
             files = request.FILES.getlist('images');
-            # print('file count:'+ ',' + str(len(files)))
+            
             imageIds = []
             for file in files:
                 image = Image(picture=file)

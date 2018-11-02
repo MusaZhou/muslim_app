@@ -32,7 +32,6 @@
                         <th>{% trans 'ID' %}</th>
                         <th>{% trans 'Title' %}</th>
                         <th>{% trans 'Description' %}</th>
-                        <th>{% trans 'Download' %}</th>
                         <th>{% trans 'Approve' %}</th>
                         <th>{% trans 'Remark' %}</th>
                         <th>{% trans 'Detail' %}</th>
@@ -45,7 +44,6 @@
                         <th>{% trans 'ID' %}</th>
                         <th>{% trans 'Title' %}</th>
                         <th>{% trans 'Description' %}</th>
-                        <th>{% trans 'Download' %}</th>
                         <th>{% trans 'Approve' %}</th>
                         <th>{% trans 'Remark' %}</th>
                         <th>{% trans 'Detail' %}</th>
@@ -58,10 +56,7 @@
                       <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ pdf.title }}</td>
-                        <td>{{ pdf.description|truncatechars:20 }}</td>
-                        <td style="vertical-align: middle">
-                            <a href="{{ pdf.latest_pdf.file.url }}"><i class="fas fa-download" ></i></a>
-                        </td>
+                        <td>{{ pdf.description|truncatechars:30 }}</td>
                         <td>{{ pdf.approve_status }}</td>
                         <td>{{ pdf.remark }}</td>
                         <td>

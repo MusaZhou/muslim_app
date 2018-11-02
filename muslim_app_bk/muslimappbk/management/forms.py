@@ -64,11 +64,13 @@ class YearField(forms.DateField):
         
 class PDFDocForm(ModelForm):
     tags = TagField(required=False, widget=LabelWidget)
-    pdf_id = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'pdf_id'}))
+    pdf_files = forms.ModelMultipleChoiceField(widget=forms.MultipleHiddenInput(attrs={'id': 'pdf_files'}),
+                                               queryset=PDFDoc.objects.all())
+    pdf_files = forms.MultipleChoiceField(widget=forms.MultipleHiddenInput(attrs={'id': 'pdf_files'}))
     publish_year = YearField(required=False)
     
     class Meta:
         model = PDFDoc
-        fields = ['title', 'description', 'tags', 'slug', 'pdf_id', 'upload_by', 'author', 'publish_year']
+        fields = ['title', 'description', 'tags', 'slug', 'pdf_files', 'upload_by', 'author', 'publish_year']
         
 
