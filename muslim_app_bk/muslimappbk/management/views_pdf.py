@@ -29,37 +29,54 @@ class PDFEditView(View):
         if 'slug' in kwargs:
             slug = kwargs['slug']
             pdf_doc = get_object_or_404(PDFDoc, slug=slug)
-#             initial_data = {'pdf_id': pdf_doc.latest_pdf().id}
-#             pdf_form = PDFDocForm(instance=pdf_doc, initial=initial_data)
             pdf_form = PDFDocForm(instance=pdf_doc)
+            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.list_values('id', 'file')]    
+            pdf_file_id_list = [id for id, file in pdf_file_tuple_list]
+            pdf_file_name_list = [os.path.split(file) for id, file in pdf_file_tuple_list]
+            
+            context = {'pdf_form': pdf_form, 
+                       'slug': slug, 
+                       'pdf_file_ids': ','.join(pdf_file_id_list), 
+                       'pdf_file_name_list': pdf_file_name_list}
         else:
             initial_data = {'upload_by': request.user}
             slug = None
             pdf_form = PDFDocForm(initial=initial_data)
+            pdf_files = []
         
-        context = {'pdf_form': pdf_form, 'slug': slug}
+            context = {'pdf_form': pdf_form, 'slug': slug}
+            
         return render(request, 'management/add_pdf.html', context)
     
     def post(self, request, *args, **kwargs):
         if 'slug' in kwargs:
             slug = kwargs['slug']
             pdf_doc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
-#             initial_data = {'pdf_id': pdf_doc.latest_pdf().id}
-#             pdfForm = PDFDocForm(request.POST, request.FILES, instance=pdf_doc, initial=initial_data)
+            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.list_values('id', 'file')]    
+            pdf_file_id_list = [id for id, file in pdf_file_tuple_list]
+            pdf_file_name_list = [os.path.split(file) for id, file in pdf_file_tuple_list]
+            
             pdfForm = PDFDocForm(request.POST, request.FILES, instance=pdf_doc)
+            
+            context = {'pdf_form': pdfForm, 
+                       'slug': slug, 
+                       'pdf_file_ids': ','.join(pdf_file_id_list), 
+                       'pdf_file_name_list': pdf_file_name_list}
         else:
             slug = None
             initial_data = {'upload_by': request.user}
             pdf_doc = PDFDoc()
             pdfForm = PDFDocForm(request.POST, request.FILES, initial=initial_data)
             
+            context = {'pdf_form': pdfForm, 'slug': slug}
+            
         if pdfForm.is_valid():
             pdf_doc = pdfForm.save()
-#             pdf_id = pdfForm.cleaned_data['pdf_id']
-#             PDFFile.objects.filter(id=pdf_id).update(pdf_doc=pdf_doc)
+            pdf_file_ids = pdfForm.cleaned_data['pdf_file_ids']
+            pdf_doc.pdf_files.set(PDFFile.objects.filter(id__in=pdf_file_ids))
             return redirect('management:pdf_list')
         
-        context = {'pdf_form': pdfForm, 'slug': slug}
+        
         return render(request, 'management/add_pdf.html', context)
     
 @method_decorator(login_required, name='dispatch')     
@@ -75,7 +92,7 @@ class PDFDetailView(View):
         pdfdoc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
         context = {'pdfdoc': pdfdoc}
         return render(request, 'management/pdf_detail.html', context)
-
+        
 @login_required 
 @csrf_exempt   
 def upload_pdf(request):
@@ -95,7 +112,7 @@ def _upload_pdf(request):
             
             file_path = pdf.temporary_file_path()
             logger.info('temporary file path:' + file_path)
-            base_name = 'pdf/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.pdf'
+            base_name = 'pdf/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '/' + pdf.name
             file_name = settings.MEDIA_ROOT + base_name
             os.rename(file_path, file_name)
             os.chmod(file_name, 0o755)
