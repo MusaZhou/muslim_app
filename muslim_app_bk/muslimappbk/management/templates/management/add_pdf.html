@@ -195,7 +195,7 @@
             console.log(data);
             pdf_file_ids = pdf_file_ids.concat(data.pdf_ids);
             $.each(files, function(i, file){
-                var pdfEle = newPdfDiv(file);
+                newPdfDiv(file);
             });
             attachEvents();
           }).always(function(){
@@ -213,8 +213,7 @@
           $('#pdf_input').prop('disabled', true);
           $('#pdf_file_ids').val(pdf_file_ids);
       });
-      
-    
+    attachEvents();
     setActiveMenu(2);
   });
       
@@ -222,7 +221,7 @@
     var currentPdfCount = $('.pdfdiv').length;
     var newPdfDiv = $(pdfDivTemplate.repeat(1));
     newPdfDiv.find('label').text(file.name);
-    $('#pdf_row_div').append(newPdfDiv);
+    $('.pdf_row_div').append(newPdfDiv);
   }
 
   function attachEvents(){

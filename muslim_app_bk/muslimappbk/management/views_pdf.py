@@ -30,9 +30,9 @@ class PDFEditView(View):
             slug = kwargs['slug']
             pdf_doc = get_object_or_404(PDFDoc, slug=slug)
             pdf_form = PDFDocForm(instance=pdf_doc)
-            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.list_values('id', 'file')]    
-            pdf_file_id_list = [id for id, file in pdf_file_tuple_list]
-            pdf_file_name_list = [os.path.split(file) for id, file in pdf_file_tuple_list]
+            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.values_list('id', 'file')]    
+            pdf_file_id_list = [str(id) for id, file in pdf_file_tuple_list]
+            pdf_file_name_list = [os.path.split(file)[1] for id, file in pdf_file_tuple_list]
             
             context = {'pdf_form': pdf_form, 
                        'slug': slug, 
@@ -52,8 +52,8 @@ class PDFEditView(View):
         if 'slug' in kwargs:
             slug = kwargs['slug']
             pdf_doc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
-            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.list_values('id', 'file')]    
-            pdf_file_id_list = [id for id, file in pdf_file_tuple_list]
+            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.values_list('id', 'file')]    
+            pdf_file_id_list = [str(id) for id, file in pdf_file_tuple_list]
             pdf_file_name_list = [os.path.split(file) for id, file in pdf_file_tuple_list]
             
             pdfForm = PDFDocForm(request.POST, request.FILES, instance=pdf_doc)
@@ -72,8 +72,9 @@ class PDFEditView(View):
             
         if pdfForm.is_valid():
             pdf_doc = pdfForm.save()
-            pdf_file_ids = pdfForm.cleaned_data['pdf_file_ids']
-            pdf_doc.pdf_files.set(PDFFile.objects.filter(id__in=pdf_file_ids))
+            pdf_file_ids = pdfForm.cleaned_data['pdf_file_ids'].split(',')
+            pdf_file_list = [pdf_file for pdf_file in PDFFile.objects.filter(id__in=pdf_file_ids)]
+            pdf_doc.pdf_files.set(pdf_file_list)
             return redirect('management:pdf_list')
         
         
@@ -102,7 +103,7 @@ def upload_pdf(request):
 @csrf_protect
 def _upload_pdf(request):        
     if request.is_ajax():
-        pdf_list = request.FILES.getlist('pdf')
+        pdf_list = request.FILES.getlist('pdf_files')
         pdf_ids = []
         
         for pdf in pdf_list:
@@ -112,11 +113,13 @@ def _upload_pdf(request):
             
             file_path = pdf.temporary_file_path()
             logger.info('temporary file path:' + file_path)
-            base_name = 'pdf/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '/' + pdf.name
-            file_name = settings.MEDIA_ROOT + base_name
+            dir_name = os.path.join('pdf', ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)))
+            os.mkdir(settings.MEDIA_ROOT + dir_name)
+            base_name = os.path.join(dir_name, pdf.name)
+            file_name = os.path.join(settings.MEDIA_ROOT, base_name)
             os.rename(file_path, file_name)
             os.chmod(file_name, 0o755)
-            upload_file_task.delay(file_name, 'pdf/', pdf_file.id, 'management_pdffile', 'file')
+            upload_file_task.delay(file_name, 'pdf/', pdf_file.id, 'management_pdffile', 'file', random_folder=True)
         
         context = {'pdf_ids': pdf_ids}
         return JsonResponse(context, safe=False)
