@@ -30,9 +30,9 @@ class PDFEditView(View):
             slug = kwargs['slug']
             pdf_doc = get_object_or_404(PDFDoc, slug=slug)
             pdf_form = PDFDocForm(instance=pdf_doc)
-            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.values_list('id', 'file')]    
-            pdf_file_id_list = [str(id) for id, file in pdf_file_tuple_list]
-            pdf_file_path_list = [file for id, file in pdf_file_tuple_list]
+            pdf_file_list = [pdf_file for pdf_file in pdf_doc.pdf_files.all()]    
+            pdf_file_id_list = [str(pdf_file.id) for pdf_file in pdf_file_list]
+            pdf_file_path_list = [pdf_file.file.url for pdf_file in pdf_file_list]
             pdf_file_name_list = [os.path.split(filepath)[1] for filepath in pdf_file_path_list]
             
             context = {'pdf_form': pdf_form, 
@@ -54,9 +54,9 @@ class PDFEditView(View):
         if 'slug' in kwargs:
             slug = kwargs['slug']
             pdf_doc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
-            pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.values_list('id', 'file')]    
-            pdf_file_id_list = [str(id) for id, file in pdf_file_tuple_list]
-            pdf_file_path_list = [file.url for id, file in pdf_file_tuple_list]
+            pdf_file_list = [pdf_file for pdf_file in pdf_doc.pdf_files()]    
+            pdf_file_id_list = [str(pdf_file.id) for pdf_file in pdf_file_list]
+            pdf_file_path_list = [pdf_file.file.url for pdf_file in pdf_file_list]
             pdf_file_name_list = [os.path.split(filepath)[1] for filepath in pdf_file_path_list]
             
             pdfForm = PDFDocForm(request.POST, request.FILES, instance=pdf_doc)
@@ -94,7 +94,8 @@ class PDFDeleteView(View):
 class PDFDetailView(View):    
     def get(self, request, *args, **kwargs):
         pdfdoc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
-        context = {'pdfdoc': pdfdoc}
+        pdf_file_name_list = [os.path.split(pdf_file.file.path)[1] for pdf_file in pdfdoc.pdf_files.all()]
+        context = {'pdfdoc': pdfdoc, 'pdf_file_name_list': pdf_file_name_list}
         return render(request, 'management/pdf_detail.html', context)
         
 @login_required 
