@@ -70,11 +70,16 @@
           </div>
         </div>
       </header>
-
     <main role="main" class="container">
         {% block mainContent %}{% endblock %}
+        <div class="list-group" style="width:auto;position:absolute;top:80px;left:80%">
+          <a href="{% url 'showcase:index' %}" class="showcase-main-menu list-group-item list-group-item-action">
+            {% trans 'Android App' %}
+          </a>
+          <a href="{% url 'showcase:index_pdf' %}" class="showcase-main-menu list-group-item list-group-item-action">{% trans 'PDF Document' %}</a>
+          <a href="#" class="showcase-main-menu list-group-item list-group-item-action">{% trans 'Inspired Videos' %}</a>
+        </div>
     </main><!-- /.container -->
-
     <footer class="blog-footer">
       <p>{% trans 'Muslim App by Musa Zhou' %}</p>
       <p>
@@ -104,6 +109,8 @@
         </div>
       </div>
     </div>
+    </div>
+      
     {% block javascript %}
     <!-- Bootstrap core JavaScript
     ================================================== -->
@@ -133,7 +140,17 @@
        $('#language-select').change(function(){
           $('#language-form').submit(); 
        });
+        
+       $('.showcase-main-menu').click(function(){
+           $('.showcase-main-menu').removeClass('active');
+           $(this).addClass('active');
+       });
     });
+        
+    function setActiveMenu(index){
+        currentMenu = $('.showcase-main-menu')[index-1];
+        $(currentMenu).addClass('active');
+    }
     </script>
     {% endblock %}
 

@@ -37,3 +37,6 @@ def search(request):
 
 def disqus(request):
     return render(request, 'showcase/disqus.html')
+
+def index_pdf(request):
+    return render(request, 'showcase/index_pdf.html')

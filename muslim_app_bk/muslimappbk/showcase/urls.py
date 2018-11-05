@@ -13,6 +13,7 @@ urlpatterns = [
     path('index/', cache_page(24 * 60 * 60 * 15)(views.index), name='index'),
     path('app/<str:slug>', cache_page(60 * 60 * 15)(views.app), name='app'),
     path('search', views.search, name="search"),
-    path('disqus', views.disqus, name="disqus")
+    path('disqus', views.disqus, name="disqus"),
+    path('index_pdf/', views.index_pdf, name="index_pdf")
 ]
 
