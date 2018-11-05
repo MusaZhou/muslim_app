@@ -202,3 +202,7 @@ def mobile_link_filter(link):
             return link
     except  Resolver404:
         return link
+    
+@register.filter(name="get_item")
+def get_item(obj, i):
+    return obj[int(i)]

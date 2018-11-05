@@ -116,12 +116,19 @@
               </div>
               <div class="col-md-6">
                   {% if slug %}
-                      <embed src="{{ pdf_form.instance.latest_pdf.file.url }}" type="application/pdf" width="100%" height="900px" />
+                      {% for pdf_file_path in pdf_file_path_list %}
+                        <div class="form-check">
+                          <input class="form-check-input" type="radio" name="pdf_file_radio" id="pdf_file_radio{{ forloop.counter0 }}" value="{% static pdf_file_path %}">
+                          <label class="form-check-label" for="pdf_file_radio{{ forloop.counter0 }}">
+                                {{ pdf_file_name_list|get_item:forloop.counter0 }}
+                          </label>
+                        </div>
+                      {% endfor %}
+                      <embed id="pdf_embed" src="" type="application/pdf" width="100%" height="900px" />
                       {% render_field pdf_form.pdf_file_ids value=pdf_file_ids %}
                   {% else %}
                     {{ pdf_form.pdf_file_ids }}
                   {% endif %}
-                  
                   {{ pdf_form.upload_by.as_hidden }}
               </div>
             </div>
@@ -213,6 +220,12 @@
           $('#pdf_input').prop('disabled', true);
           $('#pdf_file_ids').val(pdf_file_ids);
       });
+      
+      $('input[name=pdf_file_radio]').change(function(){
+          $('#pdf_embed').prop('src', $(this).val());
+      });
+      $('#pdf_file_radio0').click();
+      
     attachEvents();
     setActiveMenu(2);
   });

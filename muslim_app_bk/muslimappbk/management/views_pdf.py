@@ -32,12 +32,14 @@ class PDFEditView(View):
             pdf_form = PDFDocForm(instance=pdf_doc)
             pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.values_list('id', 'file')]    
             pdf_file_id_list = [str(id) for id, file in pdf_file_tuple_list]
-            pdf_file_name_list = [os.path.split(file)[1] for id, file in pdf_file_tuple_list]
+            pdf_file_path_list = [file for id, file in pdf_file_tuple_list]
+            pdf_file_name_list = [os.path.split(filepath)[1] for filepath in pdf_file_path_list]
             
             context = {'pdf_form': pdf_form, 
                        'slug': slug, 
                        'pdf_file_ids': ','.join(pdf_file_id_list), 
-                       'pdf_file_name_list': pdf_file_name_list}
+                       'pdf_file_name_list': pdf_file_name_list,
+                       'pdf_file_path_list': pdf_file_path_list}
         else:
             initial_data = {'upload_by': request.user}
             slug = None
@@ -54,7 +56,8 @@ class PDFEditView(View):
             pdf_doc = get_object_or_404(PDFDoc, slug=kwargs['slug'])
             pdf_file_tuple_list = [pdf_file for pdf_file in pdf_doc.pdf_files.values_list('id', 'file')]    
             pdf_file_id_list = [str(id) for id, file in pdf_file_tuple_list]
-            pdf_file_name_list = [os.path.split(file) for id, file in pdf_file_tuple_list]
+            pdf_file_path_list = [file.url for id, file in pdf_file_tuple_list]
+            pdf_file_name_list = [os.path.split(filepath)[1] for filepath in pdf_file_path_list]
             
             pdfForm = PDFDocForm(request.POST, request.FILES, instance=pdf_doc)
             
