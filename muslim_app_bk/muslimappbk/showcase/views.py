@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from management.models import MobileApp, Banner, AppCategory
+from management.models import MobileApp, Banner, AppCategory, PDFDoc
 from django.db.models import Q
 
 # Create your views here.
@@ -39,4 +39,12 @@ def disqus(request):
     return render(request, 'showcase/disqus.html')
 
 def index_pdf(request):
-    return render(request, 'showcase/index_pdf.html')
+    pdfdoc_list = PDFDoc.approved_pdf.all()
+    author_list = {pdfdoc.author for pdfdoc in pdfdoc_list}
+    year_list = {pdfdoc.publish_year.year for pdfdoc in pdfdoc_list}
+    
+    context = {'pdfdoc_list': pdfdoc_list, 'author_list': author_list, 'year_list':year_list}
+    return render(request, 'showcase/index_pdf.html', context)  
+
+def detail_pdf(request):
+    pass;

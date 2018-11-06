@@ -56,7 +56,7 @@
                       <tr>
                         <td>{{ forloop.counter }}</td>
                         <td>{{ pdf.title }}</td>
-                        <td>{{ pdf.description|truncatechars:30 }}</td>
+                        <td>{{ pdf.description|truncatewords:30 }}</td>
                         <td>{{ pdf.approve_status }}</td>
                         <td>{{ pdf.remark }}</td>
                         <td>

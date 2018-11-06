@@ -222,6 +222,9 @@ class AppCommentModerator(XtdCommentModerator):
 
 moderator.register(MobileApp, AppCommentModerator)
 
+class PDFApprovedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(approve_status='approved') 
  
 class PDFDoc(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=200, unique=True)
@@ -245,6 +248,9 @@ class PDFDoc(models.Model):
     author = models.CharField(max_length=100, null=True, blank=True, verbose_name=_('Author'))
     publish_year = models.DateField(null=True, blank=True, verbose_name=_('Publish Year'))
     ratings = GenericRelation(Rating, related_query_name='rating_pdf')
+    
+    objects = models.Manager()
+    approved_pdf = PDFApprovedManager()
     
     class Meta:
         ordering = ["-upload_time"]

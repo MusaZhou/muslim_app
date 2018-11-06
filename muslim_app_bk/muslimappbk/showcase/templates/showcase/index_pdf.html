@@ -24,9 +24,14 @@
         font-size: 0.8em;
     }
     
+    .zInput:hover {
+        cursor: pointer;
+    }
+    
     .zCheckbox {
         color: darkgreen;
         border-color:darkgreen;
+        border-radius: 4px;
     }
     
     .zSelected.zCheckbox {
@@ -39,19 +44,14 @@
 <div class="pdf_filter py-2">
     <ul class="list-group">
       <li class="list-group-item">{% trans 'Author' %}:
-          <input type="checkbox" name="check-author" title="Author A">
-          <input type="checkbox" name="check-author" title="Author B">
-          <input type="checkbox" name="check-author" title="Author C">
+          {% for author in author_list %}
+          <input type="checkbox" name="check-author" title="{{ author }}">
+          {% endfor %}
       </li>
       <li class="list-group-item">{% trans 'Publish Year' %}:
-          <input type="checkbox" name="check-year" title="Year A">
-          <input type="checkbox" name="check-year" title="Year B">
-          <input type="checkbox" name="check-year" title="Year C">
-      </li>
-      <li class="list-group-item">{% trans 'Tag' %}:
-          <input type="checkbox" name="check-tag" title="Tag A">
-          <input type="checkbox" name="check-tag" title="Tag B">
-          <input type="checkbox" name="check-tag" title="Tag C">
+          {% for publish_year in year_list %}
+          <input type="checkbox" name="check-year" title="{{ publish_year }}">
+          {% endfor %}
       </li>
     </ul>
 </div>
@@ -80,39 +80,19 @@
           </tr>
         </tfoot>
         <tbody>
+          {% for pdfdoc in pdfdoc_list %}
           <tr>
-            <td>1</td>
-            <td>Test Title</td>
-            <td>This book is great</td>
-            <td>Someone Great</td>
-            <td>2010</td>
-            <td>3</td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ pdfdoc.title }}</td>
+            <td>{{ pdfdoc.description|truncatewords:20}}</td>
+            <td>{{ pdfdoc.author }}</td>
+            <td>{{ pdfdoc.publish_year.year }}</td>
+            <td>{{ pdfdoc.pdf_files.count }}</td>
             <td style="vertical-align: middle">
-                <a href="" class="btn btn-primary">{% trans 'Detail' %}</a>
+                <a href="{% url 'showcase:detail_pdf' pdfdoc.slug %}" class="btn btn-primary">{% trans 'Detail' %}</a>
             </td>
           </tr>
-          <tr>
-            <td>2</td>
-            <td>Test Title</td>
-            <td>This book is great</td>
-            <td>Someone Great</td>
-            <td>2010</td>
-            <td>3</td>
-            <td style="vertical-align: middle">
-                <a href="" class="btn btn-primary">{% trans 'Detail' %}</a>
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>Test Title</td>
-            <td>This book is great</td>
-            <td>Someone Great</td>
-            <td>2010</td>
-            <td>3</td>
-            <td style="vertical-align: middle">
-                <a href="" class="btn btn-primary">{% trans 'Detail' %}</a>
-            </td>
-          </tr>
+          {% endfor %}
         </tbody>
     </table>
 </div>
@@ -125,9 +105,9 @@
 <script>
 $(function(){
     var dataTable = $('#dataTable').DataTable();   
-    setActiveMenu(2);
-    
     $('.pdf_filter').zInput();
+    
+    setActiveMenu(2);
 });
 </script>    
 {% endblock %}
