@@ -107,6 +107,25 @@ $(function(){
     var dataTable = $('#dataTable').DataTable();   
     $('.pdf_filter').zInput();
     
+    $('input[name=check-author]').change(function(){
+        var checked_v = [];
+        $('input[name=check-author]:checked').each(function(){
+           checked_v.push($(this).parent().text()); 
+        });
+       console.log(checked_v); 
+        search_str = checked_v.join('|');
+        dataTable.column(3).search('(' + search_str +')', true).draw();
+    });
+    
+    $('input[name=check-year]').change(function(){
+        var checked_v = [];
+        $('input[name=check-year]:checked').each(function(){
+           checked_v.push($(this).parent().text()); 
+        });
+       console.log(checked_v); 
+        search_str = checked_v.join('|');
+        dataTable.column(4).search('(' + search_str +')', true).draw();
+    });
     setActiveMenu(2);
 });
 </script>    
