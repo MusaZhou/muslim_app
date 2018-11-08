@@ -10,7 +10,7 @@
 <i>{{ comment.comment }}</i>
 </p>
 
-<p>{% trans 'Click' %} <a href="http://{{ site.domain }}{{ mute_url }}">http://{{ site.domain }}{{ mute_url|slice:":40" }}...</a> {% 'to mute the comments thread. You will no longer receive follow-up notifications' %}.</p>
+<p>{% trans 'Click' %} <a href="http://{{ site.domain }}{{ mute_url }}">http://{{ site.domain }}{{ mute_url|slice:":40" }}...</a> {% trans 'to mute the comments thread. You will no longer receive follow-up notifications' %}.</p>
 <p>--<br/>
 {% trans 'Kind regards' %},<br/>
 {{ site }}

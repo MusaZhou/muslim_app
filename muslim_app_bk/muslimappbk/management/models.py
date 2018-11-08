@@ -267,8 +267,8 @@ class PDFDoc(models.Model):
     def canShow(self):
         return self.approve_status == 'approved'
     
-#     def get_absolute_url(self):
-#         return reverse('showcase:app', args=[self.slug])
+    def get_absolute_url(self):
+        return reverse('showcase:detail_pdf', args=[self.slug])
     
 @receiver(post_save, sender=MobileApp)
 @receiver(post_save, sender=PDFDoc)

@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from management.models import MobileApp, Banner, AppCategory, PDFDoc
 from django.db.models import Q
+import os
 
 # Create your views here.
 def blog_template(request):
@@ -46,5 +47,8 @@ def index_pdf(request):
     context = {'pdfdoc_list': pdfdoc_list, 'author_list': author_list, 'year_list':year_list}
     return render(request, 'showcase/index_pdf.html', context)  
 
-def detail_pdf(request):
-    pass;
+def detail_pdf(request, slug):
+    pdfdoc = get_object_or_404(PDFDoc.objects.prefetch_related('ratings', 'tags'), slug=slug)
+    pdf_file_name_list = [os.path.split(pdf_file.file.path)[1] for pdf_file in pdfdoc.pdf_files.all()]
+    context = {'pdfdoc': pdfdoc, 'pdf_file_name_list': pdf_file_name_list}
+    return render(request, 'showcase/pdf.html', context)
