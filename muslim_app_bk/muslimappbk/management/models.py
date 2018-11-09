@@ -247,7 +247,6 @@ class PDFDoc(models.Model):
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     author = models.CharField(max_length=100, null=True, blank=True, verbose_name=_('Author'))
     publish_year = models.DateField(null=True, blank=True, verbose_name=_('Publish Year'))
-    ratings = GenericRelation(Rating, related_query_name='rating_pdf')
     
     objects = models.Manager()
     approved_pdf = PDFApprovedManager()
@@ -285,3 +284,41 @@ class PDFFile(models.Model):
     pdf_doc = models.ForeignKey(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf_files')
     file = models.FileField(upload_to="pdf", blank=True, null=True,verbose_name=_("PDF File"), \
                             validators=[validators.FileExtensionValidator(['pdf'])])
+
+class VideoAlbum(models.Model):
+    title = models.CharField(max_length=100, verbose_name=_('title')) 
+    description = models.TextField(blank=True, null=True, verbose_name=_('description'))
+    upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
+    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
+                                      default='new', verbose_name=_('Approve Status'))
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
+                                    null=True, blank=True, verbose_name=_('Approved By'),\
+                                    related_name='album_approved')
+    approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
+    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                  verbose_name=_('Uploader'), related_name='album_uploaded')
+    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
+                            validators=[validators.validate_unicode_slug])
+    video_count = models.SmallIntegerField(default=0)
+    
+class InspiredVideo(models.Model):
+    video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
+    screenshot = GenericRelation(Image, related_query_name='screenshot_video', verbose_name=_('screenshot'))
+    title = models.CharField(max_length=100, verbose_name=_('title'))
+    description = models.TextField(blank=True, null=True, verbose_name=_('description'))
+    tags = TaggableManager()
+    upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
+    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
+                                      default='new', verbose_name=_('Approve Status'))
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
+                                    null=True, blank=True, verbose_name=_('Approved By'),\
+                                    related_name='video_approved')
+    approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
+    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+                                  verbose_name=_('Uploader'), related_name='video_uploaded')
+    download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
+    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
+                            validators=[validators.validate_unicode_slug])
+    ratings = GenericRelation(Rating, related_query_name='rating_video')
+    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
+    album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name="Album",on_delete=models.CASCADE)

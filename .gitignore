@@ -6,3 +6,8 @@ muslim_app_bk/muslimappbk/basic/__pycache__
 muslim_app_bk/muslimappbk/showcase/__pycache__
 muslim_app_bk/muslimappbk/userauth/__pycache__
 muslim_app_bk/muslimappbk/management/templatetags/__pycache__
+muslim_app_bk/muslimappbk/management/migrations/__pycache__
+muslim_app_bk/muslimappbk/showcase/migrations/__pycache__
+muslim_app_bk/muslimappbk/userauth/migrations/__pycache__
+muslim_app_bk/muslimappbk/mobile/migrations/__pycache__
+muslim_app_bk/muslimappbk/basic/migrations/__pycache__
