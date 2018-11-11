@@ -259,9 +259,6 @@ class PDFDoc(models.Model):
             self.slug = slugify(self.title, allow_unicode=True)
     
         super(PDFDoc, self).save(*args, **kwargs)
-        
-#     def latest_pdf(self):
-#         return self.pdf_files.last()
     
     def canShow(self):
         return self.approve_status == 'approved'
@@ -303,7 +300,7 @@ class VideoAlbum(models.Model):
     
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
-    screenshot = GenericRelation(Image, related_query_name='screenshot_video', verbose_name=_('screenshot'))
+    screenshot = models.ImageField(upload_to="pictures/inspired_video/screenshot", verbose_name=_('screenshot'))
     title = models.CharField(max_length=100, verbose_name=_('title'))
     description = models.TextField(blank=True, null=True, verbose_name=_('description'))
     tags = TaggableManager()
@@ -322,3 +319,12 @@ class InspiredVideo(models.Model):
     ratings = GenericRelation(Rating, related_query_name='rating_video')
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name="Album",on_delete=models.CASCADE)
+    
+    class Meta:
+        ordering = ["-upload_time"]
+        
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title, allow_unicode=True)
+    
+        super(InspiredVideo, self).save(*args, **kwargs)

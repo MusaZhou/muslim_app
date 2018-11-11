@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
-from management.models import MobileApp, AppVersion, Banner, PDFDoc
+from management.models import MobileApp, AppVersion, Banner, PDFDoc,\
+    InspiredVideo
 from django.forms import ModelChoiceField
 from django.utils.translation import gettext_lazy as _
 from taggit_labels.widgets import LabelWidget
@@ -71,4 +72,10 @@ class PDFDocForm(ModelForm):
         model = PDFDoc
         fields = ['title', 'description', 'tags', 'slug', 'pdf_file_ids', 'upload_by', 'author', 'publish_year']
         
-
+class InpiredVideoForm(ModelForm):
+    video_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_id'}))
+    tags = TagField(required=False, widget=LabelWidget)
+    
+    class Meta:
+        model = InspiredVideo
+        fields = ['video_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'screenshot', 'album']
