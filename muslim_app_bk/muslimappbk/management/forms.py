@@ -72,10 +72,10 @@ class PDFDocForm(ModelForm):
         model = PDFDoc
         fields = ['title', 'description', 'tags', 'slug', 'pdf_file_ids', 'upload_by', 'author', 'publish_year']
         
-class InpiredVideoForm(ModelForm):
+class InspiredVideoForm(ModelForm):
     video_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_id'}))
     tags = TagField(required=False, widget=LabelWidget)
     
     class Meta:
         model = InspiredVideo
-        fields = ['video_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'screenshot', 'album']
+        fields = ['video_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album']

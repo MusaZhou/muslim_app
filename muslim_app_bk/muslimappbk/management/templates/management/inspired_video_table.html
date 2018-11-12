@@ -15,7 +15,7 @@
     <div class="container-fluid">
             <div class="row">
                 <h4 class="col-auto" style="margin-top: 5px;">{% trans 'Video List' %}</h4>
-                <a class="btn btn-primary btn-sm cur-p add-new-version" href="{% url 'management:add_pdf' %}">
+                <a class="btn btn-primary btn-sm cur-p add-new-version" href="{% url 'management:add_inspired_video' %}">
                     {% trans 'Upload New Video' %}
                 </a>
             </div>
@@ -41,7 +41,7 @@
                     </thead>
                     <tfoot>
                       <tr>
-                        <th>{% trans 'ID' %}</th>
+                        <th>{% trans 'No' %}</th>
                         <th>{% trans 'Title' %}</th>
                         <th>{% trans 'Album' %}</th>
                         <th>{% trans 'Approve' %}</th>
@@ -60,13 +60,13 @@
                         <td>{{ video.approve_status }}</td>
                         <td>{{ video.remark }}</td>
                         <td>
-                            <a href="{% url 'management:detail_video' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
+                            <a href="{% url 'management:detail_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:edit_video' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
+                            <a href="{% url 'management:edit_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:delete_video' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
+                            <a href="{% url 'management:delete_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
                         </td>
                       </tr>
                       {% endfor %}

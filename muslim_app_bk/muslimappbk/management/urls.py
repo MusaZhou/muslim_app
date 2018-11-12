@@ -1,11 +1,12 @@
 from django.urls import path, include, re_path
-from . import views, views_pdf
+from . import views, views_pdf, views_inspired_video
 from .views import ImageFieldView, UpdateMobileAppView,  AppTableBasicView,\
 AddAppVersionView, AppHistoryView, VersionDetailView
 from .views_uploader import AppTableUploaderView, AppHistoryUploaderView
 from .views import BannerListView, BannerEditView, BannerDeleteView
 from django.views.decorators.cache import cache_page
 from .views_pdf import PDFListView, PDFEditView, PDFDeleteView, PDFDetailView
+from .views_inspired_video import InspiredVideoListView, InspiredVideoEditView, InspiredVideoDeleteView, InspiredVideoDetailView
 
 app_name = 'management'
 
@@ -35,4 +36,11 @@ urlpatterns = [
     path('detail_pdf/<str:slug>', PDFDetailView.as_view(), name="detail_pdf"),
     path('upload_pdf', views_pdf.upload_pdf, name="upload_pdf"),
     path('update_pdf_status', views_pdf.update_pdf_status, name="update_pdf_status"),
+    path('inspired_video_list', InspiredVideoListView.as_view(), name="inspired_video_list"),
+    path('add_inspired_video', cache_page(24 * 60 * 60 * 15)(InspiredVideoEditView.as_view()), name="add_inspired_video"),
+    path('edit_inspired_video/<str:slug>', InspiredVideoEditView.as_view(), name="edit_inspired_video"),
+    path('delete_inspired_video/<str:slug>', InspiredVideoDeleteView.as_view(), name="delete_inspired_video"),
+    path('detail_inspired_video/<str:slug>', InspiredVideoDetailView.as_view(), name="detail_inspired_video"),
+    path('upload_inspired_video', views_inspired_video.upload_inspired_video, name="upload_pdf"),
+    path('update_inspired_video_status', views_inspired_video.update_inspired_video_status, name="update_inspired_video_status"),
 ]

@@ -194,6 +194,7 @@ class AppVersion(models.Model):
     class Meta:
         ordering = ["-created_time"]
         unique_together = (('mobile_app', 'version_number'),)
+        get_latest_by = "created_time"
     
     def __str__(self):
         return self.version_number
@@ -300,7 +301,7 @@ class VideoAlbum(models.Model):
     
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
-    screenshot = models.ImageField(upload_to="pictures/inspired_video/screenshot", verbose_name=_('screenshot'))
+    screenshot = models.FilePathField(path="pictures/inspired_video/screenshot", verbose_name=_('screenshot'))
     title = models.CharField(max_length=100, verbose_name=_('title'))
     description = models.TextField(blank=True, null=True, verbose_name=_('description'))
     tags = TaggableManager()

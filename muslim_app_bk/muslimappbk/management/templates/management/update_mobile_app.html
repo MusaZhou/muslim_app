@@ -225,6 +225,7 @@
 
     $('#update_app_form').submit(function(){
       $('#imgIds').val(imgIds);
+      $('#imgCtr, #video_input').prop('disabled', true);
       $(this).submit();
     });
 
