@@ -7,14 +7,6 @@
   {{ block.super }}
   <link href="{% static 'taggit_labels/css/taggit_labels.css' %}" rel="stylesheet">
   <style>
-    .imgDivTop {
-      padding:5px;
-      margin-right:5px;
-    }
-
-    .imgDivTop .delImgBtn {
-      vertical-align: top;
-    }
 
     #submit_btn {
       position: relative;
@@ -31,7 +23,7 @@
     {% endif %}
 {% endblock %}
 {% block mainContent %}
-          <form id="add_app_form" method="POST" action="{% url 'management:add_mobile_app' %}" enctype="multipart/form-data">
+          <form id="video_form" method="POST" action="{% url 'management:add_mobile_app' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-6">
@@ -82,19 +74,21 @@
                        {% endif %}
                       {% endfor %}
                       <div class="form-group row pl-3">
-	                        <button type="button" class="button btn-primary btn col-md-2" id="video_input_btn">{% trans 'Video Upload' %}</button>
-	                        <input type="file" id="video_input" accept="video/*" style="display:none">
-	                        <div class="col-md-10 d-none" id="progress-div">
-	                          <div class="progress" style="height:90%; width:100%">
-	                           <div id="video_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
-	                          </div>
-	                        </div>
+                        <button type="button" class="button btn-primary btn col-md-2" id="video_input_btn">{% trans 'Video Upload' %}</button>
+                        <input type="file" id="video_input" accept="video/*" style="display:none">
+                        <div class="col-md-10 d-none" id="progress-div">
+                          <div class="progress" style="height:90%; width:100%">
+                           <div id="video_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+                          </div>
+                        </div>
                       </div>
 <!--                      <video width="100%" height="auto" controls></video>-->
                       <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >{% trans 'Save' %}</button>
               </div>
             </div>
             {{ video_form.video_id }}
+            {{ video_form.policy }}
+            {{ video_form.authorization }}
           </form>
 {% endblock %}
 {% block javascript %}
@@ -102,14 +96,17 @@
   <script src="{% static 'taggit_labels/js/taggit_labels.js' %}" type="text/javascript"></script>
   <script>
   var videoUploading = false;
+  var authorization = null;
+  var policy = null;
       
   $(function(){
-    $('#add_app_form').submit(function(e){
+    $('#video_form').submit(function(e){
       if(videoUploading){
           alert("{% trans 'sorry, please wait for a while, the video uploading has not complte yet' %}");
           e.preventDefault();
           return false;
       }
+      $('#video_input').prop('disabled', true);
       $(this).submit();
     });
     
@@ -120,73 +117,61 @@
     $('#video_input').change(function(){
         videoUploading = true;
         var file = this.files[0];
+        var policy = $('#upyun_policy').val();
+        var signature = $('#upyun_authorization').val();
         
-        // var fileList
-        if(file !== null){
-          if(!validateFileSize(file, 10)){
-            alert("{% trans 'file size exceed the limitaion' %}");
-            videoUploading = false;
-            return;
-          }
-          $('#progress-div').removeClass('d-none');
-            
-          var formData = new FormData();
-          formData.append('video', file)
-
-          $.ajax({
-              url: "{% url 'management:upload_video' %}",
-              type: 'POST',
-              data: formData,
-              cache: false,
-              dataType: 'json',
-              processData: false, // Don't process the files
-              contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-              xhr: function()
-              {
-                var xhr = new window.XMLHttpRequest();
-                //Upload progress
-                xhr.upload.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
-                    //Do something with upload progress
-                    console.log(percentComplete);
-                    $('#video_upload_progress').css('width', percentComplete);
-                    $('#video_upload_progress').text(percentComplete);
-                  }
-                }, false);
-                //Download progress
-                xhr.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = evt.loaded / evt.total;
-                    //Do something with download progress
-                    console.log(percentComplete);
-                  }
-                }, false);
-                return xhr;
-              },
-          }).done(function(data){
-            console.log(data);
-//            var video_url = data.video_url;
-            var video_id = data.video_id;
-            $('#video_id').val(video_id);
-//            $('video').prop('src', video_url);
-//            $('video')[0].load();
-          }).always(function(){
-                videoUploading = false;    
-          });
-        }
+        var formData = new FormData();
+        formData.append('authorization', authorization);
+        formData.append('policy', policy);
+        formData.append('video', file);
+        uploadVideo(formData);
       });
-    attachEvents();
     setActiveMenu(4);
   });
-
-  function attachEvents(){
-    $('.delImgBtn').click(function(){
-      var index = $(this).parents('.imgDivTop').index('.imgDivTop');
-      imgIds.splice(index, 1);
-      $(this).siblings('.delImgCheckbox').prop('checked', true);
-      $(this).parents('.imgDivTop').remove();
-    });
+      
+  function uploadVideo(formData){
+      $('#progress-div').removeClass('d-none');
+      $.ajax({
+          url: "{% url 'management:upload_inspired_video' %}",
+          type: 'POST',
+          data: formData,
+          cache: false,
+          dataType: 'json',
+          processData: false, // Don't process the files
+          contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+          xhr: function()
+          {
+            var xhr = new window.XMLHttpRequest();
+            //Upload progress
+            xhr.upload.addEventListener("progress", function(evt){
+              if (evt.lengthComputable) {
+                var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
+                //Do something with upload progress
+                console.log(percentComplete);
+                $('#video_upload_progress').css('width', percentComplete);
+                $('#video_upload_progress').text(percentComplete);
+              }
+            }, false);
+            //Download progress
+            xhr.addEventListener("progress", function(evt){
+              if (evt.lengthComputable) {
+                var percentComplete = evt.loaded / evt.total;
+                //Do something with download progress
+                console.log(percentComplete);
+              }
+            }, false);
+            return xhr;
+          },
+      }).done(function(data){
+        console.log(data);
+//            var video_url = data.video_url;
+        var video_id = data.video_id;
+        $('#video_id').val(video_id);
+//            $('video').prop('src', video_url);
+//            $('video')[0].load();
+      }).always(function(){
+            videoUploading = false;    
+      });
   }
   </script>
 {% endblock %}

@@ -41,6 +41,6 @@ urlpatterns = [
     path('edit_inspired_video/<str:slug>', InspiredVideoEditView.as_view(), name="edit_inspired_video"),
     path('delete_inspired_video/<str:slug>', InspiredVideoDeleteView.as_view(), name="delete_inspired_video"),
     path('detail_inspired_video/<str:slug>', InspiredVideoDetailView.as_view(), name="detail_inspired_video"),
-    path('upload_inspired_video', views_inspired_video.upload_inspired_video, name="upload_pdf"),
+    path('upload_inspired_video', views_inspired_video.upload_inspired_video, name="upload_inspired_video"),
     path('update_inspired_video_status', views_inspired_video.update_inspired_video_status, name="update_inspired_video_status"),
 ]

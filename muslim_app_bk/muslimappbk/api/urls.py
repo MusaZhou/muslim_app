@@ -7,6 +7,6 @@ app_name = 'api'
 urlpatterns = [
     path('app_list', views.AppListView.as_view(), name='app_list'),
     path('app_download_count', views.app_download_count, name="app_download_count"),
-    path('upyun_sign_head', views.upyun_sign_head, name='upyun_sign_head')
+    path('get_video_upload_signature', views.get_video_upload_signature, name='get_video_upload_signature')
 ]
 

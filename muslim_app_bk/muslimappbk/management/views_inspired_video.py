@@ -12,7 +12,10 @@ from django.conf import settings
 from management.tasks import upload_file_task
 from django.http import JsonResponse
 from datetime import datetime
+import time
 from django.core.files.storage import default_storage
+from upyun.modules import sign
+from upyun.modules.httpipe import cur_dt
 
 logger = logging.getLogger(__name__)
 
@@ -41,7 +44,10 @@ class InspiredVideoEditView(View):
                        'pdf_file_name_list': pdf_file_name_list,
                        'pdf_file_path_list': pdf_file_path_list}
         else:
-            initial_data = {'upload_by': request.user}
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization}
             slug = None
             video_form = InspiredVideoForm(initial=initial_data)
         
@@ -65,7 +71,6 @@ class InspiredVideoEditView(View):
                        'pdf_file_ids': ','.join(pdf_file_id_list), 
                        'pdf_file_name_list': pdf_file_name_list}
         else:
-#             default_storage.up.
             slug = None
             initial_data = {'upload_by': request.user}
             pdf_doc = InspiredVideo()
@@ -107,26 +112,20 @@ def upload_inspired_video(request):
 @csrf_protect
 def _upload_inspired_video(request):        
     if request.is_ajax():
-        pdf_list = request.FILES.getlist('pdf_files')
-        pdf_ids = []
-        
-        for pdf in pdf_list:
-#             pdf_file = PDFFile()
-#             pdf_file.save()
-#             pdf_ids.append(pdf_file.id)
-            
-            file_path = pdf.temporary_file_path()
-            logger.info('temporary file path:' + file_path)
-            dir_name = os.path.join('pdf', ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)))
-            os.mkdir(settings.MEDIA_ROOT + dir_name)
-            base_name = os.path.join(dir_name, pdf.name)
-            file_name = os.path.join(settings.MEDIA_ROOT, base_name)
-            os.rename(file_path, file_name)
-            os.chmod(file_name, 0o755)
+        video_file = request.FILES.getlist('video')
+                    
+        file_path = video_file.temporary_file_path()
+        logger.info('temporary file path:' + file_path)
+        dir_name = os.path.join('pdf', ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)))
+        os.mkdir(settings.MEDIA_ROOT + dir_name)
+        base_name = os.path.join(dir_name, video_file.name)
+        file_name = os.path.join(settings.MEDIA_ROOT, base_name)
+        os.rename(file_path, file_name)
+        os.chmod(file_name, 0o755)
 #             upload_file_task.delay(file_name, 'pdf/', pdf_file.id, 'management_pdffile', 'file', random_folder=True)
         
-        context = {'pdf_ids': pdf_ids}
-        return JsonResponse(context, safe=False)
+#         context = {'pdf_ids': pdf_ids}
+#         return JsonResponse(context, safe=False)
     
 @permission_required('management.can_approve_app')    
 def update_inspired_video_status(request):
@@ -139,3 +138,23 @@ def update_inspired_video_status(request):
                                                             approved_by=request.user, 
                                                             remark=remark)
         return JsonResponse({'status': 1}, safe=False)
+    
+def get_upyun_signature():
+    save_key = default_storage._get_key_name(f'{time.time()}')
+    upyun = default_storage.up
+    now = cur_dt()
+    data = {
+            'service': upyun.service,
+            'expiration': 1800 + int(time.time()),
+            'save-key': save_key,
+            'date': now
+        }
+    policy = sign.make_policy(data)
+    signature = sign.make_signature(
+        username = upyun.username, 
+        password = upyun.password,
+        method = "POST",
+        uri = '/%s' % upyun.service,
+        date = now,
+        policy = policy)
+    return (policy, signature)

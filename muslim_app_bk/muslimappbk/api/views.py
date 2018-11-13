@@ -35,17 +35,7 @@ def app_download_count(request):
     MobileApp.objects.filter(slug=app_slug).update(download_count=F('download_count')+1)
     return HttpResponse(status=200)
 
-@csrf_exempt
-def upyun_sign_head(request):
-    date = http_date()
-    data = {
-            'username': settings.UPY_USERNAME,
-            'password': hashlib.md5(settings.UPY_PASSWORD.encode()).hexdigest(),
-            'method': request.GET['method'],
-            'uri': request.GET['uri'],
-            'date': date,
-        }
-    
-    header = {'Authorization': upyun.make_signature(**data), 'X-Date': date}
-    
-    return JsonResponse(header, safe=False)
+
+def get_video_upload_signature(request):
+    file_name = request.POST['file_name']
+    pass
