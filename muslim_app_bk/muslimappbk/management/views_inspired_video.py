@@ -6,16 +6,15 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from management.forms import InspiredVideoForm
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-import logging, os, random, string
+from django.views.decorators.csrf import csrf_exempt, csrf_protect 
 from django.conf import settings
 from management.tasks import upload_file_task
 from django.http import JsonResponse
 from datetime import datetime
-import time
 from django.core.files.storage import default_storage
 from upyun.modules import sign
 from upyun.modules.httpipe import cur_dt
+import base64, time, json, logging, os, random, string
 
 logger = logging.getLogger(__name__)
 
@@ -47,11 +46,12 @@ class InspiredVideoEditView(View):
             policy, authorization = get_upyun_signature()
             initial_data = {'upload_by': request.user,
                             'policy': policy,
-                            'authorization': authorization}
+                            'authorization': authorization,
+                            }
             slug = None
             video_form = InspiredVideoForm(initial=initial_data)
-        
-            context = {'video_form': video_form, 'slug': slug}
+            upyun = default_storage.up
+            context = {'video_form': video_form, 'slug': slug, 'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
             
         return render(request, 'management/add_inspired_video.html', context)
     
@@ -140,16 +140,17 @@ def update_inspired_video_status(request):
         return JsonResponse({'status': 1}, safe=False)
     
 def get_upyun_signature():
-    save_key = default_storage._get_key_name(f'{time.time()}')
+    save_key = '/%s' % default_storage._get_key_name(f'videos/{time.time()}')
+    logger.info('signature save-key:' + save_key)
     upyun = default_storage.up
     now = cur_dt()
     data = {
-            'service': upyun.service,
+            'bucket': upyun.service,
             'expiration': 1800 + int(time.time()),
             'save-key': save_key,
             'date': now
         }
-    policy = sign.make_policy(data)
+    policy = base64.b64encode(json.dumps(data).encode()).decode()
     signature = sign.make_signature(
         username = upyun.username, 
         password = upyun.password,

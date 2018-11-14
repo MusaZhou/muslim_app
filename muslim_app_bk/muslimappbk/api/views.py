@@ -4,12 +4,15 @@ from api.serializers import AppSerializer
 from rest_framework import generics
 from django.db.models import F
 from django.http import HttpResponse, JsonResponse
-import upyun
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from django.utils.http import http_date
-import hashlib
 from django.core.paginator import InvalidPage, Paginator
+from django.core.files.storage import default_storage
+from upyun.modules import sign
+from upyun.modules.httpipe import cur_dt
+import base64, time, json, logging, os, random, string
+
+logger = logging.getLogger(__name__)
 
 class AppListView(generics.ListAPIView):
     serializer_class = AppSerializer
@@ -35,7 +38,41 @@ def app_download_count(request):
     MobileApp.objects.filter(slug=app_slug).update(download_count=F('download_count')+1)
     return HttpResponse(status=200)
 
-
+# @csrf_exempt
 def get_video_upload_signature(request):
-    file_name = request.POST['file_name']
+    file_name, ext = os.path.splitext(request.POST['file_name'])
+    file_size = request.POST['file_size']
+    
+    if ext:
+        name = f"videos/{file_name}_{time.time()}{ext}"
+    else:
+        name = f"videos/{file_name}_{time.time()}"
+    save_key = '/%s' % default_storage._get_key_name(name)
+    logger.info('signature save-key:' + save_key)
+    upyun = default_storage.up
+    now = cur_dt()
+    video_process = _video_process()
+    data = {
+            'bucket': upyun.service,
+            'expiration': 1800 + int(time.time()),
+            'content-length': file_size,
+            'save-key': save_key,
+            'date': now
+        }
+    policy = base64.b64encode(json.dumps(data).encode()).decode()
+    authorization = sign.make_signature(
+        username = upyun.username, 
+        password = upyun.password,
+        method = "POST",
+        uri = '/%s' % upyun.service,
+        date = now,
+        policy = policy)
+    data = {'policy': policy, 'authorization': authorization}
+    return JsonResponse(data)
+
+def _video_process():
+    return [{
+            "name": "thumb",
+            "x-gmkerl-thumb": "",
+        }]
     pass

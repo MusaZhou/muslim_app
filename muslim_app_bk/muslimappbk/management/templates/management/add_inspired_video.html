@@ -23,7 +23,7 @@
     {% endif %}
 {% endblock %}
 {% block mainContent %}
-          <form id="video_form" method="POST" action="{% url 'management:add_mobile_app' %}" enctype="multipart/form-data">
+          <form id="video_form" method="POST" action="{% url 'management:add_inspired_video' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="row">
               <div class="col-md-6">
@@ -117,14 +117,22 @@
     $('#video_input').change(function(){
         videoUploading = true;
         var file = this.files[0];
-        var policy = $('#upyun_policy').val();
-        var signature = $('#upyun_authorization').val();
-        
-        var formData = new FormData();
-        formData.append('authorization', authorization);
-        formData.append('policy', policy);
-        formData.append('video', file);
-        uploadVideo(formData);
+        var fileSize = file.size;
+        var fileName = file.name;
+        $.ajax({
+            url: "{% url 'api:get_video_upload_signature' %}",
+            method: 'POST',
+            data: {'file_size': fileSize, 
+                   'file_name': fileName},
+        }).done(function(response){
+            var policy = response.policy;
+            var authorization = response.authorization;
+            var formData = new FormData();
+            formData.append('policy', policy);
+            formData.append('authorization', authorization);
+            formData.append('file', file);
+            uploadVideo(formData);
+        });
       });
     setActiveMenu(4);
   });
@@ -132,11 +140,11 @@
   function uploadVideo(formData){
       $('#progress-div').removeClass('d-none');
       $.ajax({
-          url: "{% url 'management:upload_inspired_video' %}",
+          url: "{{ upyun_url }}",
           type: 'POST',
           data: formData,
           cache: false,
-          dataType: 'json',
+//          dataType: 'json',
           processData: false, // Don't process the files
           contentType: false, // Set content type to false as jQuery will tell the server its a query string request
           xhr: function()
@@ -165,12 +173,13 @@
       }).done(function(data){
         console.log(data);
 //            var video_url = data.video_url;
-        var video_id = data.video_id;
-        $('#video_id').val(video_id);
+//        var video_id = data.video_id;
+//        $('#video_id').val(video_id);
 //            $('video').prop('src', video_url);
 //            $('video')[0].load();
-      }).always(function(){
-            videoUploading = false;    
+      }).always(function(data){
+        console.log(data);
+        videoUploading = false;    
       });
   }
   </script>
