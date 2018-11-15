@@ -1,5 +1,5 @@
 
-from management.models import MobileApp
+from management.models import MobileApp, InspiredVideo, Video
 from api.serializers import AppSerializer
 from rest_framework import generics
 from django.db.models import F
@@ -12,6 +12,7 @@ from upyun.modules import sign
 from upyun.modules.httpipe import cur_dt
 import base64, time, json, logging, os, random, string
 from django.urls import reverse
+from django.urls.conf import path
 
 logger = logging.getLogger(__name__)
 
@@ -81,6 +82,20 @@ def _video_process(request):
             "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
         }]
 
+@csrf_exempt
 def process_video_notify(request):
     logger.info('process video notify:')
-    logger.info(request)
+    logger.info(request.POST.dict)
+    if request.POST['status_code'] == '200':
+        logger.info('status ok')
+        path = request.POST['path[0]'].split(settings.MEDIA_URL)[1]
+        task_id = request.POST['task_id']
+        logger.info('path:' + path)
+        logger.info('task_id:' + task_id)
+        Video.objects.filter(upyun_task_id=task_id).update(file=path)
+    return HttpResponse('thanks')
+
+def notify_video_process_task(request):
+    task_id = request.POST['task_id']
+    video = Video.objects.create(upyun_task_id=task_id)
+    return JsonResponse({'video_id': video.id})

@@ -61,6 +61,7 @@ class Video(models.Model):
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
     file = models.FileField(upload_to="videos", blank=True, null=True)
+    upyun_task_id = models.UUIDField(blank=True, null=True)
 
 class AppCategory(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Category'))
