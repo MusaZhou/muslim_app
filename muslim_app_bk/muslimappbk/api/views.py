@@ -11,6 +11,7 @@ from django.core.files.storage import default_storage
 from upyun.modules import sign
 from upyun.modules.httpipe import cur_dt
 import base64, time, json, logging, os, random, string
+from django.urls import reverse
 
 logger = logging.getLogger(__name__)
 
@@ -51,13 +52,14 @@ def get_video_upload_signature(request):
     logger.info('signature save-key:' + save_key)
     upyun = default_storage.up
     now = cur_dt()
-    video_process = _video_process()
+    video_process = _video_process(request)
     data = {
             'bucket': upyun.service,
             'expiration': 1800 + int(time.time()),
             'content-length': file_size,
             'save-key': save_key,
-            'date': now
+            'date': now,
+            'apps': video_process
         }
     policy = base64.b64encode(json.dumps(data).encode()).decode()
     authorization = sign.make_signature(
@@ -70,9 +72,15 @@ def get_video_upload_signature(request):
     data = {'policy': policy, 'authorization': authorization}
     return JsonResponse(data)
 
-def _video_process():
+def _video_process(request):
     return [{
-            "name": "thumb",
-            "x-gmkerl-thumb": "",
+            "name": "naga",
+            "type": "video",
+            "avopts": "/f/mp4",
+            "return_info": True,
+            "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
         }]
-    pass
+
+def process_video_notify(request):
+    logger.info('process video notify:')
+    logger.info(request)
