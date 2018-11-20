@@ -285,7 +285,7 @@ class PDFFile(models.Model):
                             validators=[validators.FileExtensionValidator(['pdf'])])
 
 class VideoAlbum(models.Model):
-    title = models.CharField(max_length=100, verbose_name=_('title')) 
+    title = models.CharField(max_length=100, verbose_name=_('title'), unique=True) 
     description = models.TextField(blank=True, null=True, verbose_name=_('description'))
     upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
     approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
@@ -303,7 +303,7 @@ class VideoAlbum(models.Model):
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
     screenshot = models.FilePathField(path="pictures/inspired_video/screenshot", verbose_name=_('screenshot'))
-    title = models.CharField(max_length=100, verbose_name=_('title'))
+    title = models.CharField(max_length=100, verbose_name=_('title'), unique=True)
     description = models.TextField(blank=True, null=True, verbose_name=_('description'))
     tags = TaggableManager()
     upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
@@ -330,3 +330,6 @@ class InspiredVideo(models.Model):
             self.slug = slugify(self.title, allow_unicode=True)
     
         super(InspiredVideo, self).save(*args, **kwargs)
+        
+    def latest_valid_video(self):
+        return self.video.exclude(file__isnull=True).exclude(file__exact='').last()

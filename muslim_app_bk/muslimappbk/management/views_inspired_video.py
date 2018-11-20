@@ -1,7 +1,7 @@
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import View
-from management.models import InspiredVideo, VideoAlbum
+from management.models import InspiredVideo, VideoAlbum, Video
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from management.forms import InspiredVideoForm
@@ -15,6 +15,7 @@ from django.core.files.storage import default_storage
 from upyun.modules import sign
 from upyun.modules.httpipe import cur_dt
 import base64, time, json, logging, os, random, string
+from django.db.models.fields import related
 
 logger = logging.getLogger(__name__)
 
@@ -30,18 +31,21 @@ class InspiredVideoEditView(View):
     def get(self, request, *args, **kwargs):
         if 'slug' in kwargs:
             slug = kwargs['slug']
-            pdf_doc = get_object_or_404(InspiredVideo, slug=slug)
-            pdf_form = InspiredVideoForm(instance=pdf_doc)
-            pdf_file_list = [pdf_file for pdf_file in pdf_doc.pdf_files.all()]    
-            pdf_file_id_list = [str(pdf_file.id) for pdf_file in pdf_file_list]
-            pdf_file_path_list = [pdf_file.file.url for pdf_file in pdf_file_list]
-            pdf_file_name_list = [os.path.split(filepath)[1] for filepath in pdf_file_path_list]
-            
-            context = {'pdf_form': pdf_form, 
-                       'slug': slug, 
-                       'pdf_file_ids': ','.join(pdf_file_id_list), 
-                       'pdf_file_name_list': pdf_file_name_list,
-                       'pdf_file_path_list': pdf_file_path_list}
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization,
+                            }
+            inspired_video = get_object_or_404(InspiredVideo, slug=slug)
+            latest_valid_video = inspired_video.latest_valid_video()
+            if latest_valid_video is not None:
+                initial_data['video_id'] = latest_valid_video.id
+                
+            video_form = InspiredVideoForm(instance=inspired_video, initial=initial_data)
+            upyun = default_storage.up
+            context = {'video_form': video_form, 
+                       'slug': slug,
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         else:
             policy, authorization = get_upyun_signature()
             initial_data = {'upload_by': request.user,
@@ -51,42 +55,56 @@ class InspiredVideoEditView(View):
             slug = None
             video_form = InspiredVideoForm(initial=initial_data)
             upyun = default_storage.up
-            context = {'video_form': video_form, 'slug': slug, 'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+            context = {'video_form': video_form, 
+                       'slug': slug, 
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
             
         return render(request, 'management/add_inspired_video.html', context)
     
     def post(self, request, *args, **kwargs):
         if 'slug' in kwargs:
             slug = kwargs['slug']
-            pdf_doc = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
-            pdf_file_list = [pdf_file for pdf_file in pdf_doc.pdf_files()]    
-            pdf_file_id_list = [str(pdf_file.id) for pdf_file in pdf_file_list]
-            pdf_file_path_list = [pdf_file.file.url for pdf_file in pdf_file_list]
-            pdf_file_name_list = [os.path.split(filepath)[1] for filepath in pdf_file_path_list]
-            
-            pdfForm = InspiredVideoForm(request.POST, request.FILES, instance=pdf_doc)
-            
-            context = {'pdf_form': pdfForm, 
-                       'slug': slug, 
-                       'pdf_file_ids': ','.join(pdf_file_id_list), 
-                       'pdf_file_name_list': pdf_file_name_list}
+            inspired_video = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization,
+                            }
+            latest_valid_video = inspired_video.latest_valid_video()
+            if latest_valid_video is not None:
+                initial_data['video_id'] = latest_valid_video.id
+                
+            video_form = InspiredVideoForm(request.POST, instance=inspired_video, initial=initial_data)
+            upyun = default_storage.up
+            context = {'video_form': video_form, 
+                       'slug': slug,
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         else:
             slug = None
-            initial_data = {'upload_by': request.user}
-            pdf_doc = InspiredVideo()
-            pdfForm = InspiredVideoForm(request.POST, request.FILES, initial=initial_data)
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization,
+                            }
+            video_form = InspiredVideoForm(request.POST, initial=initial_data)
+            upyun = default_storage.up
+            context = {'video_form': video_form, 
+                       'slug': slug, 
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
             
-            context = {'pdf_form': pdfForm, 'slug': slug}
-            
-        if pdfForm.is_valid():
-            pdf_doc = pdfForm.save()
-            pdf_file_ids = pdfForm.cleaned_data['pdf_file_ids'].split(',')
-#             pdf_file_list = [pdf_file for pdf_file in PDFFile.objects.filter(id__in=pdf_file_ids)]
-#             pdf_doc.pdf_files.set(pdf_file_list)
-            return redirect('management:pdf_list')
+        if video_form.is_valid():
+            inspired_video = video_form.save()
+            video_id = video_form.cleaned_data['video_id']
+            video = Video.objects.get(id=video_id)
+            related_object = video.content_object
+            if related_object is None:
+                video.content_object = inspired_video
+                video.save()
+            return redirect('management:inspired_video_list')
         
-        
-        return render(request, 'management/add_pdf.html', context)
+        logger.info('video_for error data------------------------------------')
+        logger.info(video_form.errors.as_data())
+        return render(request, 'management/add_inspired_video.html', context)
     
 @method_decorator(login_required, name='dispatch')     
 class InspiredVideoDeleteView(View):    
