@@ -13,6 +13,7 @@ from upyun.modules.httpipe import cur_dt
 import base64, time, json, logging, os, random, string
 from django.urls import reverse
 from django.urls.conf import path
+from management.tasks import update_video_path_task
 
 logger = logging.getLogger(__name__)
 
@@ -92,7 +93,7 @@ def process_video_notify(request):
         task_id = request.POST['task_id']
         logger.info('path:' + path)
         logger.info('task_id:' + task_id)
-        Video.objects.filter(upyun_task_id=task_id).update(file=path)
+        update_video_path_task.apply_async((path, task_id), count_down=3)
     return HttpResponse('thanks')
 
 def notify_video_process_task(request):
