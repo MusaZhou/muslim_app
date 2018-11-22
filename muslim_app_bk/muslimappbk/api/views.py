@@ -93,7 +93,15 @@ def process_video_notify(request):
         task_id = request.POST['task_id']
         logger.info('path:' + path)
         logger.info('task_id:' + task_id)
-        update_video_path_task.apply_async((path, task_id), count_down=3)
+        video_info = json.loads(base64.b64decode(request.POST['info']))
+        logger.info(video_info)
+        width = video_info['streams'][0]['video_width']
+        height = video_info['streams'][0]['video_height']
+        duration = video_info['streams'][0]['duration']
+        logger.info('video width:' + str(width))
+        logger.info('video height:' + str(height))
+        logger.info('duration:' + str(int(duration)))
+        update_video_path_task.apply_async(kwargs={ 'path': path, 'task_id': task_id, 'width': width, 'height': height, 'duration': duration}, count_down=3)
     return HttpResponse('thanks')
 
 def notify_video_process_task(request):

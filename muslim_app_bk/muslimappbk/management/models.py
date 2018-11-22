@@ -62,6 +62,9 @@ class Video(models.Model):
     content_object = GenericForeignKey()
     file = models.FileField(upload_to="videos", blank=True, null=True)
     upyun_task_id = models.UUIDField(blank=True, null=True)
+    width = models.PositiveIntegerField(null=True)
+    height = models.PositiveIntegerField(null=True)
+    duration = models.PositiveIntegerField(null=True)
 
 class AppCategory(models.Model):
     name = models.CharField(max_length=100, verbose_name=_('Category'))
@@ -302,7 +305,6 @@ class VideoAlbum(models.Model):
     
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
-    screenshot = models.FilePathField(path="pictures/inspired_video/screenshot", verbose_name=_('screenshot'))
     title = models.CharField(max_length=100, verbose_name=_('title'), unique=True)
     description = models.TextField(blank=True, null=True, verbose_name=_('description'))
     tags = TaggableManager()

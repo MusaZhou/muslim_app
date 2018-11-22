@@ -26,7 +26,7 @@ def upload_file_task(file_name, folder, pk, table_name, file_field_name, random_
         cursor.execute("UPDATE " + table_name + " SET " + file_field_name +"=%s WHERE id=%s", [os.path.join(folder, base_name), pk])
         
 @shared_task(bind=True)
-def update_video_path_task(self, path, task_id):
+def update_video_path_task(self, path, task_id, width, height, duration):
     try:
         logger.info('enter update_video_path_task')
         Video.objects.get(upyun_task_id=task_id)
@@ -34,5 +34,5 @@ def update_video_path_task(self, path, task_id):
         logger.info('video object has not been created, waiting to retry')
         raise self.retry(exc=exc, countdown=5, max_retries=3)
     else:
-        Video.objects.filter(upyun_task_id=task_id).update(file=path)
+        Video.objects.filter(upyun_task_id=task_id).update(file=path, width=width, height=height, duration=duration)
         logger.info('video path updated')

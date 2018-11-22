@@ -240,6 +240,11 @@ LOGGING = {
             'handlers': ['console', 'mail_admins'],
             'level': 'DEBUG',
             'propagate': True,
+        },
+        'api': {
+            'handlers': ['console', 'mail_admins'],
+            'level': 'DEBUG',
+            'propagate': True,
         }
     }
 }
