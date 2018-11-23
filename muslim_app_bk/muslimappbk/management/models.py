@@ -220,6 +220,9 @@ class Banner(models.Model):
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
     image = models.ImageField(upload_to='banners', verbose_name=_('Banner Image'))
     link = models.CharField(verbose_name=_("Link"), max_length=200)
+    
+    def __str__(self):
+        return self.title
 
 class AppCommentModerator(XtdCommentModerator):
     removal_suggestion_notification = True
@@ -271,6 +274,9 @@ class PDFDoc(models.Model):
     def get_absolute_url(self):
         return reverse('showcase:detail_pdf', args=[self.slug])
     
+    def __str__(self):
+        return self.title
+    
 @receiver(post_save, sender=MobileApp)
 @receiver(post_save, sender=PDFDoc)
 def add_rating(sender, instance, **kwargs):
@@ -302,6 +308,9 @@ class VideoAlbum(models.Model):
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
                             validators=[validators.validate_unicode_slug])
     video_count = models.SmallIntegerField(default=0)
+    
+    def __str__(self):
+        return self.title
     
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
@@ -335,3 +344,6 @@ class InspiredVideo(models.Model):
         
     def latest_valid_video(self):
         return self.video.exclude(file__isnull=True).exclude(file__exact='').last()
+    
+    def __str__(self):
+        return self.title

@@ -77,7 +77,8 @@ class InspiredVideoForm(ModelForm):
     tags = TagField(required=False, widget=LabelWidget)
     policy = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_policy'}))
     authorization = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_authorization'}))
+    video_path = forms.CharField(required=False, widget=forms.HiddenInput())
     
     class Meta:
         model = InspiredVideo
-        fields = ['video_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'policy', 'authorization']
+        fields = ['video_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'policy', 'authorization', 'video_path']

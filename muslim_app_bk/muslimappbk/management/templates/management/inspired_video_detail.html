@@ -1,0 +1,168 @@
+{% extends "management/index.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load custom_tags %}
+{% load comments %}
+{% load i18n %}
+
+{% block title %}{% trans 'Inspired Video Detail' %}{% endblock %}
+{% block stylesheet %}
+  {{ block.super }}
+  <style>
+    .imgDivTop {
+      padding:5px;
+      margin-right:5px;
+    }
+
+    .imgDivTop .delImgBtn {
+      vertical-align: top;
+    }
+
+    #submit_btn {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
+    }
+    
+  .attr-val {
+      color:blueviolet
+  }
+  </style>
+{% endblock %}
+{% block sidebar %}
+    {% if perms.management.can_approve_app %}
+        {% include 'management/sidebar.html' %}
+    {% else %}
+        {% include 'management/uploader/sidebar_uploader.html' %}
+    {% endif %}
+{% endblock %}
+{% block mainContent %}
+<form method="" action="" enctype="multipart/form-data">
+{% csrf_token %}
+<div class="row">
+  <div class="col-md-6">
+    <div class="">
+      <div class="row">
+        <h4 class="col-md-6">
+            {{ inspired_video.title }}<br/>
+        </h4>
+      </div>
+
+      <div style="font-size: 1.2em; margin-top: 10px">
+          <div class="row">
+            {% comment %}
+            <span class="col">{% trans 'Statistic(Download, Comment, Average Rate)' %} </span>
+            {% get_comment_count for inspired_video as comment_count %}
+            <span class="col attr-val">{{ inspired_video.download_count }}, {{ comment_count }}, {{ inspired_video.rating.average|default:5 }}</span>
+            {% endcomment %}
+          </div>
+          <div class="row">
+            <span class="col">{{ inspired_video|verbose_name:'approve_status' }}</span>
+            <span class="col attr-val">{{ inspired_video.get_approve_status_display }}</span>
+          </div>
+          <div class="row">
+            <span class="col">{{ inspired_video|verbose_name:'description'}}</span>
+            <span class="col attr-val">{{ inspired_video.description }}</span>
+          </div>
+          <div class="row">
+            <span class="col">{{ inspired_video|verbose_name:'album' }}</span>
+            <span class="col attr-val">{{ inspired_video.album }}</span>
+          </div>
+          <div class="row">
+            <span class="col">{{ inspired_video|verbose_name:'tags' }}</span>
+            <span class="col attr-val">{{ inspired_video.tags.all|join:' ' }}</span>
+          </div>
+          <div class="row">
+            <span class="col">{{ inspired_video|verbose_name:'upload_by' }}</span>
+            <span class="col attr-val">{{ inspired_video.upload_by }}</span>
+          </div>
+          <div class="row">
+            <span class="col">{{ inspired_video|verbose_name:'upload_time' }}</span>
+            <span class="col attr-val">{{ inspired_video.upload_time }}</span>
+          </div>
+          <div class="row">
+            <span class="col">{% trans 'Checked By' %}</span>
+            <span class="col attr-val">{{ inspired_video.approved_by }} {% trans 'at' %} {{ inspired_video.approved_time }}</span>
+          </div>
+          <div class="row justify-content-md-center align-items-center mt-2">
+            {% if perms.management.can_approve_app %}
+                <div class="col-3" style="">
+                    <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'approved' %}" class="btn btn-success w-100" style="" >{% trans 'Approve' %}</button>
+                </div>
+                <div class="col-3" style="">
+                    <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'rejected' %}" class="btn btn-warning w-100" style="" >{% trans 'Reject' %}</button>
+                </div>
+            {% endif %}
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+      <video width="100%" height="auto" controls>
+        <source src="{{ inspired_video.latest_valid_video.file.url }}" type="video/mp4">
+      </video>
+  </div>
+</div>
+</form>
+
+<div class="modal fade" id="remarkModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="remarkModalLabel">{% trans "Remark for" %} <span></span></h5>
+        <button type="button" class="close" data-dismiss="modal">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="modal-remark" placeholder="{% trans 'Remark' %}">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">{% trans "Close" %}</button>
+        <button type="button" class="btn btn-primary" id="modal-btn-confirm">{% trans "Confirm" %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  <script>
+  var inspired_video_slug = "{{ inspired_video.slug }}";
+  
+  $(function(){
+      $('#remarkModal').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget); // Button that triggered the modal
+          var result = button.data('result');           
+          var modal = $(this)
+          modal.find('.modal-title span').text(result);
+          
+          $('#modal-btn-confirm').on('click', function(){
+              var remark = $('#modal-remark').val().trim();
+              updateApprove(result, remark);
+          });
+        });
+      
+      setActiveMenu(4);
+  });
+
+  function updateApprove(approve_status, remark){
+	  $.ajax({
+          url: "{% url 'management:update_inspired_video_status' %}",
+          method: 'POST',
+          data: {
+              'inspired_video_slug': inspired_video_slug,
+              'approve_status': approve_status,
+              'remark': remark,
+          }
+      }).done(function(response){
+          if (response.status = 1){
+              location.reload();
+          }else{
+              alert("{% trans 'server error' %}");
+          }
+          
+      });
+  }
+  </script>
+{% endblock %}

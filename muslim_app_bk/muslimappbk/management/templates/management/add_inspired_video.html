@@ -95,9 +95,11 @@
                          </div>
                        {% endif %}
                       {% endfor %}
-                      
-<!--                      <video width="100%" height="auto" controls></video>-->
-                      
+                      {% if slug %}
+                      <video width="100%" height="auto" controls>
+                        <source src="{{ video_form.video_path.value }}" type="video/mp4">
+                      </video>
+                      {% endif %}
               </div>
             </div>
             {{ video_form.video_id }}

@@ -40,6 +40,7 @@ class InspiredVideoEditView(View):
             latest_valid_video = inspired_video.latest_valid_video()
             if latest_valid_video is not None:
                 initial_data['video_id'] = latest_valid_video.id
+                initial_data['video_path'] = latest_valid_video.file.url
                 
             video_form = InspiredVideoForm(instance=inspired_video, initial=initial_data)
             upyun = default_storage.up
@@ -109,37 +110,36 @@ class InspiredVideoEditView(View):
 @method_decorator(login_required, name='dispatch')     
 class InspiredVideoDeleteView(View):    
     def get(self, request, *args, **kwargs):
-        pdf = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
-        pdf.delete()
-        return redirect('management:pdf_list')
+        inspired_video = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
+        inspired_video.delete()
+        return redirect('management:inspired_video_list')
     
 @method_decorator(login_required, name='dispatch')     
 class InspiredVideoDetailView(View):    
     def get(self, request, *args, **kwargs):
-        pdfdoc = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
-        pdf_file_name_list = [os.path.split(pdf_file.file.path)[1] for pdf_file in pdfdoc.pdf_files.all()]
-        context = {'pdfdoc': pdfdoc, 'pdf_file_name_list': pdf_file_name_list}
-        return render(request, 'management/pdf_detail.html', context)
+        inspired_video = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
+        context = {'inspired_video': inspired_video}
+        return render(request, 'management/inspired_video_detail.html', context)
         
-@login_required 
-@csrf_exempt   
-def upload_inspired_video(request):
-    request.upload_handlers = [TemporaryFileUploadHandler(request)]
-    return _upload_inspired_video(request)
+# @login_required 
+# @csrf_exempt   
+# def upload_inspired_video(request):
+#     request.upload_handlers = [TemporaryFileUploadHandler(request)]
+#     return _upload_inspired_video(request)
  
-@csrf_protect
-def _upload_inspired_video(request):        
-    if request.is_ajax():
-        video_file = request.FILES.getlist('video')
-                    
-        file_path = video_file.temporary_file_path()
-        logger.info('temporary file path:' + file_path)
-        dir_name = os.path.join('pdf', ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)))
-        os.mkdir(settings.MEDIA_ROOT + dir_name)
-        base_name = os.path.join(dir_name, video_file.name)
-        file_name = os.path.join(settings.MEDIA_ROOT, base_name)
-        os.rename(file_path, file_name)
-        os.chmod(file_name, 0o755)
+# @csrf_protect
+# def _upload_inspired_video(request):        
+#     if request.is_ajax():
+#         video_file = request.FILES.getlist('video')
+#                     
+#         file_path = video_file.temporary_file_path()
+#         logger.info('temporary file path:' + file_path)
+#         dir_name = os.path.join('pdf', ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)))
+#         os.mkdir(settings.MEDIA_ROOT + dir_name)
+#         base_name = os.path.join(dir_name, video_file.name)
+#         file_name = os.path.join(settings.MEDIA_ROOT, base_name)
+#         os.rename(file_path, file_name)
+#         os.chmod(file_name, 0o755)
 #             upload_file_task.delay(file_name, 'pdf/', pdf_file.id, 'management_pdffile', 'file', random_folder=True)
         
 #         context = {'pdf_ids': pdf_ids}
@@ -148,13 +148,13 @@ def _upload_inspired_video(request):
 @permission_required('management.can_approve_app')    
 def update_inspired_video_status(request):
     if request.is_ajax():
-        pdf_slug = request.POST['pdf_slug']
+        inspired_video_slug = request.POST['inspired_video_slug']
         status = request.POST['approve_status']
         remark = request.POST['remark']
-        pdfdoc = InspiredVideo.objects.filter(slug=pdf_slug).update(approve_status=status, 
-                                                            approved_time=datetime.now(), 
-                                                            approved_by=request.user, 
-                                                            remark=remark)
+        InspiredVideo.objects.filter(slug=inspired_video_slug).update(approve_status=status, 
+                                                                            approved_time=datetime.now(), 
+                                                                            approved_by=request.user, 
+                                                                            remark=remark)
         return JsonResponse({'status': 1}, safe=False)
     
 def get_upyun_signature():
