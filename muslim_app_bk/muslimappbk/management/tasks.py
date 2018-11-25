@@ -1,7 +1,7 @@
 # Create your tasks here
 from __future__ import unicode_literals
 from celery import shared_task
-from .models import Video
+from .models import Video, Image
 from celery.utils.log import get_task_logger
 from django.core.files.storage import default_storage
 from django.core.files import File
@@ -35,4 +35,16 @@ def update_video_path_task(self, path, task_id, width, height, duration):
         raise self.retry(exc=exc, countdown=5, max_retries=3)
     else:
         Video.objects.filter(upyun_task_id=task_id).update(file=path, width=width, height=height, duration=duration)
+        logger.info('video path updated')
+        
+@shared_task(bind=True)
+def update_image_path_task(self, path, task_id, width, height):
+    try:
+        logger.info('enter update_image_path_task')
+        Image.objects.get(upyun_task_id=task_id)
+    except ObjectDoesNotExist as exc:
+        logger.info('image object has not been created, waiting to retry')
+        raise self.retry(exc=exc, countdown=5, max_retries=3)
+    else:
+        Image.objects.filter(upyun_task_id=task_id).update(file=path, width=width, height=height)
         logger.info('video path updated')

@@ -45,7 +45,7 @@
                       <div class="form-group">
                         <label>{{ album_form.title.label }}</label>
                         {% render_field album_form.title class="form-control" placeholder=album_form.title.name %}
-                        {% if video_form.title.errors %}
+                        {% if album_form.title.errors %}
                           <div class="invalid-feedback d-block">
                             {% for error in album_form.title.errors %}
                               {{ error }}
@@ -89,7 +89,7 @@
                       {% endfor %}
                       {% if slug %}
                       <div width="100%" height="auto" controls>
-                        <img src="{{ album_form.image_url }}" width="100%">
+                        <img id='album_img' src="{{ slug|yesno:album_form.image_url }}" width="100%">
                       </div>
                       {% endif %}
               </div>
@@ -141,7 +141,7 @@
             uploadImage(formData);
         });
       });
-    setActiveMenu(4);
+    setActiveMenu(5);
   });
       
   function uploadImage(formData){

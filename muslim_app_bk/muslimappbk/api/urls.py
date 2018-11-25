@@ -12,5 +12,6 @@ urlpatterns = [
     path('notify_video_process_task', views.notify_video_process_task, name='notify_video_process_task'),
     path('get_image_upload_signature', views.get_image_upload_signature, name='get_image_upload_signature'),
     path('notify_image_process_task', views.notify_image_process_task, name='notify_image_process_task'),
+    path('image_thumbnail_notify', views.image_thumbnail_notify, name='image_thumbnail_notify'),
 ]
 

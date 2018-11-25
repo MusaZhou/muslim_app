@@ -52,6 +52,8 @@ class Image(models.Model):
     picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True)
     width = models.CharField(null=True, max_length=8, blank=True)
     height = models.CharField(null=True, max_length=8, blank=True)
+    upyun_task_id = models.UUIDField(blank=True, null=True)
+    thumbnail_picture = models.ImageField(upload_to="pictures",blank=True)
 
     def __str__(self):
         return self.content_object
