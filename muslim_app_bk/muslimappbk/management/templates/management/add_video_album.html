@@ -182,7 +182,8 @@
         console.log(response);
         if(response.code == 200){
             var taskId = response.task_ids[0];
-            notifyTask(taskId);
+            var original_path = response.url;
+            notifyTask(taskId, original_path);
         }
       }).always(function(data){
         console.log(data);
@@ -190,11 +191,13 @@
       });
   }
       
-  function notifyTask(taskId){
+  function notifyTask(taskId, original_path){
+      console.log('task_id:' + taskId);
+      console.log('original_path' + original_path);
       $.ajax({
           url: "{% url 'api:notify_image_process_task' %}",
           method: 'POST',
-          data: {'task_id': taskId}
+          data: {'task_id': taskId, 'original_path': original_path}
       }).done(function(response){
         var image_id = response.image_id;
         $('#image_id').val(image_id);

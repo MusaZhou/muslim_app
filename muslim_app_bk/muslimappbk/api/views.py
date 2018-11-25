@@ -115,6 +115,7 @@ def _image_tasks(request, save_key):
             "x-gmkerl-thumb": "videoalbum",
             "save_as": save_key.replace('original', 'thumbnail', 1),
             "notify_url": request.build_absolute_uri(reverse('api:image_thumbnail_notify'))
+#             "notify_url": 'https://uptool.tingfun.net/echo.php'
         }]
     
 # @csrf_exempt
@@ -150,25 +151,25 @@ def get_image_upload_signature(request):
 
 def notify_image_process_task(request):
     task_id = request.POST['task_id']
-    image = Image.objects.create(upyun_task_id=task_id)
+    original_path = request.POST['original_path']
+    image = Image.objects.create(upyun_task_id=task_id, picture=original_path)
     return JsonResponse({'image_id': image.id})
 
 @csrf_exempt
 def image_thumbnail_notify(request):
     logger.info('process image notify:')
-#     logger.info(request.data)
-    logger.info(request.GET)
-    logger.info(request.POST)
-    logger.info(request.META)
-    if request.POST['status_code'] == '200':
+#     logger.info(request.body)
+    logger.info(request.body.decode())
+    data = json.loads(request.body.decode())
+    if data['status_code'] == 200:
         logger.info('status ok')
-        path = request.POST['image_info']['path'].split(settings.MEDIA_URL)[1]
-        task_id = request.POST['task_id']
+        path = data['imginfo']['path'].split(settings.MEDIA_URL)[1]
+        task_id = data['task_id']
         logger.info('path:' + path)
         logger.info('task_id:' + task_id)
-        width = request.POST['image_info']['width']
-        height = request.POST['image_info']['height']
+        width = data['imginfo']['width']
+        height = data['imginfo']['height']
         logger.info('video width:' + str(width))
         logger.info('video height:' + str(height))
-        update_image_path_task.apply_async(kwargs={ 'path': path, 'task_id': task_id, 'width': width, 'height': height}, count_down=3)
+        update_image_path_task.apply_async(kwargs={ 'thumbnail_path': path, 'task_id': task_id, 'width': width, 'height': height}, count_down=3)
     return HttpResponse('thanks')

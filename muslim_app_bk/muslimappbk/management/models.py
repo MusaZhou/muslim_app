@@ -49,11 +49,11 @@ class Image(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
-    picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True)
+    picture = models.ImageField(upload_to="pictures/%Y/%m/%d/",blank=True, max_length=150)
     width = models.CharField(null=True, max_length=8, blank=True)
     height = models.CharField(null=True, max_length=8, blank=True)
     upyun_task_id = models.UUIDField(blank=True, null=True)
-    thumbnail_picture = models.ImageField(upload_to="pictures",blank=True)
+    thumbnail_picture = models.ImageField(upload_to="pictures",blank=True, max_length=150)
 
     def __str__(self):
         return self.content_object
@@ -62,7 +62,7 @@ class Video(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
-    file = models.FileField(upload_to="videos", blank=True, null=True)
+    file = models.FileField(upload_to="videos", blank=True, null=True, max_length=150)
     upyun_task_id = models.UUIDField(blank=True, null=True)
     width = models.PositiveIntegerField(null=True)
     height = models.PositiveIntegerField(null=True)
