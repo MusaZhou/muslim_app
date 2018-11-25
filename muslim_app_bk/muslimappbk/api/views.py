@@ -13,7 +13,7 @@ from upyun.modules.httpipe import cur_dt
 import base64, time, json, logging, os, random, string
 from django.urls import reverse
 from django.urls.conf import path
-from management.tasks import update_video_path_task
+from management.tasks import update_video_path_task, update_image_path_task
 
 logger = logging.getLogger(__name__)
 
@@ -155,21 +155,20 @@ def notify_image_process_task(request):
 
 @csrf_exempt
 def image_thumbnail_notify(request):
-    logger.info('process video notify:')
-    logger.info(request.POST.dict)
+    logger.info('process image notify:')
+#     logger.info(request.data)
+    logger.info(request.GET)
+    logger.info(request.POST)
+    logger.info(request.META)
     if request.POST['status_code'] == '200':
         logger.info('status ok')
-        path = request.POST['path[0]'].split(settings.MEDIA_URL)[1]
+        path = request.POST['image_info']['path'].split(settings.MEDIA_URL)[1]
         task_id = request.POST['task_id']
         logger.info('path:' + path)
         logger.info('task_id:' + task_id)
-        video_info = json.loads(base64.b64decode(request.POST['info']))
-        logger.info(video_info)
-        width = video_info['streams'][0]['video_width']
-        height = video_info['streams'][0]['video_height']
-        duration = video_info['streams'][0]['duration']
+        width = request.POST['image_info']['width']
+        height = request.POST['image_info']['height']
         logger.info('video width:' + str(width))
         logger.info('video height:' + str(height))
-        logger.info('duration:' + str(int(duration)))
-        update_video_path_task.apply_async(kwargs={ 'path': path, 'task_id': task_id, 'width': width, 'height': height, 'duration': duration}, count_down=3)
+        update_image_path_task.apply_async(kwargs={ 'path': path, 'task_id': task_id, 'width': width, 'height': height}, count_down=3)
     return HttpResponse('thanks')
