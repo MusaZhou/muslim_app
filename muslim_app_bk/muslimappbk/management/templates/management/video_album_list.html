@@ -1,7 +1,7 @@
 {% extends "management/index.html" %}
 {% load i18n %}
 {% load l10n %}
-{% block title %}{% trans 'Inspired Video Table' %}{% endblock %}
+{% block title %}{% trans 'Video Album Table' %}{% endblock %}
 {% block stylesheet %}
     {{ block.super }}
     <style>
@@ -14,9 +14,9 @@
 {% block mainContent %}
     <div class="container-fluid">
             <div class="row">
-                <h4 class="col-auto" style="margin-top: 5px;">{% trans 'Video List' %}</h4>
-                <a class="btn btn-primary btn-sm cur-p add-new-version" href="{% url 'management:add_inspired_video' %}">
-                    {% trans 'Upload New Video' %}
+                <h4 class="col-auto" style="margin-top: 5px;">{% trans 'Video Album List' %}</h4>
+                <a class="btn btn-primary btn-sm cur-p add-new-version" href="{% url 'management:add_video_album' %}">
+                    {% trans 'Create New Album' %}
                 </a>
             </div>
             
@@ -31,7 +31,7 @@
                       <tr>
                         <th>{% trans 'No.' %}</th>
                         <th>{% trans 'Title' %}</th>
-                        <th>{% trans 'Album' %}</th>
+                        <th>{% trans 'Video Count' %}</th>
                         <th>{% trans 'Approve' %}</th>
                         <th>{% trans 'Remark' %}</th>
                         <th>{% trans 'Detail' %}</th>
@@ -43,7 +43,7 @@
                       <tr>
                         <th>{% trans 'No' %}</th>
                         <th>{% trans 'Title' %}</th>
-                        <th>{% trans 'Album' %}</th>
+                        <th>{% trans 'Video Count' %}</th>
                         <th>{% trans 'Approve' %}</th>
                         <th>{% trans 'Remark' %}</th>
                         <th>{% trans 'Detail' %}</th>
@@ -52,21 +52,21 @@
                       </tr>
                     </tfoot>
                     <tbody>
-                      {% for video in video_list %}
+                      {% for album in album_list %}
                       <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ video.title }}</td>
-                        <td>{{ video.album.title|default_if_none:"" }}</td>
-                        <td>{{ video.approve_status }}</td>
-                        <td>{{ video.remark }}</td>
+                        <td>{{ album.title }}</td>
+                        <td>{{ album.album_videos.count|default_if_none:0 }}</td>
+                        <td>{{ album.approve_status }}</td>
+                        <td>{{ album.remark }}</td>
                         <td>
-                            <a href="{% url 'management:detail_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
+                            <a href="{% url 'management:detail_video_album' album.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:edit_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
+                            <a href="{% url 'management:edit_video_album' album.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:delete_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
+                            <a href="{% url 'management:delete_video_album' album.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
                         </td>
                       </tr>
                       {% endfor %}
@@ -82,7 +82,7 @@
 <script>
     $(function(){
         var dataTable = $('#dataTable').DataTable();       
-        setActiveMenu(4);
+        setActiveMenu(5);
     });
 </script>
 {% endblock %}

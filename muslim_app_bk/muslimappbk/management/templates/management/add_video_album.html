@@ -1,0 +1,206 @@
+{% extends "management/index.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block title %}
+    {% if not slug %}
+        {% trans 'Add Video Album' %}
+    {% else %}
+        {% trans 'Upload Video Album' %}
+    {% endif %}
+{% endblock %}
+{% block stylesheet %}
+  {{ block.super }}
+  <link href="{% static 'taggit_labels/css/taggit_labels.css' %}" rel="stylesheet">
+  <style>
+
+    #submit_btn {
+      position: relative;
+      left: 50%;
+      transform: translateX(-50%); /* this will calculate what 50% of the element width is and will move it across the X-axis. The negative value ensures it moves to the left. */
+    }
+  </style>
+{% endblock %}
+{% block sidebar %}
+    {% if perms.management.can_approve_app %}
+        {% include 'management/sidebar.html' %}
+    {% else %}
+        {% include 'management/uploader/sidebar_uploader.html' %}
+    {% endif %}
+{% endblock %}
+{% block mainContent %}
+          <form id="album_form" method="POST" action="{% if not slug %} {% url 'management:add_video_album' %} {% else %} {% url 'management:edit_video_album' slug %} {% endif %}" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-6">
+                <div class="">
+                  <h6 class="">
+                      {% if not slug %}
+                        {% trans 'Add Video Album' %}
+                      {% else %}
+                        {% trans 'Update Video Album' %}
+                      {% endif %}
+                  </h6>
+                  <div class="">
+                      <div class="form-group">
+                        <label>{{ album_form.title.label }}</label>
+                        {% render_field album_form.title class="form-control" placeholder=album_form.title.name %}
+                        {% if video_form.title.errors %}
+                          <div class="invalid-feedback d-block">
+                            {% for error in album_form.title.errors %}
+                              {{ error }}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ album_form.description.label }}</label>
+                        {% render_field album_form.description class="form-control" %}
+                      </div>
+                      <div class="form-group row pl-3">
+                        <button type="button" class="button btn-primary btn col-md-2" id="image_input_btn">{% trans 'Image Upload' %}</button>
+                        <input type="file" id="image_input" accept="image/*" style="display:none">
+                        <div class="col-md-10 d-none" id="progress-div">
+                          <div class="progress" style="height:90%; width:100%">
+                           <div id="image_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+                          </div>
+                        </div>
+                      </div>
+                      <button id="submit_btn" class="btn cur-p button btn-success center" style="margin-left:auto;margin-right:auto;margin-top:50px;" >{% trans 'Save' %}</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 pt-3">
+                      {% if album_form.non_field_errors %}
+                        <div class="alert alert-danger" role="alert">
+                          {% for error in album_form.non_field_errors %}
+                            {{ error }}
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                      {% for hidden_field in album_form.hidden_fields %}
+                       {% if hidden_field.errors %}
+                         <div class="alert alert-danger" role="alert">
+                           {% for error in hidden_field.errors %}
+                             {{ hidden_field.name }}: {{ error }}
+                           {% endfor %}
+                         </div>
+                       {% endif %}
+                      {% endfor %}
+                      {% if slug %}
+                      <div width="100%" height="auto" controls>
+                        <img src="{{ album_form.image_url }}" width="100%">
+                      </div>
+                      {% endif %}
+              </div>
+            </div>
+            {{ album_form.image_id }}
+            {{ album_form.policy }}
+            {{ album_form.authorization }}
+            {{ album_form.upload_by.as_hidden }}
+          </form>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+  <script src="{% static 'taggit_labels/js/taggit_labels.js' %}" type="text/javascript"></script>
+  <script>
+  var imageUploading = false;
+  var authorization = null;
+  var policy = null;
+      
+  $(function(){
+    $('#album_form').submit(function(e){
+      if(imageUploading){
+          alert("{% trans 'sorry, please wait for a while, the image uploading has not complte yet' %}");
+          e.preventDefault();
+          return false;
+      }
+      $('#image_input').prop('disabled', true);
+      $(this).submit();
+    });
+    
+    $('#image_input_btn').click(function(){
+    	$('#image_input').click();
+    });
+    
+    $('#image_input').change(function(){
+        imageUploading = true;
+        var file = this.files[0];
+        var fileName = file.name;
+        $.ajax({
+            url: "{% url 'api:get_image_upload_signature' %}",
+            method: 'POST',
+            data: {'file_name': fileName},
+        }).done(function(response){
+            var policy = response.policy;
+            var authorization = response.authorization;
+            var formData = new FormData();
+            formData.append('policy', policy);
+            formData.append('authorization', authorization);
+            formData.append('file', file);
+            uploadImage(formData);
+        });
+      });
+    setActiveMenu(4);
+  });
+      
+  function uploadImage(formData){
+      $('#progress-div').removeClass('d-none');
+      $.ajax({
+          url: "{{ upyun_url }}",
+          type: 'POST',
+          data: formData,
+          cache: false,
+//          dataType: 'json',
+          processData: false, // Don't process the files
+          contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+          dataType: 'json',
+          xhr: function()
+          {
+            var xhr = new window.XMLHttpRequest();
+            //Upload progress
+            xhr.upload.addEventListener("progress", function(evt){
+              if (evt.lengthComputable) {
+                var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
+                //Do something with upload progress
+                console.log(percentComplete);
+                $('#image_upload_progress').css('width', percentComplete);
+                $('#image_upload_progress').text(percentComplete);
+              }
+            }, false);
+            //Download progress
+            xhr.addEventListener("progress", function(evt){
+              if (evt.lengthComputable) {
+                var percentComplete = evt.loaded / evt.total;
+                //Do something with download progress
+                console.log(percentComplete);
+              }
+            }, false);
+            return xhr;
+          },
+      }).done(function(response){
+        console.log(response);
+        if(response.code == 200){
+            var taskId = response.task_ids[0];
+            notifyTask(taskId);
+        }
+      }).always(function(data){
+        console.log(data);
+        imageUploading = false;    
+      });
+  }
+      
+  function notifyTask(taskId){
+      $.ajax({
+          url: "{% url 'api:notify_image_process_task' %}",
+          method: 'POST',
+          data: {'task_id': taskId}
+      }).done(function(response){
+        var image_id = response.image_id;
+        $('#image_id').val(image_id);
+         console.log('taskId notified'); 
+         alert('{% trans "image uploaded and currently is encoding" %}')
+      });
+  }
+  </script>
+{% endblock %}

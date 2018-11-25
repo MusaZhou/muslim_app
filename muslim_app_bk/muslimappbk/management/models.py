@@ -307,10 +307,13 @@ class VideoAlbum(models.Model):
                                   verbose_name=_('Uploader'), related_name='album_uploaded')
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
                             validators=[validators.validate_unicode_slug])
-    video_count = models.SmallIntegerField(default=0)
+    images = GenericRelation(Image, related_query_name='imaged_video_album', verbose_name=_('Public Image'))
     
     def __str__(self):
         return self.title
+    
+    def get_image(self):
+        return self.images.last()
     
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
@@ -331,7 +334,8 @@ class InspiredVideo(models.Model):
                             validators=[validators.validate_unicode_slug])
     ratings = GenericRelation(Rating, related_query_name='rating_video')
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
-    album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name="Album",on_delete=models.CASCADE)
+    album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name="Album",on_delete=models.CASCADE,\
+                              related_name='album_videos')
     
     class Meta:
         ordering = ["-upload_time"]

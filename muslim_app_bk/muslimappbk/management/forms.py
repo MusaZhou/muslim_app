@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from management.models import MobileApp, AppVersion, Banner, PDFDoc,\
-    InspiredVideo
+    InspiredVideo, VideoAlbum
 from django.forms import ModelChoiceField
 from django.utils.translation import gettext_lazy as _
 from taggit_labels.widgets import LabelWidget
@@ -82,3 +82,13 @@ class InspiredVideoForm(ModelForm):
     class Meta:
         model = InspiredVideo
         fields = ['video_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'policy', 'authorization', 'video_path']
+
+class VideoAlbumForm(ModelForm):
+    policy = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_policy'}))
+    authorization = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_authorization'}))
+    image_id = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'image_id'}))
+    image_path = forms.CharField(required=False, widget=forms.HiddenInput())
+    
+    class Meta:
+        model = VideoAlbum
+        fields = ['image_id', 'title', 'description', 'slug', 'upload_by', 'policy', 'authorization', 'image_path']

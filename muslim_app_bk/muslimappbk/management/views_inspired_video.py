@@ -1,10 +1,10 @@
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import View
-from management.models import InspiredVideo, VideoAlbum, Video
+from management.models import InspiredVideo, VideoAlbum, Video, Image
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from management.forms import InspiredVideoForm
+from management.forms import InspiredVideoForm, VideoAlbumForm
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
 from django.views.decorators.csrf import csrf_exempt, csrf_protect 
 from django.conf import settings
@@ -120,30 +120,6 @@ class InspiredVideoDetailView(View):
         inspired_video = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
         context = {'inspired_video': inspired_video}
         return render(request, 'management/inspired_video_detail.html', context)
-        
-# @login_required 
-# @csrf_exempt   
-# def upload_inspired_video(request):
-#     request.upload_handlers = [TemporaryFileUploadHandler(request)]
-#     return _upload_inspired_video(request)
- 
-# @csrf_protect
-# def _upload_inspired_video(request):        
-#     if request.is_ajax():
-#         video_file = request.FILES.getlist('video')
-#                     
-#         file_path = video_file.temporary_file_path()
-#         logger.info('temporary file path:' + file_path)
-#         dir_name = os.path.join('pdf', ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)))
-#         os.mkdir(settings.MEDIA_ROOT + dir_name)
-#         base_name = os.path.join(dir_name, video_file.name)
-#         file_name = os.path.join(settings.MEDIA_ROOT, base_name)
-#         os.rename(file_path, file_name)
-#         os.chmod(file_name, 0o755)
-#             upload_file_task.delay(file_name, 'pdf/', pdf_file.id, 'management_pdffile', 'file', random_folder=True)
-        
-#         context = {'pdf_ids': pdf_ids}
-#         return JsonResponse(context, safe=False)
     
 @permission_required('management.can_approve_app')    
 def update_inspired_video_status(request):
@@ -177,3 +153,110 @@ def get_upyun_signature():
         date = now,
         policy = policy)
     return (policy, signature)
+
+@method_decorator(login_required, name='dispatch')    
+class VideoAlbumListView(View):
+    def get(self, request, *args, **kwargs):
+        album_list = VideoAlbum.objects.all()
+        context = {'album_list': album_list}
+        return render(request, 'management/video_album_list.html', context)
+    
+@method_decorator(login_required, name='dispatch')   
+class VideoAlbumEditView(View):    
+    def get(self, request, *args, **kwargs):
+        if 'slug' in kwargs:
+            slug = kwargs['slug']
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization,
+                            }
+            video_album = get_object_or_404(VideoAlbum, slug=slug)
+                
+            album_form = VideoAlbumForm(instance=video_album, initial=initial_data)
+            upyun = default_storage.up
+            context = {'album_form': album_form, 
+                       'slug': slug,
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+        else:
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization,
+                            }
+            slug = None
+            album_form = VideoAlbumForm(initial=initial_data)
+            upyun = default_storage.up
+            context = {'album_form': album_form, 
+                       'slug': slug, 
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+            
+        return render(request, 'management/add_video_album.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        if 'slug' in kwargs:
+            slug = kwargs['slug']
+            video_album = get_object_or_404(VideoAlbum, slug=kwargs['slug'])
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization,
+                            }
+                
+            album_form = VideoAlbumForm(request.POST, instance=video_album, initial=initial_data)
+            upyun = default_storage.up
+            context = {'album_form': album_form, 
+                       'slug': slug,
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+        else:
+            slug = None
+            policy, authorization = get_upyun_signature()
+            initial_data = {'upload_by': request.user,
+                            'policy': policy,
+                            'authorization': authorization,
+                            }
+            album_form = VideoAlbumForm(request.POST, initial=initial_data)
+            upyun = default_storage.up
+            context = {'album_form': album_form, 
+                       'slug': slug, 
+                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+            
+        if album_form.is_valid():
+            video_album = album_form.save()
+            image_id = album_form.cleaned_data['image_id']
+            image = Image.objects.get(id=image_id)
+            related_object = image.content_object
+            if related_object is None:
+                image.content_object = video_album
+                image.save()
+            return redirect('management:video_album_list')
+        
+        logger.info('video_for error data------------------------------------')
+        logger.info(album_form.errors.as_data())
+        return render(request, 'management/add_video_album.html', context)
+    
+@method_decorator(login_required, name='dispatch')     
+class VideoAlbumDeleteView(View):    
+    def get(self, request, *args, **kwargs):
+        video_album = get_object_or_404(VideoAlbum, slug=kwargs['slug'])
+        video_album.delete()
+        return redirect('management:video_album_list')
+    
+@method_decorator(login_required, name='dispatch')     
+class VideoAlbumDetailView(View):    
+    def get(self, request, *args, **kwargs):
+        video_album = get_object_or_404(VideoAlbum, slug=kwargs['slug'])
+        context = {'video_album': video_album}
+        return render(request, 'management/video_album_detail.html', context)
+    
+@permission_required('management.can_approve_app')    
+def update_video_album_status(request):
+    if request.is_ajax():
+        video_album_slug = request.POST['video_album_slug']
+        status = request.POST['approve_status']
+        remark = request.POST['remark']
+        VideoAlbum.objects.filter(slug=video_album_slug).update(approve_status=status, 
+                                                                approved_time=datetime.now(), 
+                                                                approved_by=request.user, 
+                                                                remark=remark)
+        return JsonResponse({'status': 1}, safe=False)
