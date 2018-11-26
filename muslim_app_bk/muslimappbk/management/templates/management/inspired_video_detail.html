@@ -37,8 +37,7 @@
     {% endif %}
 {% endblock %}
 {% block mainContent %}
-<form method="" action="" enctype="multipart/form-data">
-{% csrf_token %}
+<div class="container-fluid">
 <div class="row">
   <div class="col-md-6">
     <div class="">
@@ -51,9 +50,9 @@
       <div style="font-size: 1.2em; margin-top: 10px">
           <div class="row">
             {% comment %}
-            <span class="col">{% trans 'Statistic(Download, Comment, Average Rate)' %} </span>
+            <span class="col">{% trans 'Statistic(Comment, Average Rate)' %} </span>
             {% get_comment_count for inspired_video as comment_count %}
-            <span class="col attr-val">{{ inspired_video.download_count }}, {{ comment_count }}, {{ inspired_video.rating.average|default:5 }}</span>
+            <span class="col attr-val">{{ comment_count }}, {{ inspired_video.rating.average|default:5 }}</span>
             {% endcomment %}
           </div>
           <div class="row">
@@ -103,7 +102,7 @@
       </video>
   </div>
 </div>
-</form>
+</div>
 
 <div class="modal fade" id="remarkModal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">

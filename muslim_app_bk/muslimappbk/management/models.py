@@ -295,8 +295,8 @@ class PDFFile(models.Model):
                             validators=[validators.FileExtensionValidator(['pdf'])])
 
 class VideoAlbum(models.Model):
-    title = models.CharField(max_length=100, verbose_name=_('title'), unique=True) 
-    description = models.TextField(blank=True, null=True, verbose_name=_('description'))
+    title = models.CharField(max_length=100, verbose_name=_('Title'), unique=True) 
+    description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
     upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
     approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
                                       default='new', verbose_name=_('Approve Status'))
@@ -340,13 +340,13 @@ class InspiredVideo(models.Model):
     approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
                                   verbose_name=_('Uploader'), related_name='video_uploaded')
-    download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
                             validators=[validators.validate_unicode_slug])
     ratings = GenericRelation(Rating, related_query_name='rating_video')
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
-    album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name="Album",on_delete=models.CASCADE,\
+    album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name=_("Album"),on_delete=models.CASCADE,\
                               related_name='album_videos')
+    view_count = models.PositiveIntegerField(verbose_name=_("View Count"), default=0)
     
     class Meta:
         ordering = ["-upload_time"]
