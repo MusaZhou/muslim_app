@@ -267,7 +267,6 @@ class PDFDoc(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.title, allow_unicode=True)
-    
         super(PDFDoc, self).save(*args, **kwargs)
     
     def canShow(self):
@@ -310,7 +309,17 @@ class VideoAlbum(models.Model):
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
                             validators=[validators.validate_unicode_slug])
     images = GenericRelation(Image, related_query_name='imaged_video_album', verbose_name=_('Public Image'))
+    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     
+
+    class Meta:
+        ordering = ["-upload_time"]
+    
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title, allow_unicode=True)
+        super(VideoAlbum, self).save(*args, **kwargs)
+            
     def __str__(self):
         return self.title
     

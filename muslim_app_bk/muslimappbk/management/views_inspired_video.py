@@ -27,71 +27,43 @@ class InspiredVideoListView(View):
         return render(request, 'management/inspired_video_table.html', context)
  
 @method_decorator(login_required, name='dispatch')   
-class InspiredVideoEditView(View):    
+class InspiredVideoEditView(View):   
+    def get_common_initial(self, request):
+        return  {'upload_by': request.user}
+    
+    def append_initial_video(self, inspired_video, initial_data):
+        latest_valid_video = inspired_video.latest_valid_video()
+        if latest_valid_video is not None:
+            initial_data['video_id'] = latest_valid_video.id
+            initial_data['video_path'] = latest_valid_video.file.url
+            
     def get(self, request, *args, **kwargs):
+        initial_data = self.get_common_initial(request)
         if 'slug' in kwargs:
             slug = kwargs['slug']
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
             inspired_video = get_object_or_404(InspiredVideo, slug=slug)
-            latest_valid_video = inspired_video.latest_valid_video()
-            if latest_valid_video is not None:
-                initial_data['video_id'] = latest_valid_video.id
-                initial_data['video_path'] = latest_valid_video.file.url
-                
+            self.append_initial_video(inspired_video, initial_data)
             video_form = InspiredVideoForm(instance=inspired_video, initial=initial_data)
-            upyun = default_storage.up
-            context = {'video_form': video_form, 
-                       'slug': slug,
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         else:
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
             slug = None
             video_form = InspiredVideoForm(initial=initial_data)
-            upyun = default_storage.up
-            context = {'video_form': video_form, 
-                       'slug': slug, 
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
             
+        upyun = default_storage.up
+        context = {'video_form': video_form, 
+                   'slug': slug, 
+                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}    
         return render(request, 'management/add_inspired_video.html', context)
     
     def post(self, request, *args, **kwargs):
+        initial_data = self.get_common_initial(request)
         if 'slug' in kwargs:
             slug = kwargs['slug']
             inspired_video = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
-            latest_valid_video = inspired_video.latest_valid_video()
-            if latest_valid_video is not None:
-                initial_data['video_id'] = latest_valid_video.id
-                
+            self.append_initial_video(inspired_video, initial_data)
             video_form = InspiredVideoForm(request.POST, instance=inspired_video, initial=initial_data)
-            upyun = default_storage.up
-            context = {'video_form': video_form, 
-                       'slug': slug,
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         else:
             slug = None
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
             video_form = InspiredVideoForm(request.POST, initial=initial_data)
-            upyun = default_storage.up
-            context = {'video_form': video_form, 
-                       'slug': slug, 
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
             
         if video_form.is_valid():
             inspired_video = video_form.save()
@@ -103,8 +75,10 @@ class InspiredVideoEditView(View):
                 video.save()
             return redirect('management:inspired_video_list')
         
-        logger.info('video_for error data------------------------------------')
-        logger.info(video_form.errors.as_data())
+        upyun = default_storage.up
+        context = {'video_form': video_form, 
+                   'slug': slug, 
+                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         return render(request, 'management/add_inspired_video.html', context)
     
 @method_decorator(login_required, name='dispatch')     
@@ -132,27 +106,6 @@ def update_inspired_video_status(request):
                                                                             approved_by=request.user, 
                                                                             remark=remark)
         return JsonResponse({'status': 1}, safe=False)
-    
-def get_upyun_signature():
-    save_key = '/%s' % default_storage._get_key_name(f'videos/{time.time()}')
-    logger.info('signature save-key:' + save_key)
-    upyun = default_storage.up
-    now = cur_dt()
-    data = {
-            'bucket': upyun.service,
-            'expiration': 1800 + int(time.time()),
-            'save-key': save_key,
-            'date': now
-        }
-    policy = base64.b64encode(json.dumps(data).encode()).decode()
-    signature = sign.make_signature(
-        username = upyun.username, 
-        password = upyun.password,
-        method = "POST",
-        uri = '/%s' % upyun.service,
-        date = now,
-        policy = policy)
-    return (policy, signature)
 
 @method_decorator(login_required, name='dispatch')    
 class VideoAlbumListView(View):
@@ -163,76 +116,58 @@ class VideoAlbumListView(View):
     
 @method_decorator(login_required, name='dispatch')   
 class VideoAlbumEditView(View):    
+    def get_common_initial(self, request):
+        return  {'upload_by': request.user}
+    
+    def append_initial_image(self, video_album, initial_data):
+        image = video_album.get_image()
+        if image:
+            initial_data['image_id'] = image.id
+            initial_data['image_path'] = image.thumbnail_picture.url
+        
     def get(self, request, *args, **kwargs):
+        initial_data = self.get_common_initial(request)
         if 'slug' in kwargs:
             slug = kwargs['slug']
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
             video_album = get_object_or_404(VideoAlbum, slug=slug)
-                
+            self.append_initial_image(video_album, initial_data)
             album_form = VideoAlbumForm(instance=video_album, initial=initial_data)
-            upyun = default_storage.up
-            context = {'album_form': album_form, 
-                       'slug': slug,
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         else:
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
             slug = None
             album_form = VideoAlbumForm(initial=initial_data)
-            upyun = default_storage.up
-            context = {'album_form': album_form, 
-                       'slug': slug, 
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
             
+        upyun = default_storage.up
+        context = {'album_form': album_form, 
+                   'slug': slug, 
+                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}    
         return render(request, 'management/add_video_album.html', context)
     
     def post(self, request, *args, **kwargs):
+        initial_data = self.get_common_initial(request)
         if 'slug' in kwargs:
             slug = kwargs['slug']
             video_album = get_object_or_404(VideoAlbum, slug=kwargs['slug'])
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
-                
+            self.append_initial_image(video_album, initial_data)
             album_form = VideoAlbumForm(request.POST, instance=video_album, initial=initial_data)
-            upyun = default_storage.up
-            context = {'album_form': album_form, 
-                       'slug': slug,
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         else:
             slug = None
-            policy, authorization = get_upyun_signature()
-            initial_data = {'upload_by': request.user,
-                            'policy': policy,
-                            'authorization': authorization,
-                            }
             album_form = VideoAlbumForm(request.POST, initial=initial_data)
-            upyun = default_storage.up
-            context = {'album_form': album_form, 
-                       'slug': slug, 
-                       'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
             
         if album_form.is_valid():
             video_album = album_form.save()
             image_id = album_form.cleaned_data['image_id']
-            image = Image.objects.get(id=image_id)
-            related_object = image.content_object
-            if related_object is None:
-                image.content_object = video_album
-                image.save()
+            if image_id:
+                image = Image.objects.get(id=image_id)
+                related_object = image.content_object
+                if related_object is None:
+                    image.content_object = video_album
+                    image.save()
             return redirect('management:video_album_list')
         
-        logger.info('video_for error data------------------------------------')
-        logger.info(album_form.errors.as_data())
+        upyun = default_storage.up
+        context = {'album_form': album_form, 
+                   'slug': slug, 
+                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
         return render(request, 'management/add_video_album.html', context)
     
 @method_decorator(login_required, name='dispatch')     
