@@ -73,7 +73,8 @@ class PDFDocForm(ModelForm):
         fields = ['title', 'description', 'tags', 'slug', 'pdf_file_ids', 'upload_by', 'author', 'publish_year']
         
 class InspiredVideoForm(ModelForm):
-    video_id = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'video_id'}))
+    video_id = forms.CharField(widget=forms.HiddenInput(attrs={'id':'video_id'}))
+    image_id = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'image_id'}))
     tags = TagField(required=False, widget=LabelWidget)
     policy = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_policy'}))
     authorization = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_authorization'}))
@@ -81,7 +82,7 @@ class InspiredVideoForm(ModelForm):
     
     class Meta:
         model = InspiredVideo
-        fields = ['video_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'policy', 'authorization', 'video_path']
+        fields = ['video_id', 'image_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'policy', 'authorization', 'video_path']
 
 class VideoAlbumForm(ModelForm):
     policy = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_policy'}))

@@ -53,7 +53,7 @@ class Image(models.Model):
     width = models.CharField(null=True, max_length=8, blank=True)
     height = models.CharField(null=True, max_length=8, blank=True)
     upyun_task_id = models.UUIDField(blank=True, null=True)
-    thumbnail_picture = models.ImageField(upload_to="pictures",blank=True, max_length=150)
+    thumbnail_picture = models.ImageField(upload_to="pictures",blank=True, max_length=150, null=True)
 
     def __str__(self):
         return self.content_object
@@ -347,6 +347,7 @@ class InspiredVideo(models.Model):
     album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name=_("Album"),on_delete=models.CASCADE,\
                               related_name='album_videos')
     view_count = models.PositiveIntegerField(verbose_name=_("View Count"), default=0)
+    images = GenericRelation(Image, related_query_name='thumnail_video')
     
     class Meta:
         ordering = ["-upload_time"]
@@ -359,6 +360,9 @@ class InspiredVideo(models.Model):
         
     def latest_valid_video(self):
         return self.video.exclude(file__isnull=True).exclude(file__exact='').last()
+    
+    def thumbnail(self):
+        return self.images.last()
     
     def __str__(self):
         return self.title

@@ -13,7 +13,8 @@ from upyun.modules.httpipe import cur_dt
 import base64, time, json, logging, os, random, string
 from django.urls import reverse
 from django.urls.conf import path
-from management.tasks import update_video_path_task, update_image_path_task
+from management.tasks import update_video_path_task, update_image_path_task, update_video_thumbnail_task
+from email.policy import HTTP
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +55,7 @@ def get_video_upload_signature(request):
     logger.info('signature save-key:' + save_key)
     upyun = default_storage.up
     now = cur_dt()
-    video_process = _video_process(request)
+    video_process = _video_process(request, file_name)
     data = {
             'bucket': upyun.service,
             'expiration': 1800 + int(time.time()),
@@ -74,14 +75,27 @@ def get_video_upload_signature(request):
     data = {'policy': policy, 'authorization': authorization}
     return JsonResponse(data)
 
-def _video_process(request):
+def _video_process(request, file_name):
+    thumbnail_name = f"pictures/video_thumbnail/{file_name}_{time.time()}.jpg"
+    thumbnail_save_as = '/%s' % default_storage._get_key_name(thumbnail_name)
+    
     return [{
             "name": "naga",
             "type": "video",
             "avopts": "/f/mp4",
             "return_info": True,
-            "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
-        }]
+#             "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
+            "notify_url": 'https://uptool.tingfun.net/echo.php'
+        },
+        {
+            "name": "naga",
+            "type": "thumbnail",
+            "avopts": "/o/true/n/1",
+            "return_info": True,
+            "save_as": thumbnail_save_as,
+#             "notify_url": request.build_aboslute_uri(reverse('api:process_video_thumbnail_notify'))
+            "notify_url": 'https://uptool.tingfun.net/echo.php'
+            }]
 
 @csrf_exempt
 def process_video_notify(request):
@@ -104,10 +118,26 @@ def process_video_notify(request):
         update_video_path_task.apply_async(kwargs={ 'path': path, 'task_id': task_id, 'width': width, 'height': height, 'duration': duration}, count_down=3)
     return HttpResponse('thanks')
 
+@csrf_exempt
+def process_video_thumbnail_notify(request):
+    logger.info('process_video_thumbnail_notify:')
+    logger.info(request.POST.dict)
+    if request.POST['status_code'] == '200':
+        logger.info('status ok')
+        path = request.POST['path[0]'].split(settings.MEDIA_URL)[1]
+        task_id = request.POST['task_id']
+        logger.info('path:' + path)
+        logger.info('task_id:' + task_id)
+        update_video_thumbnail_task.apply_async(kwargs={ 'picture_path': path, 'task_id': task_id}, count_down=3)
+    return HttpResponse('thanks')
+
+@csrf_exempt
 def notify_video_process_task(request):
-    task_id = request.POST['task_id']
-    video = Video.objects.create(upyun_task_id=task_id)
-    return JsonResponse({'video_id': video.id})
+    task_ids = json.loads(request.POST['task_ids'])
+    logger.info(task_ids)
+    video = Video.objects.create(upyun_task_id=task_ids[0])
+    image = Image.objects.create(upyun_task_id=task_ids[1])
+    return JsonResponse({'video_id': video.id, 'image_id': image.id})
 
 def _image_tasks(request, save_key):
     return [{

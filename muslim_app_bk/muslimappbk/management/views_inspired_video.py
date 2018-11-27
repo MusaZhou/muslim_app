@@ -37,6 +37,10 @@ class InspiredVideoEditView(View):
             initial_data['video_id'] = latest_valid_video.id
             initial_data['video_path'] = latest_valid_video.file.url
             
+        thumbnail = inspired_video.thumbnail()
+        if thumbnail is not None:
+            initial_data['image_id'] = thumbnail.id
+            
     def get(self, request, *args, **kwargs):
         initial_data = self.get_common_initial(request)
         if 'slug' in kwargs:
@@ -67,12 +71,24 @@ class InspiredVideoEditView(View):
             
         if video_form.is_valid():
             inspired_video = video_form.save()
+            
+            # update relate video model
             video_id = video_form.cleaned_data['video_id']
             video = Video.objects.get(id=video_id)
             related_object = video.content_object
             if related_object is None:
                 video.content_object = inspired_video
                 video.save()
+            
+            # update related image model    
+            image_id = video_form.cleaned_data['image_id']
+            if image_id:
+                image = Image.objects.get(id=image_id)
+                related_object = image.content_object
+                if related_object is None:
+                    image.content_object = inspired_video
+                    image.save()
+            
             return redirect('management:inspired_video_list')
         
         upyun = default_storage.up

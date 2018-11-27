@@ -103,6 +103,7 @@
               </div>
             </div>
             {{ video_form.video_id }}
+            {{ video_form.image_id }}
             {{ video_form.policy }}
             {{ video_form.authorization }}
             {{ video_form.upload_by.as_hidden }}
@@ -191,8 +192,8 @@
       }).done(function(response){
         console.log(response);
         if(response.code == 200){
-            var taskId = response.task_ids[0];
-            notifyTask(taskId);
+//            var taskId = response.task_ids[0];
+            notifyTask(response.task_ids);
         }
 //            var video_url = data.video_url;
 //            $('video').prop('src', video_url);
@@ -203,14 +204,16 @@
       });
   }
       
-  function notifyTask(taskId){
+  function notifyTask(taskIds){
       $.ajax({
           url: "{% url 'api:notify_video_process_task' %}",
           method: 'POST',
-          data: {'task_id': taskId}
+          data: {'task_ids': JSON.stringify(taskIds)}
       }).done(function(response){
         var video_id = response.video_id;
+        var image_id = response.image_id;
         $('#video_id').val(video_id);
+        $('#image_id').val(image_id);
          console.log('taskId notified'); 
          alert('{% trans "video uploaded and currently is encoding" %}')
       });

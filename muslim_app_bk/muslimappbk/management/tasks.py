@@ -47,4 +47,16 @@ def update_image_path_task(self, thumbnail_path, task_id, width, height):
         raise self.retry(exc=exc, countdown=5, max_retries=3)
     else:
         Image.objects.filter(upyun_task_id=task_id).update(thumbnail_picture=thumbnail_path, width=width, height=height)
-        logger.info('video path updated')
+        logger.info('image path updated')
+
+@shared_task(bind=True)        
+def update_video_thumbnail_task(self, picture_path, task_id):
+    try:
+        logger.info('enter update_video_thumbnail_task')
+        Image.objects.get(upyun_task_id=task_id)
+    except ObjectDoesNotExist as exc:
+        logger.info('image object has not been created, waiting to retry')
+        raise self.retry(exc=exc, countdown=5, max_retries=3)
+    else:
+        Image.objects.filter(upyun_task_id=task_id).update(picture=picture_path)
+        logger.info('image path updated')
