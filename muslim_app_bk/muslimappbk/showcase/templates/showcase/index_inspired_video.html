@@ -54,19 +54,29 @@
       </li>
     </ul>
 </div>
-<div class="row video-grid-div py-2">
+<div class="row video-grid py-2">
   {% for i in 'aaaaaa' %}
-  <div class="card col-auto px-1 mb-3" style="height:210px">
-    <img class="card-img-top" style="width:250px;height:150px" src="http://upyun.muslimapp.cn/media/pictures/album/thumbnail/test.jpg" alt="Card image cap">
+  <div class="card col-auto px-1 mb-3" data-url="{% url 'showcase:detail_inspired_video' 'test'%}" onclick="goToDetail()" style="height:210px">
+    <img class="card-img-top video-image" style="width:250px;height:150px" src="http://upyun.muslimapp.cn/media/pictures/album/thumbnail/test.jpg">
     <div class="card-body" style="padding: 3px 6px">
-      <h5 class="card-title" style="margin-bottom: 2px">Card title</h5>
+      <h5 class="card-title video-title" style="margin-bottom: 2px">Card title</h5>
       <p class="card-text">
-          <small class="text-muted">Views 1000</small>
-          <small class="text-muted float-right mr-2">15:20</small>
+          <small class="text-muted">Views <span class="video-views">1000</span></small>
+          <small class="text-muted float-right mr-2 video-duration">15:20</small>
       </p>
     </div>
   </div>
   {% endfor %}
+</div>
+<div class="card col-auto px-1 mb-3 inspired-video-template d-none" data-url="" onclick="goToDetail()" style="height:210px">
+    <img class="card-img-top video-image" style="width:250px;height:150px" src="">
+    <div class="card-body" style="padding: 3px 6px">
+      <h5 class="card-title video-title" style="margin-bottom: 2px"></h5>
+      <p class="card-text">
+          <small class="text-muted">Views <span class="video-views"></span></small>
+          <small class="text-muted float-right mr-2 video-duration"></small>
+      </p>
+    </div>
 </div>
 {% endblock %}
     
@@ -74,6 +84,9 @@
     {{ block.super }}
 <script src="{% static 'zInput.js' %}"></script>
 <script>
+var page = 1;
+var emptyPage = false;
+var blockPagination = false;
 $(function(){
     $('.pdf_filter').zInput();
     
@@ -96,7 +109,53 @@ $(function(){
         search_str = checked_v.join('|');
 //        dataTable.column(4).search('(' + search_str +')', true).draw();
     });
+    
+    $(window).scroll(function(){
+        var margin = $(document).height() - $(window).height() - 200;
+        if ($(window).scrollTop() > margin){
+            getVideoList();
+        }
+    });
+    
     setActiveMenu(3);
+    getVideoList();
 });
+    
+function getVideoList(){
+    if(!emptyPage && !blockPagination){
+        blockPagination = true;
+        
+        $.ajax({
+           url: '{% url "api:inspired_video_list" %}',
+           method: 'GET',
+           data: {
+                    'page': page
+                 },
+           contentType: 'application/json'
+        }).done(function(response){
+            if(response == ''){
+                emptyPage = true;
+            }else{
+                console.log(response);
+                response.forEach(function(data, index){
+                    var videoCard = $('.inspired-video-template').clone().removeClass('inspired-video-template');
+                    videoCard.find('.video-image').prop('src', data.thumbnail_path);
+                    videoCard.data('url', data.url);
+                    videoCard.find('.video-title').text(data.title);
+                    videoCard.find('.video-views').text(data.view_count);
+                    videoCard.find('.video-duration').text(data.video_duration);
+    //                console.log(appCard.html());
+                    $('.video-grid').append(videoCard);
+                    console.log(videoCard);
+                    videoCard.removeClass('d-none');
+                });
+                console.log($('.video-grid'))
+                page++;
+            }
+        }).always(function(){
+            blockPagination = false;
+        });
+    }
+}
 </script>    
 {% endblock %}

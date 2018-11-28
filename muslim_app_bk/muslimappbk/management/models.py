@@ -15,6 +15,7 @@ from django.utils.translation import gettext_lazy as _
 from ordered_model.models import OrderedModel
 from taggit.managers import TaggableManager
 from django.db.models import Q
+import datetime
 
 # Create your models here.
 class Profile(models.Model):
@@ -56,7 +57,7 @@ class Image(models.Model):
     thumbnail_picture = models.ImageField(upload_to="pictures",blank=True, max_length=150, null=True)
 
     def __str__(self):
-        return self.content_object
+        return self.picture.url
     
 class Video(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
@@ -364,5 +365,25 @@ class InspiredVideo(models.Model):
     def thumbnail(self):
         return self.images.last()
     
+    def thumbnail_path(self):
+        return str(self.thumbnail() or '')
+    
     def __str__(self):
         return self.title
+    
+    @property
+    def userLink(self):
+        return reverse('showcase:detail_inspired_video', args=[self.slug])
+    
+    @property
+    def user_link_mobile(self):
+        return reverse('showcase:detail_inspired_video', args=[self.slug])
+#         return reverse('mobile:app', args=[self.slug])
+
+    def video_duration(self):
+        return self.latest_valid_video().duration
+    
+    @property
+    def video_duration_str(self):
+        seconds = self.video_duration() or 0
+        return str(datetime.timedelta(seconds=seconds))

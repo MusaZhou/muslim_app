@@ -1,6 +1,6 @@
 
 from management.models import MobileApp, InspiredVideo, Video, Image
-from api.serializers import AppSerializer
+from api.serializers import AppSerializer, InspiredVideoSerializer
 from rest_framework import generics
 from django.db.models import F
 from django.http import HttpResponse, JsonResponse
@@ -203,3 +203,19 @@ def image_thumbnail_notify(request):
         logger.info('video height:' + str(height))
         update_image_path_task.apply_async(kwargs={ 'thumbnail_path': path, 'task_id': task_id, 'width': width, 'height': height}, count_down=3)
     return HttpResponse('thanks')
+
+class InspiredVideoListView(generics.ListAPIView):
+    serializer_class = InspiredVideoSerializer
+    
+    def get_queryset(self):
+        page = int(self.request.query_params.get('page', 1))
+        
+        # to be update, show approved video and album only
+        video_list_all = InspiredVideo.objects.all()
+            
+        paginator = Paginator(video_list_all, 9)
+        try:
+            video_list = paginator.page(page)
+            return video_list.object_list
+        except InvalidPage:
+            return InspiredVideo.objects.none()

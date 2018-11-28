@@ -60,3 +60,9 @@ def index_inspired_video(request):
     tags = Tag.objects.all()
     context = {'albums': albums, 'tags': tags}
     return render(request, 'showcase/index_inspired_video.html', context)
+
+def detail_inspired_video(request, slug):
+    inspired_video = get_object_or_404(InspiredVideo.objects.prefetch_related('ratings', 'tags'), slug=slug)
+#     pdf_file_name_list = [os.path.split(pdf_file.file.path)[1] for pdf_file in pdfdoc.pdf_files.all()]
+#     context = {'inspired_video': inspired_video, 'pdf_file_name_list': pdf_file_name_list}
+#     return render(request, 'showcase/detail_inspired_video.html', context)

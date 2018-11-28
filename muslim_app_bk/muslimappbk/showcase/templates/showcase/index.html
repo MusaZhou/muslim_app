@@ -148,8 +148,6 @@ $(function(){
     
     $(window).scroll(function(){
         var margin = $(document).height() - $(window).height() - 200;
-//        console.log('margin=' + margin);
-//        console.log('window scrollTop=' + $(window).scrollTop());
         if ($(window).scrollTop() > margin){
             getAppList();
         }
