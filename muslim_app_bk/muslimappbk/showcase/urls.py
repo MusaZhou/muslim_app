@@ -11,6 +11,7 @@ urlpatterns = [
     path('search', views.search, name="search"),
     path('disqus', views.disqus, name="disqus"),
     path('index_pdf/', views.index_pdf, name="index_pdf"),
-    path('detail_pdf/<str:slug>', views.detail_pdf, name="detail_pdf")
+    path('detail_pdf/<str:slug>', views.detail_pdf, name="detail_pdf"),
+    path('index_inspired_video', views.index_inspired_video, name="index_inspired_video")
 ]
 

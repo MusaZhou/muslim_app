@@ -84,8 +84,8 @@ def _video_process(request, file_name):
             "type": "video",
             "avopts": "/f/mp4",
             "return_info": True,
-#             "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
-            "notify_url": 'https://uptool.tingfun.net/echo.php'
+            "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
+#             "notify_url": 'https://uptool.tingfun.net/echo.php'
         },
         {
             "name": "naga",
@@ -93,8 +93,8 @@ def _video_process(request, file_name):
             "avopts": "/o/true/n/1",
             "return_info": True,
             "save_as": thumbnail_save_as,
-#             "notify_url": request.build_aboslute_uri(reverse('api:process_video_thumbnail_notify'))
-            "notify_url": 'https://uptool.tingfun.net/echo.php'
+            "notify_url": request.build_absolute_uri(reverse('api:process_video_thumbnail_notify'))
+#             "notify_url": 'https://uptool.tingfun.net/echo.php'
             }]
 
 @csrf_exempt

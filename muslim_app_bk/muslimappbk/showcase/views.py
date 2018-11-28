@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
-from management.models import MobileApp, Banner, AppCategory, PDFDoc
+from management.models import MobileApp, Banner, AppCategory, PDFDoc, VideoAlbum, InspiredVideo
+from taggit.models import Tag
 from django.db.models import Q
 import os
 
@@ -52,3 +53,10 @@ def detail_pdf(request, slug):
     pdf_file_name_list = [os.path.split(pdf_file.file.path)[1] for pdf_file in pdfdoc.pdf_files.all()]
     context = {'pdfdoc': pdfdoc, 'pdf_file_name_list': pdf_file_name_list}
     return render(request, 'showcase/pdf.html', context)
+
+def index_inspired_video(request):
+    # for temporary, need filter album with approved value
+    albums = VideoAlbum.objects.all()
+    tags = Tag.objects.all()
+    context = {'albums': albums, 'tags': tags}
+    return render(request, 'showcase/index_inspired_video.html', context)

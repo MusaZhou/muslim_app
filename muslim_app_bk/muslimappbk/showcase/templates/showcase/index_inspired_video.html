@@ -1,0 +1,102 @@
+{% extends 'showcase/base.html' %}
+{% load static %}
+{% load i18n %}
+{% block stylesheet %}
+    {{ block.super }}
+<link href="{% static 'zInput_default_stylesheet.css' %}" rel="stylesheet">
+<style>
+    .zInputWrapper {
+        padding: 2px;
+        margin: 2px;
+        border-radius: 6px;
+        vertical-align: middle;
+        line-height:normal;
+        background-color: transparent;
+    }
+    
+    .zInput {
+        width: auto;
+        height: auto;
+        margin: 2px;
+        padding: 2px 4px;
+        
+        font-size: 0.8em;
+    }
+    
+    .zInput:hover {
+        cursor: pointer;
+    }
+    
+    .zCheckbox {
+        color: darkgreen;
+        border-color:darkgreen;
+        border-radius: 4px;
+    }
+    
+    .zSelected.zCheckbox {
+        color:white;
+        background-color: darkgreen;
+    }
+</style>
+{% endblock %}
+{% block mainContent %}
+<div class="pdf_filter py-2">
+    <ul class="list-group">
+      <li class="list-group-item">{% trans 'Tag' %}:
+          {% for tag in tags %}
+          <input type="checkbox" name="check-author" title="{{ tag }}">
+          {% endfor %}
+      </li>
+      <li class="list-group-item">{% trans 'Album' %}:
+          {% for album in albums %}
+          <input type="checkbox" name="check-year" title="{{ album }}">
+          {% endfor %}
+      </li>
+    </ul>
+</div>
+<div class="row video-grid-div py-2">
+  {% for i in 'aaaaaa' %}
+  <div class="card col-auto px-1 mb-3" style="height:210px">
+    <img class="card-img-top" style="width:250px;height:150px" src="http://upyun.muslimapp.cn/media/pictures/album/thumbnail/test.jpg" alt="Card image cap">
+    <div class="card-body" style="padding: 3px 6px">
+      <h5 class="card-title" style="margin-bottom: 2px">Card title</h5>
+      <p class="card-text">
+          <small class="text-muted">Views 1000</small>
+          <small class="text-muted float-right mr-2">15:20</small>
+      </p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
+    
+{% block javascript %}
+    {{ block.super }}
+<script src="{% static 'zInput.js' %}"></script>
+<script>
+$(function(){
+    $('.pdf_filter').zInput();
+    
+    $('input[name=check-author]').change(function(){
+        var checked_v = [];
+        $('input[name=check-author]:checked').each(function(){
+           checked_v.push($(this).parent().text()); 
+        });
+       console.log(checked_v); 
+        search_str = checked_v.join('|');
+//        dataTable.column(3).search('(' + search_str +')', true).draw();
+    });
+    
+    $('input[name=check-year]').change(function(){
+        var checked_v = [];
+        $('input[name=check-year]:checked').each(function(){
+           checked_v.push($(this).parent().text()); 
+        });
+       console.log(checked_v); 
+        search_str = checked_v.join('|');
+//        dataTable.column(4).search('(' + search_str +')', true).draw();
+    });
+    setActiveMenu(3);
+});
+</script>    
+{% endblock %}
