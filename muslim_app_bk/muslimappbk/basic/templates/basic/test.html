@@ -1,0 +1,79 @@
+{% extends "basic/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load thumbnail %}
+{% load i18n %}
+{% block title %}Test{% endblock %}
+{% block stylesheet %}
+  {{ block.super }}
+{% endblock %}
+{% block mainContent %}
+          <div class="container-fluid">
+            <div class="row">
+                <input type="file" onchange="fileChanged(this)">
+            </div>
+          </div>
+{% endblock %}
+{% block javascript %}
+  {{ block.super }}
+<script>
+    $(function(){
+        
+    });
+    
+    function fileChanged(fileInput){
+        var file = fileInput.files[0];
+        var fileName = file.name;
+        
+        getSignature(fileName).then(function(response){
+            return uploadImage(response, file);
+        }).then(function(response){
+            notifyTask(response);
+            return 'test';
+        }).always(function(data){
+            console.log(data);
+            console.log('Alhamudulinlahi');
+        });
+    }
+    
+    function getSignature(fileName){
+        return $.ajax({
+                    url: "{% url 'api:get_image_upload_signature' %}",
+                    method: 'POST',
+                    data: {'file_name': fileName},
+                });
+    }
+    
+    function uploadImage(response, file){
+        console.log(response);
+        var policy = response.policy;
+        var authorization = response.authorization;
+        var formData = new FormData();
+        formData.append('policy', policy);
+        formData.append('authorization', authorization);
+        formData.append('file', file);
+        console.log(formData);
+        return $.ajax({
+                      url: "{{ upyun_url }}",
+                      type: 'POST',
+                      data: formData,
+                      cache: false,
+                      processData: false, // Don't process the files
+                      contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+                      dataType: 'json',
+                });
+    }
+    
+    function notifyTask(response){
+        console.log(response);
+        if(response.code == 200){
+            var taskId = response.task_ids[0];
+            var original_path = response.url;
+//                notifyTask(taskId, original_path);
+            console.log('task_id is ' + taskId);
+            console.log('original_path is ' + original_path);
+        }
+    }
+</script>
+{% endblock %}
+

@@ -16,5 +16,6 @@ urlpatterns = [
     path('logger', views.customLogger, name='logger'),
     path('email', views.email, name='email'),
     path('test', views.test, name='test'),
+    path('test_view', views.test_view, name="test_view"),
 ]
 

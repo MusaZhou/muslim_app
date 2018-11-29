@@ -1,0 +1,97 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<!-- saved from url=(0053)# -->
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="{% static 'images/logo.png' %}">
+
+        <title>{% block title %}{% trans 'Muslim App' %}{% endblock %}</title>
+        
+        {% block stylesheet %}
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <link href="{% static 'fontawesome-web/css/all.min.css' %}" rel="stylesheet">
+
+        <!-- Custom styles for this template -->
+        <link href="{% static 'management/dashboard.css' %}" rel="stylesheet">
+        
+        <link href="{% static 'DataTables/datatables.min.css' %}" rel="stylesheet">
+        <link href="{% static 'star-rating.min.css' %}">
+        {% endblock %}
+    </head>
+
+  <body data-media-url="{% get_media_prefix %}">
+
+    <div class="container-fluid">
+      <div class="row">
+
+        <main role="main" class="col-md-12 ml-sm-auto col-lg-12 px-4" style="padding-top: 70px">
+        {% block mainContent %}{% endblock %}
+        </main>
+      </div>
+    </div>
+    {% block javascript %}
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'popper.min.js' %}"></script>
+    <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'DataTables/datatables.js' %}"></script>
+    <script src="{% static 'js.cookie.js' %}"></script>
+
+    <!-- Icons -->
+    <script src="{% static 'feather.min.js' %}"></script>
+  
+    <script>
+      feather.replace()
+      var csrftoken = Cookies.get('csrftoken');
+      function csrfSafeMethod(method) {
+	    	// these HTTP methods do not require CSRF protection
+	    	return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+    	}
+    	$.ajaxSetup({
+	    	beforeSend: function(xhr, settings) {
+		    	if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+		    	    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+		    	}
+	    	}
+    	});
+        
+        function displayImage(file, imgEle){
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              // Set the img src property using the data URL.
+              imgEle.prop('src', reader.result);
+            }
+
+            reader.readAsDataURL(file);
+          }
+        
+        function validateFileSize(file, acceptSize){
+            if (file.size > acceptSize*1024*1024){
+                return false;
+            }
+            
+            return true;
+        }
+        
+        function makeid(n) {
+          var text = "";
+          var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+          for (var i = 0; i < n; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+          return text;
+        }
+    </script>
+    {% endblock %}
+  </body>
+</html>

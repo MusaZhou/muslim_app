@@ -5,8 +5,8 @@ import logging
 from django.core.mail import send_mail
 from management.models import Image
 from .tasks import test_task, error_handler_task
-# from slugify import slugify
 from django.utils.text import slugify
+from django.core.files.storage import default_storage
 
 logger = logging.getLogger(__name__)
 
@@ -45,3 +45,8 @@ def email(request):
 def test(request):
     print(slugify('测试', allow_unicode=True))
     return HttpResponse(slugify('测试', allow_unicode=True))
+
+def test_view(request):
+    upyun = default_storage.up
+    context = {'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+    return render(request, 'basic/test.html', context)
