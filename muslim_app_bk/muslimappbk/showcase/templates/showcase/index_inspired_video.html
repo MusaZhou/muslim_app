@@ -19,57 +19,38 @@
         height: auto;
         margin: 2px;
         padding: 2px 4px;
-        
         font-size: 0.8em;
-    }
-    
-    .zInput:hover {
-        cursor: pointer;
-    }
-    
-    .zCheckbox {
         color: darkgreen;
         border-color:darkgreen;
         border-radius: 4px;
+        cursor: pointer;
     }
     
-    .zSelected.zCheckbox {
+    .zInput.zSelected{
         color:white;
         background-color: darkgreen;
     }
 </style>
 {% endblock %}
 {% block mainContent %}
-<div class="pdf_filter py-2">
+<div class="video_filter py-2">
     <ul class="list-group">
       <li class="list-group-item">{% trans 'Tag' %}:
           {% for tag in tags %}
-          <input type="checkbox" name="check-author" title="{{ tag }}">
+          <input type="checkbox" name="check-tag[]" title="{{ tag }}" value="{{ tag.id }}">
           {% endfor %}
       </li>
       <li class="list-group-item">{% trans 'Album' %}:
           {% for album in albums %}
-          <input type="checkbox" name="check-year" title="{{ album }}">
+          <input type="radio" name="check-album" title="{{ album }}" value="{{ album.id }}">
           {% endfor %}
       </li>
     </ul>
 </div>
 <div class="row video-grid py-2">
-  {% for i in 'aaaaaa' %}
-  <div class="card col-auto px-1 mb-3" data-url="{% url 'showcase:detail_inspired_video' 'test'%}" onclick="goToDetail()" style="height:210px">
-    <img class="card-img-top video-image" style="width:250px;height:150px" src="http://upyun.muslimapp.cn/media/pictures/album/thumbnail/test.jpg">
-    <div class="card-body" style="padding: 3px 6px">
-      <h5 class="card-title video-title" style="margin-bottom: 2px">Card title</h5>
-      <p class="card-text">
-          <small class="text-muted">Views <span class="video-views">1000</span></small>
-          <small class="text-muted float-right mr-2 video-duration">15:20</small>
-      </p>
-    </div>
-  </div>
-  {% endfor %}
 </div>
-<div class="card col-auto px-1 mb-3 inspired-video-template d-none" data-url="" onclick="goToDetail()" style="height:210px">
-    <img class="card-img-top video-image" style="width:250px;height:150px" src="">
+<div class="card col-auto px-1 mb-3 inspired-video-template d-none" data-detail-url="" onclick="goToDetail(this)" style="height:210px;cursor: pointer">
+    <img class="card-img-top video-image" style="width:250px;height:150px;" src="">
     <div class="card-body" style="padding: 3px 6px">
       <h5 class="card-title video-title" style="margin-bottom: 2px"></h5>
       <p class="card-text">
@@ -85,29 +66,27 @@
 <script src="{% static 'zInput.js' %}"></script>
 <script>
 var page = 1;
+var tags = [];
+var album = 0;
 var emptyPage = false;
 var blockPagination = false;
 $(function(){
-    $('.pdf_filter').zInput();
+    $('.video_filter').zInput();
     
-    $('input[name=check-author]').change(function(){
-        var checked_v = [];
-        $('input[name=check-author]:checked').each(function(){
-           checked_v.push($(this).parent().text()); 
+    $('input[name="check-tag[]"]').change(function(){
+        resetZinput($('input[name=check-album]:checked'));
+        $('input[name="check-tag[]"]:checked').each(function(){
+            tags.push($(this).val()); 
         });
-       console.log(checked_v); 
-        search_str = checked_v.join('|');
-//        dataTable.column(3).search('(' + search_str +')', true).draw();
+        console.log(tags);
+        getVideoList();
     });
     
-    $('input[name=check-year]').change(function(){
-        var checked_v = [];
-        $('input[name=check-year]:checked').each(function(){
-           checked_v.push($(this).parent().text()); 
-        });
-       console.log(checked_v); 
-        search_str = checked_v.join('|');
-//        dataTable.column(4).search('(' + search_str +')', true).draw();
+    $('input[name=check-album]').change(function(){
+        resetZinput($('input[name="check-tag[]"]:checked'));
+        album = $('input[name=check-album]:checked').val();
+        console.log(album); 
+        getVideoList();
     });
     
     $(window).scroll(function(){
@@ -121,6 +100,17 @@ $(function(){
     getVideoList();
 });
     
+function resetZinput(inputElement){
+    inputElement.each(function(index){
+        $(this).prop('checked', false);
+        $(this).parents('.zInput').removeClass('zSelected');
+    });
+    page = 1;
+    tags = [];
+    album = 0;
+    $('.video-grid').empty();
+}
+    
 function getVideoList(){
     if(!emptyPage && !blockPagination){
         blockPagination = true;
@@ -129,7 +119,9 @@ function getVideoList(){
            url: '{% url "api:inspired_video_list" %}',
            method: 'GET',
            data: {
-                    'page': page
+                    'page': page,
+                    'tags': JSON.stringify(tags),
+                    'album': album
                  },
            contentType: 'application/json'
         }).done(function(response){
@@ -140,22 +132,24 @@ function getVideoList(){
                 response.forEach(function(data, index){
                     var videoCard = $('.inspired-video-template').clone().removeClass('inspired-video-template');
                     videoCard.find('.video-image').prop('src', data.thumbnail_path);
-                    videoCard.data('url', data.url);
+//                    videoCard.data('detail-url', data.url);
+                    videoCard.data('detail-url', data.url);
                     videoCard.find('.video-title').text(data.title);
                     videoCard.find('.video-views').text(data.view_count);
                     videoCard.find('.video-duration').text(data.video_duration);
-    //                console.log(appCard.html());
                     $('.video-grid').append(videoCard);
-                    console.log(videoCard);
                     videoCard.removeClass('d-none');
                 });
-                console.log($('.video-grid'))
                 page++;
             }
         }).always(function(){
             blockPagination = false;
         });
     }
+}
+    
+function goToDetail(element){
+    console.log($(element).data('detail-url'));
 }
 </script>    
 {% endblock %}

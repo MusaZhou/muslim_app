@@ -17,6 +17,10 @@ from taggit.managers import TaggableManager
 from django.db.models import Q
 import datetime
 
+class ApprovedManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(approve_status='approved')
+    
 # Create your models here.
 class Profile(models.Model):
     nick_name = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("Nick Name"))
@@ -171,10 +175,6 @@ class MobileApp(OrderedModel):
         if last_rating is not None:
             return last_rating.average
         return 5.0
-         
-class VersionApprovedManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(approve_status='approved') 
            
 class AppVersion(models.Model):
     version_number = models.CharField(max_length=10,
@@ -196,7 +196,7 @@ class AppVersion(models.Model):
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     
     objects = models.Manager()
-    approved_manager = VersionApprovedManager()
+    approved_manager = ApprovedManager()
     
     class Meta:
         ordering = ["-created_time"]
@@ -232,10 +232,6 @@ class AppCommentModerator(XtdCommentModerator):
     email_notification = True
 
 moderator.register(MobileApp, AppCommentModerator)
-
-class PDFApprovedManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(approve_status='approved') 
  
 class PDFDoc(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=200, unique=True)
@@ -260,7 +256,7 @@ class PDFDoc(models.Model):
     publish_year = models.DateField(null=True, blank=True, verbose_name=_('Publish Year'))
     
     objects = models.Manager()
-    approved_pdf = PDFApprovedManager()
+    approved_pdf = ApprovedManager()
     
     class Meta:
         ordering = ["-upload_time"]
@@ -294,7 +290,7 @@ class PDFFile(models.Model):
     pdf_doc = models.ForeignKey(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf_files')
     file = models.FileField(upload_to="pdf", blank=True, null=True,verbose_name=_("PDF File"), \
                             validators=[validators.FileExtensionValidator(['pdf'])])
-
+    
 class VideoAlbum(models.Model):
     title = models.CharField(max_length=100, verbose_name=_('Title'), unique=True) 
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
@@ -312,7 +308,9 @@ class VideoAlbum(models.Model):
     images = GenericRelation(Image, related_query_name='imaged_video_album', verbose_name=_('Public Image'))
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     
-
+    objects = models.Manager()
+    approved_albums = ApprovedManager()
+    
     class Meta:
         ordering = ["-upload_time"]
     
@@ -326,7 +324,11 @@ class VideoAlbum(models.Model):
     
     def get_image(self):
         return self.images.last()
-    
+
+class ShownInspiredVideoManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(Q(approve_status='approved') & Q(album__approve_status='approved'))
+            
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
     title = models.CharField(max_length=100, verbose_name=_('title'), unique=True)
@@ -349,6 +351,10 @@ class InspiredVideo(models.Model):
                               related_name='album_videos')
     view_count = models.PositiveIntegerField(verbose_name=_("View Count"), default=0)
     images = GenericRelation(Image, related_query_name='thumnail_video')
+    
+    objects = models.Manager()
+    approved_videos = ApprovedManager()
+    shown_videos = ShownInspiredVideoManager()
     
     class Meta:
         ordering = ["-upload_time"]

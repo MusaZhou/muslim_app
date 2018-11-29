@@ -209,11 +209,19 @@ class InspiredVideoListView(generics.ListAPIView):
     
     def get_queryset(self):
         page = int(self.request.query_params.get('page', 1))
-        
-        # to be update, show approved video and album only
-        video_list_all = InspiredVideo.objects.all()
+        tags = json.loads(self.request.query_params.get('tags', "[]"))
+        album = int(self.request.query_params.get('album', 0))
+        logger.info('page: ' + str(page))
+        logger.info('tags id:' + str(tags))
+        logger.info('album id' + str(album));
+        if tags != []:
+            video_list_all = InspiredVideo.shown_videos.filter(tags__id__in=tags)
+        elif album != 0:
+            video_list_all = InspiredVideo.shown_videos.filter(album_id=album)
+        else:
+            video_list_all = InspiredVideo.shown_videos.all()
             
-        paginator = Paginator(video_list_all, 9)
+        paginator = Paginator(video_list_all, 12)
         try:
             video_list = paginator.page(page)
             return video_list.object_list
