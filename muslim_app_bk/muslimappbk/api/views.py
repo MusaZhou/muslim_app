@@ -215,7 +215,7 @@ class InspiredVideoListView(generics.ListAPIView):
         logger.info('tags id:' + str(tags))
         logger.info('album id' + str(album));
         if tags != []:
-            video_list_all = InspiredVideo.shown_videos.filter(tags__id__in=tags)
+            video_list_all = InspiredVideo.shown_videos.filter(tags__id__in=tags).distinct()
         elif album != 0:
             video_list_all = InspiredVideo.shown_videos.filter(album_id=album)
         else:

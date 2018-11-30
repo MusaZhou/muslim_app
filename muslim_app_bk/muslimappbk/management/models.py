@@ -274,17 +274,6 @@ class PDFDoc(models.Model):
     
     def __str__(self):
         return self.title
-    
-@receiver(post_save, sender=MobileApp)
-@receiver(post_save, sender=PDFDoc)
-def add_rating(sender, instance, **kwargs):
-    if sender.__name__ == 'MobileApp':
-        if not Rating.objects.filter(rating_apps=instance).exists():
-            Rating.objects.rate(instance, 5, '127.0.0.1')
-            
-    if sender.__name__ == 'PDFDoc':
-        if not Rating.objects.filter(rating_pdf=instance).exists():
-            Rating.objects.rate(instance, 5, '127.0.0.1')
 
 class PDFFile(models.Model):
     pdf_doc = models.ForeignKey(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf_files')
@@ -327,7 +316,7 @@ class VideoAlbum(models.Model):
 
 class ShownInspiredVideoManager(models.Manager):
     def get_queryset(self):
-        return super().get_queryset().filter(Q(approve_status='approved') & Q(album__approve_status='approved'))
+        return super().get_queryset().filter(Q(approve_status='approved') & (Q(album__approve_status='approved') | Q(album__isnull=True)))
             
 class InspiredVideo(models.Model):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
@@ -393,3 +382,19 @@ class InspiredVideo(models.Model):
     def video_duration_str(self):
         seconds = self.video_duration() or 0
         return str(datetime.timedelta(seconds=seconds))
+    
+@receiver(post_save, sender=InspiredVideo)    
+@receiver(post_save, sender=MobileApp)
+@receiver(post_save, sender=PDFDoc)
+def add_rating(sender, instance, **kwargs):
+    if sender.__name__ == 'MobileApp':
+        if not Rating.objects.filter(rating_apps=instance).exists():
+            Rating.objects.rate(instance, 5, '127.0.0.1')
+            
+    if sender.__name__ == 'PDFDoc':
+        if not Rating.objects.filter(rating_pdf=instance).exists():
+            Rating.objects.rate(instance, 5, '127.0.0.1')
+    
+    if sender.__name__ == 'InspiredVideo':
+        if not Rating.objects.filter(rating_video=instance).exists():
+            Rating.objects.rate(instance, 5, '127.0.0.1')

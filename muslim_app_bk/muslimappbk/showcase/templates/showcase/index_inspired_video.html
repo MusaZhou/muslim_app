@@ -149,7 +149,7 @@ function getVideoList(){
 }
     
 function goToDetail(element){
-    console.log($(element).data('detail-url'));
+    window.location.href = $(element).data('detail-url');;
 }
 </script>    
 {% endblock %}

@@ -1,0 +1,136 @@
+{% extends 'showcase/base.html' %}
+{% load static %}
+{% load i18n %}
+{% load comments %}
+{% load comments_xtd %}
+{% load custom_tags %}
+{% load ratings %}
+{% block stylesheet %}
+    {{ block.super }}
+<style>
+    
+</style>
+{% endblock %}
+{% block mainContent %}
+<div class="row">
+    <h5>{{ inspired_video.title }}</h5>
+</div>
+<div class="row" style="">
+    <div class="col-9">
+        <video width="800px" height="450px" controls>
+            <source src="{{ inspired_video.latest_valid_video.file.url }}" type="video/mp4">
+        </video>
+    </div>
+    <div class="col-3" style="height: 450px; overflow-y: scroll">
+        {% for related_video in related_video_list %}
+        <div class="card px-1 mb-1" data-detail-url="{% url 'showcase:detail_inspired_video' related_video.slug %}" onclick="goToDetail(this)" style="height:210px;cursor: pointer">
+            <img class="card-img-top video-image" style="width:250px;height:150px;" src="{{ related_video.thumbnail_path }}">
+            <div class="card-body" style="padding: 3px 6px">
+              <h5 class="card-title video-title" style="margin-bottom: 2px">{{ related_video.title }}</h5>
+              <p class="card-text">
+                  <small class="text-muted">Views <span class="video-views">{{ related_video.view_count }}</span></small>
+                  <small class="text-muted float-right mr-2 video-duration">{{ related_video.video_duration }}</small>
+              </p>
+            </div>
+        </div>
+        <div class="w-100"></div>
+        {% endfor %}
+    </div>
+</div>
+<div class="row">
+    <div class="col">{{ inspired_video.description }}</div>
+    <div class="w-100"></div>
+    <div class="col-auto">{{ inspired_video|verbose_name:'view_count' }}</div>
+    <div class="col-auto">{{ inspired_video.view_count }}</div>
+    <div class="col-auto rating star-icon value-{{ inspired_video.ratings.last.average|default:'5'|floatformat:'0' }} color-positive label-right">
+        <div class="label-value" style="color:orange">{{ inspired_video.ratings.last.average|default:'5'|floatformat }}</div>
+        {% include 'showcase/star.html' %}
+    </div>
+    <div class="col">
+        {% for video_tag in inspired_video.tags.names %}
+        <span class="badge badge-info mr-1">{{ video_tag }}</span>
+        {% endfor %}
+    </div>
+</div>
+<div class="rating container" style="margin-top:20px">
+  {% ratings inspired_video %}
+</div>
+<div class="comment" style="margin-top:20px">
+  <h4 class="text-center">{% trans 'Comments' %}</h4>
+  <div class="card">
+    {% render_comment_form for inspired_video %}
+  </div>
+</div>
+{% get_comment_count for inspired_video as comment_count %}
+{% if comment_count %}
+<hr/>
+<ul class="media-list">
+  {% render_xtdcomment_tree for inspired_video %}
+</ul>
+{% endif %}
+{% endblock %}
+    
+{% block javascript %}
+    {{ block.super }}
+<script src="{% static 'zInput.js' %}"></script>
+<script>
+var page = 1;
+var tags = [];
+var album = 0;
+var emptyPage = false;
+var blockPagination = false;
+$(function(){
+    
+//    $(window).scroll(function(){
+//        var margin = $(document).height() - $(window).height() - 200;
+//        if ($(window).scrollTop() > margin){
+//            getVideoList();
+//        }
+//    });
+    
+    setActiveMenu(3);
+//    getVideoList();
+});
+    
+function getVideoList(){
+    if(!emptyPage && !blockPagination){
+        blockPagination = true;
+        
+        $.ajax({
+           url: '{% url "api:inspired_video_list" %}',
+           method: 'GET',
+           data: {
+                    'page': page,
+                    'tags': JSON.stringify(tags),
+                    'album': album
+                 },
+           contentType: 'application/json'
+        }).done(function(response){
+            if(response == ''){
+                emptyPage = true;
+            }else{
+                console.log(response);
+                response.forEach(function(data, index){
+                    var videoCard = $('.inspired-video-template').clone().removeClass('inspired-video-template');
+                    videoCard.find('.video-image').prop('src', data.thumbnail_path);
+//                    videoCard.data('detail-url', data.url);
+                    videoCard.data('detail-url', data.url);
+                    videoCard.find('.video-title').text(data.title);
+                    videoCard.find('.video-views').text(data.view_count);
+                    videoCard.find('.video-duration').text(data.video_duration);
+                    $('.video-grid').append(videoCard);
+                    videoCard.removeClass('d-none');
+                });
+                page++;
+            }
+        }).always(function(){
+            blockPagination = false;
+        });
+    }
+}
+    
+function goToDetail(element){
+    window.location.href = $(element).data('detail-url');
+}
+</script>    
+{% endblock %}

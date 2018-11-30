@@ -62,7 +62,12 @@ def index_inspired_video(request):
     return render(request, 'showcase/index_inspired_video.html', context)
 
 def detail_inspired_video(request, slug):
-    inspired_video = get_object_or_404(InspiredVideo.objects.prefetch_related('ratings', 'tags'), slug=slug)
-#     pdf_file_name_list = [os.path.split(pdf_file.file.path)[1] for pdf_file in pdfdoc.pdf_files.all()]
-#     context = {'inspired_video': inspired_video, 'pdf_file_name_list': pdf_file_name_list}
-#     return render(request, 'showcase/detail_inspired_video.html', context)
+    inspired_video = get_object_or_404(InspiredVideo.shown_videos.prefetch_related('ratings', 'tags'), slug=slug)
+    album = inspired_video.album
+    if album:
+        related_video_list = album.album_videos.exclude(slug=inspired_video.slug)
+    else:
+        tags = inspired_video.tags.all()
+        related_video_list = InspiredVideo.shown_videos.filter(tags__id__in=tags.values_list('id', flat=True)).exclude(id=inspired_video.id)
+    context = {'inspired_video': inspired_video, 'related_video_list': related_video_list}
+    return render(request, 'showcase/detail_inspired_video.html', context)
