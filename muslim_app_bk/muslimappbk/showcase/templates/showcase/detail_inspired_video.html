@@ -12,8 +12,8 @@
 </style>
 {% endblock %}
 {% block mainContent %}
-<div class="row">
-    <h5>{{ inspired_video.title }}</h5>
+<div class="row mx-0">
+    <h3>{{ inspired_video.title }}</h3>
 </div>
 <div class="row" style="">
     <div class="col-9">
@@ -21,15 +21,15 @@
             <source src="{{ inspired_video.latest_valid_video.file.url }}" type="video/mp4">
         </video>
     </div>
-    <div class="col-3" style="height: 450px; overflow-y: scroll">
+    <div class="col-3" style="height: 450px; overflow-y: scroll;">
         {% for related_video in related_video_list %}
-        <div class="card px-1 mb-1" data-detail-url="{% url 'showcase:detail_inspired_video' related_video.slug %}" onclick="goToDetail(this)" style="height:210px;cursor: pointer">
-            <img class="card-img-top video-image" style="width:250px;height:150px;" src="{{ related_video.thumbnail_path }}">
+        <div class="card px-1 mb-1" data-detail-url="{% url 'showcase:detail_inspired_video' related_video.slug %}" onclick="goToDetail(this)" style="height:170px;cursor: pointer">
+            <img class="card-img-top video-image" style="width:220px;height:130px;" src="{{ related_video.thumbnail_path }}">
             <div class="card-body" style="padding: 3px 6px">
-              <h5 class="card-title video-title" style="margin-bottom: 2px">{{ related_video.title }}</h5>
+              <h6 class="card-title video-title" style="margin-bottom: 0px">{{ related_video.title }}</h6>
               <p class="card-text">
-                  <small class="text-muted">Views <span class="video-views">{{ related_video.view_count }}</span></small>
-                  <small class="text-muted float-right mr-2 video-duration">{{ related_video.video_duration }}</small>
+                  <small class="text-muted">{% trans 'Views' %} <span class="video-views">{{ related_video.view_count }}</span></small>
+                  <small class="text-muted float-right mr-2 video-duration">{{ related_video.video_duration_str }}</small>
               </p>
             </div>
         </div>
@@ -37,22 +37,18 @@
         {% endfor %}
     </div>
 </div>
-<div class="row">
-    <div class="col">{{ inspired_video.description }}</div>
-    <div class="w-100"></div>
-    <div class="col-auto">{{ inspired_video|verbose_name:'view_count' }}</div>
+<div class="row" style="">
+    <div class="col">{{ inspired_video.description }}{% lorem 3 %}</div>
+    <div class="w-100 mb-2"></div>
+    <div class="col-auto" style="color:cadetblue; font-weight: 200">{{ inspired_video|verbose_name:'view_count' }}:</div>
     <div class="col-auto">{{ inspired_video.view_count }}</div>
-    <div class="col-auto rating star-icon value-{{ inspired_video.ratings.last.average|default:'5'|floatformat:'0' }} color-positive label-right">
-        <div class="label-value" style="color:orange">{{ inspired_video.ratings.last.average|default:'5'|floatformat }}</div>
-        {% include 'showcase/star.html' %}
-    </div>
     <div class="col">
-        {% for video_tag in inspired_video.tags.names %}
+        {% for video_tag in inspired_video.tags.all %}
         <span class="badge badge-info mr-1">{{ video_tag }}</span>
         {% endfor %}
     </div>
 </div>
-<div class="rating container" style="margin-top:20px">
+<div class="rating container" style="">
   {% ratings inspired_video %}
 </div>
 <div class="comment" style="margin-top:20px">
@@ -73,14 +69,17 @@
 {% block javascript %}
     {{ block.super }}
 <script src="{% static 'zInput.js' %}"></script>
+<script src="{% static 'css3-4.js' %}" type="text/javascript"></script>
 <script>
 var page = 1;
 var tags = [];
 var album = 0;
 var emptyPage = false;
 var blockPagination = false;
+var redirect_after_comment = $('<input type="hidden" name="next" value="{% url 'showcase:detail_inspired_video' inspired_video.slug %}" />');
 $(function(){
-    
+    $('.comment .card form').append(redirect_after_comment);
+    $('.comment .card').wrapInner($('<div class="card-body">'));
 //    $(window).scroll(function(){
 //        var margin = $(document).height() - $(window).height() - 200;
 //        if ($(window).scrollTop() > margin){
