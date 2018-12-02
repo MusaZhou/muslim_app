@@ -21,12 +21,12 @@ class AddAppModelForm(ModelForm):
         fields = ['name', 'description', 'video_id', 'tags', 'category', 'slug', 'icon', 'developer']
 
 class AddAppVersionModelForm(ModelForm):
-    apk_id = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'apk_id'}))
+    apk_url = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'apk_id'}))
     mobile_app = forms.ModelChoiceField(required=False, queryset=MobileApp.objects.all())
     
     class Meta:
         model = AppVersion
-        fields = ['version_number', 'whats_new', 'apk_id', 'translator', 'android_version', 'mobile_app']
+        fields = ['version_number', 'whats_new', 'apk_url', 'translator', 'android_version', 'mobile_app']
 
 class ModelChoiceFieldBeta(ModelChoiceField):
     
@@ -76,20 +76,16 @@ class InspiredVideoForm(ModelForm):
     video_id = forms.CharField(widget=forms.HiddenInput(attrs={'id':'video_id'}))
     image_id = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'image_id'}))
     tags = TagField(required=False, widget=LabelWidget)
-    policy = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_policy'}))
-    authorization = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_authorization'}))
     video_path = forms.CharField(required=False, widget=forms.HiddenInput())
     
     class Meta:
         model = InspiredVideo
-        fields = ['video_id', 'image_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'policy', 'authorization', 'video_path']
+        fields = ['video_id', 'image_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'video_path']
 
 class VideoAlbumForm(ModelForm):
-    policy = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_policy'}))
-    authorization = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'upyun_authorization'}))
     image_id = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'image_id'}))
     image_path = forms.CharField(required=False, widget=forms.HiddenInput())
     
     class Meta:
         model = VideoAlbum
-        fields = ['image_id', 'title', 'description', 'slug', 'upload_by', 'policy', 'authorization', 'image_path']
+        fields = ['image_id', 'title', 'description', 'slug', 'upload_by', 'image_path']

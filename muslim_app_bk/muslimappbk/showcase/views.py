@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from management.models import MobileApp, Banner, AppCategory, PDFDoc, VideoAlbum, InspiredVideo
 from taggit.models import Tag
-from django.db.models import Q
+from django.db.models import Q, F
 import os
 
 # Create your views here.
@@ -63,6 +63,10 @@ def index_inspired_video(request):
 
 def detail_inspired_video(request, slug):
     inspired_video = get_object_or_404(InspiredVideo.shown_videos.prefetch_related('ratings', 'tags'), slug=slug)
+    inspired_video.view_count = F('view_count') + 1
+    inspired_video.save()
+    inspired_video.refresh_from_db()
+    
     album = inspired_video.album
     if album:
         related_video_list = album.album_videos.exclude(slug=inspired_video.slug)

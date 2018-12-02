@@ -152,7 +152,9 @@
             console.log('something wrong in ajax call');
             console.log(data);
         }).always(function(data){
-            console.log(data);
+            if(data !== undefined){
+              console.log(data);  
+            }
             videoUploading = false;    
         });
       });

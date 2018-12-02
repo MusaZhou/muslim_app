@@ -78,7 +78,7 @@
                       <div class="form-group row pl-3">
                         <button type="button" class="button btn-primary btn col-md-2" id="apk_input_btn">APK</button>
                         <input type="file" id="apk_file_input" accept=".apk,.xapk" style="display:none">
-                        <div class="col-md-10 d-none" id="apk-progress-div">
+                        <div class="col-md-10 d-none progress-div">
                           <div class="progress" style="height:90%; width:100%">
                            <div id="apk_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
                           </div>
@@ -158,7 +158,7 @@
                       <div class="form-group row pl-3">
 	                        <button type="button" class="button btn-primary btn col-md-2" id="video_input_btn">{% trans 'Video Upload' %}</button>
 	                        <input type="file" id="video_input" accept="video/*" style="display:none">
-	                        <div class="col-md-10 d-none" id="progress-div">
+	                        <div class="col-md-10 d-none progress-div">
 	                          <div class="progress" style="height:90%; width:100%">
 	                           <div id="video_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
 	                          </div>
@@ -177,8 +177,8 @@
                   </div>-->
             </div>
             {{ addAppModelForm.imgIds }}
-            {{ addAppModelForm.video_id }}
-            {{ addAppVersionModelForm.apk_id }}
+            {{ addAppModelForm.video_url }}
+            {{ addAppVersionModelForm.apk_url }}
             {{ addAppVersionModelForm.mobile_app.as_hidden }}
           </form>
 {% endblock %}
@@ -195,6 +195,7 @@
 
   var imgIds = [];
   var videoUploading = false;
+  var apkUploading = false;
   var exceedFileSize = false;
       
   $(function(){
@@ -222,7 +223,7 @@
             }
             formData.append('images', file)
         });
-          
+            
         if(exceedFileSize){
             return false;
         }else{
@@ -275,52 +276,24 @@
             videoUploading = false;
             return;
           }
-          $('#progress-div').removeClass('d-none');
-            
-          var formData = new FormData();
-          formData.append('video', file)
-
-          $.ajax({
-              url: "{% url 'management:upload_video' %}",
-              type: 'POST',
-              data: formData,
-              cache: false,
-              dataType: 'json',
-              processData: false, // Don't process the files
-              contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-              xhr: function()
-              {
-                var xhr = new window.XMLHttpRequest();
-                //Upload progress
-                xhr.upload.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
-                    //Do something with upload progress
-                    console.log(percentComplete);
-                    $('#video_upload_progress').css('width', percentComplete);
-                    $('#video_upload_progress').text(percentComplete);
-                  }
-                }, false);
-                //Download progress
-                xhr.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = evt.loaded / evt.total;
-                    //Do something with download progress
-                    console.log(percentComplete);
-                  }
-                }, false);
-                return xhr;
-              },
-          }).done(function(data){
-            console.log(data);
-//            var video_url = data.video_url;
-            var video_id = data.video_id;
-            $('#video_id').val(video_id);
-//            $('video').prop('src', video_url);
-//            $('video')[0].load();
-          }).always(function(){
-                videoUploading = false;    
-          });
+          
+          getFileUploadSignature(file.name, 'video', 0).then(function(response){
+              return uploadFile(response, 'video_upload_progress', file);
+          }).then(function(response){
+              if(response.code == 200){
+                  var taskId = response.task_ids[0];
+                  var video_url = response.url.replace($('body').data('media-url'));
+                  $('#video_url').val(video_url):
+                }
+          }).fail(function(data){
+                console.log('something wrong in ajax call');
+                console.log(data);
+            }).always(function(data){
+                if(data !== undefined){
+                  console.log(data);  
+                }
+                videoUploading = false; 
+            });
         }
       });
       
@@ -333,47 +306,23 @@
         
         // var fileList
         if(file !== null){
-          $('#apk-progress-div').removeClass('d-none');
-            
-          var formData = new FormData();
-          formData.append('apk', file)
-
-          $.ajax({
-              url: "{% url 'management:upload_apk' %}",
-              type: 'POST',
-              data: formData,
-              cache: false,
-              dataType: 'json',
-              processData: false, // Don't process the files
-              contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-              xhr: function()
-              {
-                var xhr = new window.XMLHttpRequest();
-                //Upload progress
-                xhr.upload.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
-                    //Do something with upload progress
-                    console.log(percentComplete);
-                    $('#apk_upload_progress').css('width', percentComplete);
-                    $('#apk_upload_progress').text(percentComplete);
-                  }
-                }, false);
-                //Download progress
-                xhr.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = evt.loaded / evt.total;
-                    //Do something with download progress
-                    console.log(percentComplete);
-                  }
-                }, false);
-                return xhr;
-              },
-          }).done(function(data){
-            console.log(data);
-            var apk_id = data.apk_id;
-            $('#apk_id').val(apk_id);
-          });
+          getFileUploadSignature(file.name, 'apk', 1).then(function(response){
+              return uploadFile(response, 'apk_upload_progress', file);
+          }).then(function(response){
+              if(response.code == 200){
+                  var taskId = response.task_ids[0];
+                  var apk_url = response.url.replace($('body').data('media-url'));
+                  $('#apk_url').val(apk_url);
+                }
+          }).fail(function(data){
+                console.log('something wrong in ajax call');
+                console.log(data);
+            }).always(function(data){
+                if(data !== undefined){
+                  console.log(data);  
+                }
+                apkUploading = false; 
+            });
         }
       });
       
@@ -407,6 +356,62 @@
       $(this).siblings('.delImgCheckbox').prop('checked', true);
       $(this).parents('.imgDivTop').remove();
     });
+  }
+
+  function getFileUploadSignature(fileName, folderName, big){
+      return $.ajax({
+                    url: "{% url 'api:get_file_upload_signature' %}",
+                    method: 'POST',
+                    data: {'file_name': fileName,
+                            'folder_name': folderName,
+                            'big': big},
+                });
+  }
+      
+  function uploadFile(response, progressBar, file){
+      var policy = response.policy;
+      var authorization = response.authorization;
+      var formData = new FormData();
+      formData.append('policy', policy);
+      formData.append('authorization', authorization);
+      formData.append('file', file);
+      return $.ajax({
+              url: "{{ upyun_url }}",
+              type: 'POST',
+              data: formData,
+              cache: false,
+              processData: false, // Don't process the files
+              contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+              dataType: 'json',
+              xhr: function()
+              {
+                var xhr = new window.XMLHttpRequest();
+                if(progressBar){
+                    updateProgressBar(xhr, progressBar);
+                }
+                return xhr;
+              },
+             });
+  }
+   
+  function updateProgressBar(xhr, progressBar){
+    //Upload progress
+    $(progressBar).parents('#apk-progress-div').removeClass('d-none');
+    xhr.upload.addEventListener("progress", function(evt){
+      if (evt.lengthComputable) {
+        var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
+        //Do something with upload progress
+        $(progressBar).css('width', percentComplete);
+        $(progressBar).text(percentComplete);
+      }
+    }, false);
+    //Download progress
+    xhr.addEventListener("progress", function(evt){
+      if (evt.lengthComputable) {
+        var percentComplete = evt.loaded / evt.total;
+        //Do something with download progress
+      }
+    }, false);
   }
   </script>
 {% endblock %}

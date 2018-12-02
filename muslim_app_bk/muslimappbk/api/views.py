@@ -84,8 +84,8 @@ def _video_process(request, file_name):
             "type": "video",
             "avopts": "/f/mp4",
             "return_info": True,
-            "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
-#             "notify_url": 'https://uptool.tingfun.net/echo.php'
+#             "notify_url": request.build_absolute_uri(reverse('api:process_video_notify'))
+            "notify_url": 'https://uptool.tingfun.net/echo.php'
         },
         {
             "name": "naga",
@@ -93,8 +93,8 @@ def _video_process(request, file_name):
             "avopts": "/o/true/n/1",
             "return_info": True,
             "save_as": thumbnail_save_as,
-            "notify_url": request.build_absolute_uri(reverse('api:process_video_thumbnail_notify'))
-#             "notify_url": 'https://uptool.tingfun.net/echo.php'
+#             "notify_url": request.build_absolute_uri(reverse('api:process_video_thumbnail_notify'))
+            "notify_url": 'https://uptool.tingfun.net/echo.php'
             }]
 
 @csrf_exempt
@@ -139,28 +139,31 @@ def notify_video_process_task(request):
     image = Image.objects.create(upyun_task_id=task_ids[1])
     return JsonResponse({'video_id': video.id, 'image_id': image.id})
 
-def _image_tasks(request, save_key):
+def _image_tasks(request, save_key, thumbnail_pattern):
     return [{
             "name": "thumb",
-            "x-gmkerl-thumb": "videoalbum",
+            "x-gmkerl-thumb": thumbnail_pattern,
             "save_as": save_key.replace('original', 'thumbnail', 1),
-            "notify_url": request.build_absolute_uri(reverse('api:image_thumbnail_notify'))
-#             "notify_url": 'https://uptool.tingfun.net/echo.php'
+#             "notify_url": request.build_absolute_uri(reverse('api:image_thumbnail_notify'))
+            "notify_url": 'https://uptool.tingfun.net/echo.php'
         }]
     
 # @csrf_exempt
+# folder_name: such folder name will be composed into picutre/{folder_name}/original/....
 def get_image_upload_signature(request):
     file_name, ext = os.path.splitext(request.POST['file_name'])
+    folder_name = request.POST['folder_name']
+    thumbnail_pattern = request.POST['thumbnail_pattern']
     
     if ext:
-        name = f"pictures/album/original/{file_name}_{time.time()}{ext}"
+        name = f"pictures/{folder_name}/original/{file_name}_{time.time()}{ext}"
     else:
-        name = f"pictures/album/original/{file_name}_{time.time()}"
+        name = f"pictures/{folder_name}/original/{file_name}_{time.time()}"
     save_key = '/%s' % default_storage._get_key_name(name)
     logger.info('signature save-key:' + save_key)
     upyun = default_storage.up
     now = cur_dt()
-    image_tasks = _image_tasks(request, save_key)
+    image_tasks = _image_tasks(request, save_key, thumbnail_pattern)
     data = {
             'bucket': upyun.service,
             'expiration': 1800 + int(time.time()),
@@ -181,7 +184,7 @@ def get_image_upload_signature(request):
 
 def notify_image_process_task(request):
     task_id = request.POST['task_id']
-    original_path = request.POST['original_path']
+    original_path = request.POST['original_path'].replace(settings.MEDIA_URL, '', 1)
     image = Image.objects.create(upyun_task_id=task_id, picture=original_path)
     return JsonResponse({'image_id': image.id})
 
@@ -199,8 +202,8 @@ def image_thumbnail_notify(request):
         logger.info('task_id:' + task_id)
         width = data['imginfo']['width']
         height = data['imginfo']['height']
-        logger.info('video width:' + str(width))
-        logger.info('video height:' + str(height))
+        logger.info('image width:' + str(width))
+        logger.info('image height:' + str(height))
         update_image_path_task.apply_async(kwargs={ 'thumbnail_path': path, 'task_id': task_id, 'width': width, 'height': height}, count_down=3)
     return HttpResponse('thanks')
 
@@ -227,3 +230,39 @@ class InspiredVideoListView(generics.ListAPIView):
             return video_list.object_list
         except InvalidPage:
             return InspiredVideo.objects.none()
+        
+# @csrf_exempt
+def get_file_upload_signature(request):
+    file_name, ext = os.path.splitext(request.POST['file_name'])
+    folder_name = request.POST['folder_name']
+    big = int(request.POST['big'])
+    
+    if ext:
+        name = f"{folder_name}/{file_name}_{time.time()}{ext}"
+    else:
+        name = f"{folder_name}/{file_name}_{time.time()}"
+    save_key = '/%s' % default_storage._get_key_name(name)
+    logger.info('signature save-key:' + save_key)
+    upyun = default_storage.up
+    now = cur_dt()
+    data = {
+            'bucket': upyun.service,
+            'expiration': 1800 + int(time.time()),
+            'save-key': save_key,
+            'date': now,
+        }
+    
+    if big:
+        file_size = request.POST['file_size']
+        data['content-length'] = file_size
+        
+    policy = base64.b64encode(json.dumps(data).encode()).decode()
+    authorization = sign.make_signature(
+        username = upyun.username, 
+        password = upyun.password,
+        method = "POST",
+        uri = '/%s' % upyun.service,
+        date = now,
+        policy = policy)
+    data = {'policy': policy, 'authorization': authorization}
+    return JsonResponse(data)

@@ -87,16 +87,12 @@
                          </div>
                        {% endif %}
                       {% endfor %}
-                      {% if slug %}
                       <div>
-                        <img id='album_img' src="{% if slug %}{{ album_form.image_path.value }}{% endif %}" width="300px" height="250px">
+                        <img id='album_img' src="{% if slug %}{{ album_form.image_path.value }}{% else %}{% static 'images/image_default.svg' %}{% endif %}" width="300px" height="220px">
                       </div>
-                      {% endif %}
               </div>
             </div>
             {{ album_form.image_id }}
-            {{ album_form.policy }}
-            {{ album_form.authorization }}
             {{ album_form.upload_by.as_hidden }}
           </form>
 {% endblock %}
@@ -107,6 +103,7 @@
   var imageUploading = false;
   var authorization = null;
   var policy = null;
+  var file = null;
       
   $(function(){
     $('#album_form').submit(function(e){
@@ -125,20 +122,25 @@
     
     $('#image_input').change(function(){
         imageUploading = true;
-        var file = this.files[0];
+        file = this.files[0];
         var fileName = file.name;
-        $.ajax({
-            url: "{% url 'api:get_image_upload_signature' %}",
-            method: 'POST',
-            data: {'file_name': fileName},
-        }).done(function(response){
-            var policy = response.policy;
-            var authorization = response.authorization;
-            var formData = new FormData();
-            formData.append('policy', policy);
-            formData.append('authorization', authorization);
-            formData.append('file', file);
-            uploadImage(formData);
+        getImageUploadSignature(fileName).then(function(response){
+            return uploadImage(response);
+        }).then(function(response){
+            return notifyTask(response);
+        }).then(function(response){
+            var image_id = response.image_id;
+            $('#image_id').val(image_id);
+            console.log('taskId notified'); 
+            alert('{% trans "image uploaded and currently is encoding" %}');
+        }).fail(function(data){
+            console.log('something wrong in ajax call');
+            console.log(data);
+        }).always(function(data){
+            if(data !== undefined){
+              console.log(data);  
+            }
+            imageUploading = false; 
             var reader = new FileReader();
             reader.onload = function(e) {
               $('#album_img').prop('src', e.target.result);
@@ -149,66 +151,74 @@
     setActiveMenu(5);
   });
       
-  function uploadImage(formData){
-      $('#progress-div').removeClass('d-none');
-      $.ajax({
-          url: "{{ upyun_url }}",
-          type: 'POST',
-          data: formData,
-          cache: false,
-//          dataType: 'json',
-          processData: false, // Don't process the files
-          contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-          dataType: 'json',
-          xhr: function()
-          {
-            var xhr = new window.XMLHttpRequest();
-            //Upload progress
-            xhr.upload.addEventListener("progress", function(evt){
-              if (evt.lengthComputable) {
-                var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
-                //Do something with upload progress
-                console.log(percentComplete);
-                $('#image_upload_progress').css('width', percentComplete);
-                $('#image_upload_progress').text(percentComplete);
-              }
-            }, false);
-            //Download progress
-            xhr.addEventListener("progress", function(evt){
-              if (evt.lengthComputable) {
-                var percentComplete = evt.loaded / evt.total;
-                //Do something with download progress
-                console.log(percentComplete);
-              }
-            }, false);
-            return xhr;
-          },
-      }).done(function(response){
-        console.log(response);
-        if(response.code == 200){
-            var taskId = response.task_ids[0];
-            var original_path = response.url;
-            notifyTask(taskId, original_path);
-        }
-      }).always(function(data){
-        console.log(data);
-        imageUploading = false;    
-      });
+  function getImageUploadSignature(fileName){
+      return $.ajax({
+                    url: "{% url 'api:get_image_upload_signature' %}",
+                    method: 'POST',
+                    data: {'file_name': fileName,
+                            'folder_name': 'album',
+                            'thumbnail_pattern': 'videoalbum'},
+                });
   }
       
-  function notifyTask(taskId, original_path){
-      console.log('task_id:' + taskId);
-      console.log('original_path' + original_path);
-      $.ajax({
-          url: "{% url 'api:notify_image_process_task' %}",
-          method: 'POST',
-          data: {'task_id': taskId, 'original_path': original_path}
-      }).done(function(response){
-        var image_id = response.image_id;
-        $('#image_id').val(image_id);
-         console.log('taskId notified'); 
-         alert('{% trans "image uploaded and currently is encoding" %}')
-      });
+  function uploadImage(response){
+      var policy = response.policy;
+      var authorization = response.authorization;
+      var formData = new FormData();
+      formData.append('policy', policy);
+      formData.append('authorization', authorization);
+      formData.append('file', file);
+      $('#progress-div').removeClass('d-none');
+      return $.ajax({
+              url: "{{ upyun_url }}",
+              type: 'POST',
+              data: formData,
+              cache: false,
+    //          dataType: 'json',
+              processData: false, // Don't process the files
+              contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+              dataType: 'json',
+              xhr: function()
+              {
+                var xhr = new window.XMLHttpRequest();
+                //Upload progress
+                xhr.upload.addEventListener("progress", function(evt){
+                  if (evt.lengthComputable) {
+                    var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
+                    //Do something with upload progress
+                    $('#image_upload_progress').css('width', percentComplete);
+                    $('#image_upload_progress').text(percentComplete);
+                  }
+                }, false);
+                //Download progress
+                xhr.addEventListener("progress", function(evt){
+                  if (evt.lengthComputable) {
+                    var percentComplete = evt.loaded / evt.total;
+                    //Do something with download progress
+                  }
+                }, false);
+                return xhr;
+              },
+             });
+  }
+      
+  function notifyTask(response){
+      console.log(response);
+      if(response.code == 200){
+          var taskId = response.task_ids[0];
+          var original_path = response.url;
+          console.log('task_id:' + taskId);
+          console.log('original_path' + original_path);
+          return $.ajax({
+                      url: "{% url 'api:notify_image_process_task' %}",
+                      method: 'POST',
+                      data: {'task_id': taskId, 'original_path': original_path}
+                  });
+      }else{
+          console.log('notify task failed');
+          throw "notify task failed";
+      } 
+      
   }
   </script>
 {% endblock %}

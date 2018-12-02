@@ -323,5 +323,61 @@
       $(this).parents('.imgDivTop').remove();
     });
   }
+
+  function getFileUploadSignature(fileName, folderName, big){
+      return $.ajax({
+                    url: "{% url 'api:get_file_upload_signature' %}",
+                    method: 'POST',
+                    data: {'file_name': fileName,
+                            'folder_name': folderName,
+                            'big': big},
+                });
+  }
+      
+  function uploadFile(response, progressBar){
+      var policy = response.policy;
+      var authorization = response.authorization;
+      var formData = new FormData();
+      formData.append('policy', policy);
+      formData.append('authorization', authorization);
+      formData.append('file', file);
+      $('#progress-div').removeClass('d-none');
+      return $.ajax({
+              url: "{{ upyun_url }}",
+              type: 'POST',
+              data: formData,
+              cache: false,
+              processData: false, // Don't process the files
+              contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+              dataType: 'json',
+              xhr: function()
+              {
+                var xhr = new window.XMLHttpRequest();
+                if(progressBar){
+                    updateProgressBar(xhr, progressBar);
+                }
+                return xhr;
+              },
+             });
+  }
+   
+  function updateProgressBar(xhr, progressBar){
+    //Upload progress
+    xhr.upload.addEventListener("progress", function(evt){
+      if (evt.lengthComputable) {
+        var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
+        //Do something with upload progress
+        $(progressBar).css('width', percentComplete);
+        $(progressBar).text(percentComplete);
+      }
+    }, false);
+    //Download progress
+    xhr.addEventListener("progress", function(evt){
+      if (evt.lengthComputable) {
+        var percentComplete = evt.loaded / evt.total;
+        //Do something with download progress
+      }
+    }, false);
+  }
   </script>
 {% endblock %}
