@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
-{% block title %}Applications Table{% endblock %}
+{% block title %}{% trans 'Applications Table' %}{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
 <style>
@@ -53,7 +53,7 @@
                             <td>{{ mobile_app.is_active|yesno:"active,disabled" }}</td>
                             <td>{{ mobile_app.category }}</td>
                             <td><img src="{{ mobile_app.icon.url }}" width="64px" height="64"></td>
-                            <td>{{ mobile_app.ratings.average|default:'5' }}</td>
+                            <td>{{ mobile_app.ratings.last.average|default:'5'|floatformat }}</td>
                             <td>
                                 <span>{{ mobile_app.download_count }}</span>
                                 <a href="{{ mobile_app.latestAPK }}"><i class="fas fa-download" ></i></a>

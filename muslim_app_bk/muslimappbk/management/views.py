@@ -22,12 +22,13 @@ from django.core.files.storage import default_storage
 
 
 logger = logging.getLogger(__name__)
-                
+upyun = default_storage.up
+upyun_url = 'http://%s/%s' % (upyun.endpoint, upyun.service) 
+             
 # Create your views here.
 @login_required
 def add_mobile_app(request):
-    upyun = default_storage.up
-    upyun_url = 'http://%s/%s' % (upyun.endpoint, upyun.service)
+    
     if request.method == 'POST':
         addAppModelForm = AddAppModelForm(request.POST, request.FILES)
         addAppVersionModelForm = AddAppVersionModelForm(request.POST, request.FILES)
@@ -57,7 +58,6 @@ def add_mobile_app(request):
             video_url = addAppModelForm.cleaned_data['video_url']
             if video_url:
                 video = Video(file=video_url, content_object=newApp)
-#                 video.content_object = newApp
                 video.save()
                 
             return redirect('management:app_table_basic')\
@@ -75,24 +75,24 @@ def add_mobile_app(request):
                     'addAppVersionModelForm': addAppVersionModelForm,
                     'upyun_url': upyun_url})
 
-class ImageFieldView(LoginRequiredMixin, View):
-    def post(self, request):
-        if request.is_ajax():
-            files = request.FILES.getlist('images');
-            
-            imageIds = []
-            for file in files:
-                image = Image(picture=file)
-                image.save()
-                image_meta = requests.get(image.picture.url + '!/info')
-                if image_meta.status_code == 200:
-                    image_json = image_meta.json()
-                    image.width = image_json['width']
-                    image.height = image_json['height']
-                    image.save()
-                    
-                imageIds.append(image.id)
-            return JsonResponse(imageIds, safe=False)
+# class ImageFieldView(LoginRequiredMixin, View):
+#     def post(self, request):
+#         if request.is_ajax():
+#             files = request.FILES.getlist('images');
+#             
+#             imageIds = []
+#             for file in files:
+#                 image = Image(picture=file)
+#                 image.save()
+#                 image_meta = requests.get(image.picture.url + '!/info')
+#                 if image_meta.status_code == 200:
+#                     image_json = image_meta.json()
+#                     image.width = image_json['width']
+#                     image.height = image_json['height']
+#                     image.save()
+#                     
+#                 imageIds.append(image.id)
+#             return JsonResponse(imageIds, safe=False)
 
 class UpdateMobileAppView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -103,25 +103,24 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
         for img in appImages:
             imgIds.append(str(img.id))
             imgUrls.append(img.picture.url)
-            logger.debug('imgIds:' + str(imgIds))
-            logger.debug('imgUrls:' + str(imgUrls))
         imgIds = ','.join(imgIds)
         
-        video_id = None
+        video_url = None
         last_video = mobile_app.videos.last()
-        if last_video is not None:
-            video_id = last_video.id
+        if last_video:
+            video_url = last_video.file.url
         
-        initial_data = {'imgIds': imgIds, 'video_id': video_id}
+        initial_data = {'imgIds': imgIds, 'video_url': video_url }
         updateAppModelForm = AddAppModelForm(instance=mobile_app, initial=initial_data)
         return render(request, 'management/update_mobile_app.html', {'updateAppModelForm': updateAppModelForm,
-                                                                     'imgUrls': imgUrls})
+                                                                     'imgUrls': imgUrls,
+                                                                     'upyun_url': upyun_url})
 
     def post(self, request, *args, **kwargs):
         mobile_app = get_object_or_404(MobileApp, slug=kwargs['slug'])
         updateAppModelForm = AddAppModelForm(request.POST, instance=mobile_app)
         imgUrls = []
-        video_id = None
+        video_url = None
         
         if updateAppModelForm.is_valid():
             mobile_app = updateAppModelForm.save()
@@ -131,12 +130,15 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
                 imgIds = imgIds.split(',')
                 update_app_images(imgIds, mobile_app)
                 
-            video_id = updateAppModelForm.cleaned_data['video_id']
+            video_url = updateAppModelForm.cleaned_data['video_url']
             
-            if video_id:
-                video = Video.objects.get(id=video_id)
-                if video.content_object is None:
-                    video.content_object = mobile_app
+            if video_url:
+                video = mobile_app.videos.last()
+                if video is None:
+                    video = Video(file=video_url, content_object=mobile_app)
+                    video.save()
+                else:
+                    video.file = video_url
                     video.save()
             
             return redirect('management:index')
@@ -147,8 +149,8 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
                 imgUrls.append(img.picture.url)
             
             last_video = mobile_app.videos.last()
-            if last_video is not None:
-                video_id = last_video.id
+            if last_video:
+                video_url = last_video.file.url
                 
             if(updateAppModelForm.errors):
                     logger.info('form errors: %s', updateAppModelForm.errors.as_data())
@@ -156,7 +158,8 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
         return render(request, 'management/update_mobile_app.html', 
                           {'updateAppModelForm': updateAppModelForm,
                              'imgUrls': imgUrls,
-                             'video_id': video_id})
+                             'video_url': video_url,
+                             'upyun_url': upyun_url})
             
 class AppTableBasicView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'

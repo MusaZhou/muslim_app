@@ -115,7 +115,7 @@
                         <div class="row">
                             <button type="button" class="button btn-primary btn cur-p col-md-2" id="video_input_btn">{% trans 'Upload Video' %}</button>
                             <input type="file" id="video_input" accept="video/*" style="display:none">
-                            <div class="col-md-10 d-none" id="progress-div">
+                            <div class="col-md-10 d-none progress-div">
                               <div class="progress" style="height:90%; width:100%">
                                <div id="video_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
                               </div>
@@ -145,20 +145,18 @@
                 {% endfor %}
             </div>
             {{ updateAppModelForm.imgIds }}
-            {{ updateAppModelForm.video_id }}
-
+            {{ updateAppModelForm.video_url }}
           </form>
+<div class="imgDivTop image-template d-none">
+    <img width="auto" height="200px" class="appImg rounded"><button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>
+    <input type="checkbox" class="delImgCheckbox" style="display:none">
+    <input type="number" class="orderImg" style="display:none">
+</div>
 {% endblock %}
 {% block javascript %}
   {{ block.super }}
   <script src="{% static 'taggit_labels/js/taggit_labels.js' %}" type="text/javascript"></script>
   <script>
-  var imageDivTemplate = '<div class="imgDivTop">'+
-                        '<img width="auto" height="200px" class="appImg rounded">'+
-                        '<button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>'+
-                        '<input type="checkbox" class="delImgCheckbox" style="display:none">'+
-                        '<input type="number" class="orderImg" style="display:none">'+
-                        '</div>';
 
   {% if updateAppModelForm.imgIds.value is not None %}
   var imgIds = [{{ updateAppModelForm.imgIds.value }}];
@@ -176,54 +174,49 @@
     });
 
     $('#imgCtr').change(function(){
-      videoUploading = true;
-      exceedFileSize = false;
       var files = this.files;
       if(imgIds.length + files.length > 10){
         alert("{% trans 'maximum 10 images allowed' %}");
         return;
       }
-      // var fileList
+      
       if(files !== null){
         var formData = new FormData();
         $.each(files, function(i, file){
-          if(!validateFileSize(file, 2)){
+            if(!validateFileSize(file, 2)){
                 exceedFileSize = true;
-                alert("{% trans 'file size exceed the limitaion' %}");
+                alert("{% trans 'file size exceed the limitaion' %}" + ':' + file.name);
                 return false;
-          }
-          formData.append('images', file)
-        });
-          
-        if(exceedFileSize){
-            return false;
-        }else{
-            exceedFileSize = false;
-        }
-
-        $.ajax({
-            url: "{% url 'management:add_app_images' %}",
-            type: 'POST',
-            data: formData,
-            cache: false,
-            dataType: 'json',
-            processData: false, // Don't process the files
-            contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-        }).done(function(data){
-          console.log(data);
-          imgIds = imgIds.concat(data);
-          $.each(files, function(i, file){
-            var imgEle = newImageDiv();
-            displayImage(file, imgEle);
-          });
-          attachEvents();
-        }).always(function(){
-           videoUploading=false; 
+            }
+            getImageUploadSignature(file.name, 'app', 'showcase.app.ss.thumbnail').then(function(response){
+                return uploadFile(response, false, file);
+            }).then(function(response){
+                return notifyTask(response);
+            }).then(function(response){
+                var image_id = response.image_id;
+                imgIds.push(image_id);
+                console.log('taskId for image notified:' + image_id); 
+            }).fail(function(data){
+                console.log('something wrong in ajax call');
+                console.log(data);
+            }).always(function(data){
+                if(data !== undefined){
+                  console.log(data);  
+                }
+                var imgEle = newImageDiv();
+                displayImage(file, imgEle);
+                attachEvent(imgEle.siblings('.delImgBtn'));
+            });
         });
       }
     });
 
     $('#update_app_form').submit(function(){
+      if(videoUploading){
+          alert("{% trans 'sorry, please wait for a while, the video uploading has not complte yet' %}");
+          e.preventDefault();
+          return false;
+      }
       $('#imgIds').val(imgIds);
       $('#imgCtr, #video_input').prop('disabled', true);
       $(this).submit();
@@ -234,60 +227,31 @@
     });
     
     $('#video_input').change(function(){
+        videoUploading = true;
         var file = this.files[0];
-        if(!validateFileSize(file, 10)){
+        if(file !== null){
+          if(!validateFileSize(file, 10)){
             alert("{% trans 'file size exceed the limitaion' %}");
             videoUploading = false;
             return;
-        }
-        
-        $('#progress-div').removeClass('d-none');
-        
-        // var fileList
-        if(file !== null){
-          var formData = new FormData();
-          formData.append('video', file)
-
-          $.ajax({
-              url: "{% url 'management:upload_video' %}",
-              type: 'POST',
-              data: formData,
-              cache: false,
-              dataType: 'json',
-              processData: false, // Don't process the files
-              contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-              xhr: function()
-              {
-                var xhr = new window.XMLHttpRequest();
-                //Upload progress
-                xhr.upload.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
-                    //Do something with upload progress
-                    console.log(percentComplete);
-                    $('#video_upload_progress').css('width', percentComplete);
-                    $('#video_upload_progress').text(percentComplete);
-                  }
-                }, false);
-                //Download progress
-                xhr.addEventListener("progress", function(evt){
-                  if (evt.lengthComputable) {
-                    var percentComplete = evt.loaded / evt.total;
-                    //Do something with download progress
-                    console.log(percentComplete);
-                  }
-                }, false);
-                return xhr;
-              },
-          }).done(function(data){
-            console.log(data);
-//            var video_url = data.video_url;
-            var video_id = data.video_id;
-            $('#video_id').val(video_id);
-            alert("{% trans 'The video has updated successfully, the backend still processing, so it cannot be review at this moment. Thank you!' %}")
-//            $('video').prop('src', video_url);
-//            $('video')[0].load();
-          });
+          }
+          
+          getFileUploadSignature(file.name, 'videos', 0, 0).then(function(response){
+              return uploadFile(response, '#video_upload_progress', file);
+          }).then(function(response){
+              if(response.code == 200){
+                  var video_url = response.url.replace($('body').data('media-url'), '');
+                  $('#video_url').val(video_url);
+                }
+          }).fail(function(data){
+                console.log('something wrong in ajax call');
+                console.log(data);
+            }).always(function(data){
+                if(data !== undefined){
+                  console.log(data);  
+                }
+                videoUploading = false; 
+            });
         }
       });
       
@@ -310,7 +274,7 @@
 
   function newImageDiv(){
     var currentImgCount = $('.imgDivTop').length;
-    var newImgDiv = $(imageDivTemplate.repeat(1));
+    var newImgDiv = $('.image-template').clone().removeClass('image-template d-none');
     currentImgCount > 0 ? $('.imgDivTop').last().after(newImgDiv) : $('.divSplitter').after(newImgDiv);
     return newImgDiv.find('.appImg');
   }
@@ -318,30 +282,51 @@
   function attachEvents(){
     $('.delImgBtn').click(function(){
       var index = $(this).parents('.imgDivTop').index('.imgDivTop');
-      imgIds.splice(index, 1);
+      imgIds.splice(index-1, 1);
       $(this).siblings('.delImgCheckbox').prop('checked', true);
       $(this).parents('.imgDivTop').remove();
     });
   }
+   
+  function attachEvent(element){
+      element.click(function(){
+          var index = $(this).parents('.imgDivTop').index('.imgDivTop');
+          imgIds.splice(index-1, 1);
+          $(this).siblings('.delImgCheckbox').prop('checked', true);
+          $(this).parents('.imgDivTop').remove();
+        });
+  }
+   
+  function getImageUploadSignature(fileName, folderName, thumbnail_pattern){
+      return $.ajax({
+                    url: "{% url 'api:get_image_upload_signature' %}",
+                    method: 'POST',
+                    data: {'file_name': fileName,
+                            'folder_name': folderName,
+                            'thumbnail_pattern': thumbnail_pattern},
+                });
+  }
 
-  function getFileUploadSignature(fileName, folderName, big){
+  function getFileUploadSignature(fileName, folderName, big, fileSize){
       return $.ajax({
                     url: "{% url 'api:get_file_upload_signature' %}",
                     method: 'POST',
                     data: {'file_name': fileName,
                             'folder_name': folderName,
-                            'big': big},
+                            'big': big,
+                            'file_size': fileSize},
                 });
   }
       
-  function uploadFile(response, progressBar){
+  function uploadFile(response, progressBar, file){
       var policy = response.policy;
       var authorization = response.authorization;
       var formData = new FormData();
       formData.append('policy', policy);
       formData.append('authorization', authorization);
       formData.append('file', file);
-      $('#progress-div').removeClass('d-none');
+      console.log('policy:' + policy);
+      console.log('authorization:' + authorization);
       return $.ajax({
               url: "{{ upyun_url }}",
               type: 'POST',
@@ -363,6 +348,7 @@
    
   function updateProgressBar(xhr, progressBar){
     //Upload progress
+    $(progressBar).parents('.progress-div').removeClass('d-none');
     xhr.upload.addEventListener("progress", function(evt){
       if (evt.lengthComputable) {
         var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
@@ -378,6 +364,24 @@
         //Do something with download progress
       }
     }, false);
+  }
+      
+  function notifyTask(response){
+      console.log(response);
+      if(response.code == 200){
+          var taskId = response.task_ids[0];
+          var original_path = response.url;
+          console.log('task_id:' + taskId);
+          console.log('original_path' + original_path);
+          return $.ajax({
+                      url: "{% url 'api:notify_image_process_task' %}",
+                      method: 'POST',
+                      data: {'task_id': taskId, 'original_path': original_path}
+                  });
+      }else{
+          console.log('notify task failed');
+          throw "notify task failed";
+      } 
   }
   </script>
 {% endblock %}

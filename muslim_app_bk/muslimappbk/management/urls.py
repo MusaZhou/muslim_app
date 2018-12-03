@@ -1,6 +1,7 @@
 from django.urls import path, include, re_path
 from . import views, views_pdf, views_inspired_video
-from .views import ImageFieldView, UpdateMobileAppView,  AppTableBasicView,\
+# from .views import ImageFieldView
+from .views import UpdateMobileAppView,  AppTableBasicView,\
 AddAppVersionView, AppHistoryView, VersionDetailView
 from .views_uploader import AppTableUploaderView, AppHistoryUploaderView
 from .views import BannerListView, BannerEditView, BannerDeleteView
@@ -14,7 +15,7 @@ app_name = 'management'
 
 urlpatterns = [
     path('add_mobile_app', cache_page(24 * 60 * 60 * 15)(views.add_mobile_app), name='add_mobile_app'),
-    path('add_app_images', ImageFieldView.as_view(), name='add_app_images'),
+#     path('add_app_images', ImageFieldView.as_view(), name='add_app_images'),
     path('update_mobile_app/<str:slug>', UpdateMobileAppView.as_view(), name='update_mobile_app'),
     path('add_app_version/<str:slug>', cache_page(24 * 60 * 60 * 15)(AddAppVersionView.as_view()), name='add_app_version'),
     path('app_table_basic', AppTableBasicView.as_view(), name='app_table_basic'),
