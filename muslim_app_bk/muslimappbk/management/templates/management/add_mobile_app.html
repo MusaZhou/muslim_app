@@ -259,11 +259,11 @@
             return;
           }
           
-          getFileUploadSignature(file.name, 'video', 0, 0).then(function(response){
-              return uploadFile(response, 'video_upload_progress', file);
+          getFileUploadSignature(file.name, 'videos', 0, 0).then(function(response){
+              return uploadFile(response, '#video_upload_progress', file);
           }).then(function(response){
               if(response.code == 200){
-                  var video_url = response.url.replace($('body').data('media-url'));
+                  var video_url = response.url.replace($('body').data('media-url'), '');
                   $('#video_url').val(video_url);
                 }
           }).fail(function(data){
@@ -286,7 +286,7 @@
         var file = this.files[0];
         if(file !== null){
           getFileUploadSignature(file.name, 'apk', 1, file.size).then(function(response){
-              return uploadFile(response, 'apk_upload_progress', file);
+              return uploadFile(response, '#apk_upload_progress', file);
           }).then(function(response){
               if(response.code == 200){
                   var apk_url = response.url.replace($('body').data('media-url'), '');
@@ -397,7 +397,7 @@
    
   function updateProgressBar(xhr, progressBar){
     //Upload progress
-    $(progressBar).parents('#apk-progress-div').removeClass('d-none');
+    $(progressBar).parents('.progress-div').removeClass('d-none');
     xhr.upload.addEventListener("progress", function(evt){
       if (evt.lengthComputable) {
         var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
