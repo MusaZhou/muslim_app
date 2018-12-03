@@ -18,6 +18,7 @@ from management.tasks import upload_file_task
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.core.files.uploadhandler import TemporaryFileUploadHandler
+from django.core.files.storage import default_storage
 
 
 logger = logging.getLogger(__name__)
@@ -25,6 +26,8 @@ logger = logging.getLogger(__name__)
 # Create your views here.
 @login_required
 def add_mobile_app(request):
+    upyun = default_storage.up
+    upyun_url = 'http://%s/%s' % (upyun.endpoint, upyun.service)
     if request.method == 'POST':
         addAppModelForm = AddAppModelForm(request.POST, request.FILES)
         addAppVersionModelForm = AddAppVersionModelForm(request.POST, request.FILES)
@@ -40,8 +43,8 @@ def add_mobile_app(request):
             newAppVersion.mobile_app = newApp
             newAppVersion.save()
             
-            apk_id = addAppVersionModelForm.cleaned_data['apk_id']
-            ApkFile.objects.filter(id=apk_id).update(app_version=newAppVersion)
+            apk_url = addAppVersionModelForm.cleaned_data['apk_url']
+            ApkFile.objects.create(file=apk_url, app_version=newAppVersion)
 
             imgIds = addAppModelForm.cleaned_data['imgIds']
             logger.debug('imgIds:' + imgIds)
@@ -51,10 +54,10 @@ def add_mobile_app(request):
                     img.content_object = newApp
                     img.save()
             
-            video_id = addAppModelForm.cleaned_data['video_id']
-            if video_id:
-                video = Video.objects.get(id=video_id)
-                video.content_object = newApp
+            video_url = addAppModelForm.cleaned_data['video_url']
+            if video_url:
+                video = Video(file=video_url, content_object=newApp)
+#                 video.content_object = newApp
                 video.save()
                 
             return redirect('management:app_table_basic')\
@@ -69,7 +72,8 @@ def add_mobile_app(request):
     return render(request,
                   'management/add_mobile_app.html',
                     {'addAppModelForm': addAppModelForm,
-                    'addAppVersionModelForm': addAppVersionModelForm})
+                    'addAppVersionModelForm': addAppVersionModelForm,
+                    'upyun_url': upyun_url})
 
 class ImageFieldView(LoginRequiredMixin, View):
     def post(self, request):

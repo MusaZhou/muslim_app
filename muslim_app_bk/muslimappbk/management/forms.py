@@ -13,15 +13,15 @@ from datetime import date
 
 class AddAppModelForm(ModelForm):
     imgIds = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'imgIds'}))
-    video_id = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_id'}))
+    video_url = forms.CharField(required=False, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'video_url'}))
     tags = TagField(required=False, widget=LabelWidget)
     
     class Meta:
         model = MobileApp
-        fields = ['name', 'description', 'video_id', 'tags', 'category', 'slug', 'icon', 'developer']
+        fields = ['name', 'description', 'video_url', 'tags', 'category', 'slug', 'icon', 'developer']
 
 class AddAppVersionModelForm(ModelForm):
-    apk_url = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'apk_id'}))
+    apk_url = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'apk_url'}))
     mobile_app = forms.ModelChoiceField(required=False, queryset=MobileApp.objects.all())
     
     class Meta:
