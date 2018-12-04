@@ -147,7 +147,7 @@
             {{ updateAppModelForm.imgIds }}
             {{ updateAppModelForm.video_url }}
           </form>
-<div class="imgDivTop image-template d-none">
+<div class="image-template d-none">
     <img width="auto" height="200px" class="appImg rounded"><button type="button" class="btn cur-p btn-secondary delImgBtn">x</button>
     <input type="checkbox" class="delImgCheckbox" style="display:none">
     <input type="number" class="orderImg" style="display:none">
@@ -274,7 +274,7 @@
 
   function newImageDiv(){
     var currentImgCount = $('.imgDivTop').length;
-    var newImgDiv = $('.image-template').clone().removeClass('image-template d-none');
+    var newImgDiv = $('.image-template').clone().removeClass('image-template d-none').addClass('imgDivTop');
     currentImgCount > 0 ? $('.imgDivTop').last().after(newImgDiv) : $('.divSplitter').after(newImgDiv);
     return newImgDiv.find('.appImg');
   }
@@ -282,7 +282,7 @@
   function attachEvents(){
     $('.delImgBtn').click(function(){
       var index = $(this).parents('.imgDivTop').index('.imgDivTop');
-      imgIds.splice(index-1, 1);
+      imgIds.splice(index, 1);
       $(this).siblings('.delImgCheckbox').prop('checked', true);
       $(this).parents('.imgDivTop').remove();
     });
@@ -291,7 +291,7 @@
   function attachEvent(element){
       element.click(function(){
           var index = $(this).parents('.imgDivTop').index('.imgDivTop');
-          imgIds.splice(index-1, 1);
+          imgIds.splice(index, 1);
           $(this).siblings('.delImgCheckbox').prop('checked', true);
           $(this).parents('.imgDivTop').remove();
         });

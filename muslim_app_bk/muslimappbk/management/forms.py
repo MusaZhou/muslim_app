@@ -65,12 +65,12 @@ class YearField(forms.DateField):
         
 class PDFDocForm(ModelForm):
     tags = TagField(required=False, widget=LabelWidget)
-    pdf_file_ids = forms.CharField(widget=forms.TextInput(attrs={'type': 'hidden', 'id':'pdf_file_ids'}))
+    pdf_file_urls = forms.CharField(max_length=1000, widget=forms.TextInput(attrs={'type': 'hidden', 'id':'pdf_file_urls'}))
     publish_year = YearField(required=False)
     
     class Meta:
         model = PDFDoc
-        fields = ['title', 'description', 'tags', 'slug', 'pdf_file_ids', 'upload_by', 'author', 'publish_year']
+        fields = ['title', 'description', 'tags', 'slug', 'pdf_file_urls', 'upload_by', 'author', 'publish_year']
         
 class InspiredVideoForm(ModelForm):
     video_id = forms.CharField(widget=forms.HiddenInput(attrs={'id':'video_id'}))

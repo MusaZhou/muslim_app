@@ -238,7 +238,10 @@ def get_file_upload_signature(request):
     big = int(request.POST['big'])
     
     if ext:
-        name = f"{folder_name}/{file_name}_{time.time()}{ext}"
+        if folder_name.startswith('pdf/'):
+            name = f"{folder_name}/{file_name}{ext}"
+        else:
+            name = f"{folder_name}/{file_name}_{time.time()}{ext}"
     else:
         name = f"{folder_name}/{file_name}_{time.time()}"
     save_key = '/%s' % default_storage._get_key_name(name)
