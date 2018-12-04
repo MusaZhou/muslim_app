@@ -52,10 +52,8 @@ class InspiredVideoEditView(View):
             slug = None
             video_form = InspiredVideoForm(initial=initial_data)
             
-        upyun = default_storage.up
         context = {'video_form': video_form, 
-                   'slug': slug, 
-                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}    
+                   'slug': slug}    
         return render(request, 'management/add_inspired_video.html', context)
     
     def post(self, request, *args, **kwargs):
@@ -91,10 +89,8 @@ class InspiredVideoEditView(View):
             
             return redirect('management:inspired_video_list')
         
-        upyun = default_storage.up
         context = {'video_form': video_form, 
-                   'slug': slug, 
-                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+                   'slug': slug}
         return render(request, 'management/add_inspired_video.html', context)
     
 @method_decorator(login_required, name='dispatch')     
@@ -152,10 +148,8 @@ class VideoAlbumEditView(View):
             slug = None
             album_form = VideoAlbumForm(initial=initial_data)
             
-        upyun = default_storage.up
         context = {'album_form': album_form, 
-                   'slug': slug, 
-                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}    
+                   'slug': slug}    
         return render(request, 'management/add_video_album.html', context)
     
     def post(self, request, *args, **kwargs):
@@ -180,10 +174,8 @@ class VideoAlbumEditView(View):
                     image.save()
             return redirect('management:video_album_list')
         
-        upyun = default_storage.up
         context = {'album_form': album_form, 
-                   'slug': slug, 
-                   'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
+                   'slug': slug}
         return render(request, 'management/add_video_album.html', context)
     
 @method_decorator(login_required, name='dispatch')     

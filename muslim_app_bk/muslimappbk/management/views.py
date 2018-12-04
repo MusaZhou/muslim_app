@@ -13,7 +13,6 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
-import requests
 from management.tasks import upload_file_task
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
@@ -22,8 +21,6 @@ from django.core.files.storage import default_storage
 
 
 logger = logging.getLogger(__name__)
-upyun = default_storage.up
-upyun_url = 'http://%s/%s' % (upyun.endpoint, upyun.service) 
              
 # Create your views here.
 @login_required
@@ -73,7 +70,7 @@ def add_mobile_app(request):
                   'management/add_mobile_app.html',
                     {'addAppModelForm': addAppModelForm,
                     'addAppVersionModelForm': addAppVersionModelForm,
-                    'upyun_url': upyun_url})
+                    })
 
 # class ImageFieldView(LoginRequiredMixin, View):
 #     def post(self, request):
@@ -114,7 +111,7 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
         updateAppModelForm = AddAppModelForm(instance=mobile_app, initial=initial_data)
         return render(request, 'management/update_mobile_app.html', {'updateAppModelForm': updateAppModelForm,
                                                                      'imgUrls': imgUrls,
-                                                                     'upyun_url': upyun_url})
+                                                                     })
 
     def post(self, request, *args, **kwargs):
         mobile_app = get_object_or_404(MobileApp, slug=kwargs['slug'])
@@ -159,7 +156,7 @@ class UpdateMobileAppView(LoginRequiredMixin, View):
                           {'updateAppModelForm': updateAppModelForm,
                              'imgUrls': imgUrls,
                              'video_url': video_url,
-                             'upyun_url': upyun_url})
+                             })
             
 class AppTableBasicView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
@@ -184,7 +181,9 @@ class AddAppVersionView(View):
             imgIds.append(str(img.id))
             imgUrls.append(img.picture.url)
         imgIds = ','.join(imgIds)
-        updateAppModelForm = AddAppModelForm(instance=mobile_app, initial={'imgIds': imgIds})
+        
+        initial_data = {'imgIds': imgIds}
+        updateAppModelForm = AddAppModelForm(instance=mobile_app, initial=initial_data)
         return render(request,
                   'management/add_app_version.html',
                     {'addAppVersionModelForm': addAppVersionModelForm,
@@ -205,8 +204,8 @@ class AddAppVersionView(View):
             new_app_version.save()
             imgIds = updateAppModelForm.cleaned_data['imgIds']
             
-            apk_id = addAppVersionModelForm.cleaned_data['apk_id']
-            ApkFile.objects.filter(id=apk_id).update(app_version=new_app_version)
+            apk_url = addAppVersionModelForm.cleaned_data['apk_url']
+            ApkFile.objects.create(file=apk_url, app_version=new_app_version)
             
             if imgIds:
                 imgIds = imgIds.split(',')
