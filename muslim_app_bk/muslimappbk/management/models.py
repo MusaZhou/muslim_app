@@ -221,8 +221,8 @@ class Download(models.Model):
 class Banner(models.Model):
     title = models.CharField(verbose_name=_('Title'), max_length=100)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
-    image = models.ImageField(upload_to='banners', verbose_name=_('Banner Image'))
-    link = models.CharField(verbose_name=_("Link"), max_length=200)
+    image = models.ImageField(upload_to='banners', verbose_name=_('Banner Image'), null=True, blank=True)
+    link = models.CharField(verbose_name=_("Link"), max_length=200, null=True, blank=True)
     
     def __str__(self):
         return self.title
@@ -272,8 +272,16 @@ class PDFDoc(models.Model):
     def get_absolute_url(self):
         return reverse('showcase:detail_pdf', args=[self.slug])
     
+    @property
+    def user_link(self):
+        return self.get_absolute_url()
+    
     def __str__(self):
         return self.title
+    
+#     @property
+#     def userLink(self):
+#         return reverse('showcase:detail_pdf', args=[self.slug])
 
 class PDFFile(models.Model):
     pdf_doc = models.ForeignKey(PDFDoc, on_delete=models.CASCADE, null=True, related_name='pdf_files')
@@ -373,7 +381,6 @@ class InspiredVideo(models.Model):
     @property
     def user_link_mobile(self):
         return reverse('showcase:detail_inspired_video', args=[self.slug])
-#         return reverse('mobile:app', args=[self.slug])
 
     def video_duration(self):
         return self.latest_valid_video().duration
@@ -382,6 +389,9 @@ class InspiredVideo(models.Model):
     def video_duration_str(self):
         seconds = self.video_duration() or 0
         return str(datetime.timedelta(seconds=seconds))
+    
+    def get_absolute_url(self):
+        return reverse('showcase:detail_inspired_video', args=[self.slug])
     
 @receiver(post_save, sender=InspiredVideo)    
 @receiver(post_save, sender=MobileApp)

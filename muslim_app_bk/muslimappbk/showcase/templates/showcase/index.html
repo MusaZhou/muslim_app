@@ -54,7 +54,7 @@
     <div class="carousel-inner">
       {% for banner in banner_list %}
         <div class="carousel-item {{ forloop.first|yesno:'active,' }}">
-            <img src="{{ banner.image.url }}">
+            <img src="{{ banner.image.url|add:'!banner.thumbnail' }}">
             <div class="container">
               <div class="carousel-caption text-left">
                 <h1>{{ banner.title }}</h1>

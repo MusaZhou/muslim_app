@@ -1,24 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.conf import settings
 from management.forms import AddAppModelForm, AddAppVersionModelForm, BannerForm
 from management.models import Image, MobileApp, AppVersion, Banner, Video,\
     ApkFile
 from django.http import JsonResponse
 from django.views.generic import View
 from django.core.paginator import Paginator, Page
-from django.core.exceptions import ValidationError
 from datetime import datetime
 import logging, os, random, string
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from management.tasks import upload_file_task
-from django.utils.translation import gettext_lazy as _
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
-from django.core.files.uploadhandler import TemporaryFileUploadHandler
-from django.core.files.storage import default_storage
-
 
 logger = logging.getLogger(__name__)
              
@@ -71,25 +63,6 @@ def add_mobile_app(request):
                     {'addAppModelForm': addAppModelForm,
                     'addAppVersionModelForm': addAppVersionModelForm,
                     })
-
-# class ImageFieldView(LoginRequiredMixin, View):
-#     def post(self, request):
-#         if request.is_ajax():
-#             files = request.FILES.getlist('images');
-#             
-#             imageIds = []
-#             for file in files:
-#                 image = Image(picture=file)
-#                 image.save()
-#                 image_meta = requests.get(image.picture.url + '!/info')
-#                 if image_meta.status_code == 200:
-#                     image_json = image_meta.json()
-#                     image.width = image_json['width']
-#                     image.height = image_json['height']
-#                     image.save()
-#                     
-#                 imageIds.append(image.id)
-#             return JsonResponse(imageIds, safe=False)
 
 class UpdateMobileAppView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -234,22 +207,15 @@ class AppHistoryView(PermissionRequiredMixin, View):
         app_version_list = mobile_app.versions.all()
         context = {'mobile_app': mobile_app, 'app_version_list': app_version_list}
         return render(request, 'management/app_history.html', context)
-    
-    def post(self, request, *args, **kwargs):
-        pass
 
-    
 def update_app_images(imgIds, mobile_app):
     logger.debug('new imgIds:' + ','.join(imgIds))
     if imgIds:
         new_qs = Image.objects.filter(id__in=imgIds)
         old_qs = mobile_app.images.all()
-        del_qs = old_qs.exclude(id__in=imgIds)
-        # delete removed images
-        del_qs.delete()
+        old_qs.exclude(id__in=imgIds).delete()
 
         for img in new_qs:
-            # logger.debug('img id:' + str(img.id) + '\n content_object:' + str(img.content_object))
             if not img.content_object:
                 img.content_object = mobile_app;
                 img.save()
@@ -259,7 +225,6 @@ class VersionDetailView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         app = get_object_or_404(MobileApp.objects.prefetch_related('images', 'videos', 'tags'), slug=kwargs['app_slug'])
         app_version = get_object_or_404(AppVersion.objects.select_related('apk'), mobile_app=app, version_number=kwargs['version_number'])
-#         app_version = AppVersion.objects.filter(mobile_app=app, version_number=kwargs['version_number']).first()
         context = {'app_version': app_version, 'mobile_app': app}
         return render(request, 'management/app_version_detail.html', context)
 
@@ -286,60 +251,6 @@ def update_app_active(request):
         app.is_active = True if int(request.POST['status']) == 1 else False
         app.save()
         return JsonResponse({'status': 1}, safe=False)
-    
-@login_required  
-@csrf_exempt  
-def upload_video(request):
-    request.upload_handlers = [TemporaryFileUploadHandler(request)]
-    videoId = _upload_video(request)
-    context = {'video_id': videoId}
-    return JsonResponse(context, safe=False)
-
-@csrf_protect
-def _upload_video(request):
-    if request.is_ajax():
-        video = Video()
-        video.save()
-        video.refresh_from_db()
-        
-        video_file = request.FILES['video']
-        file_path = video_file.temporary_file_path()
-        logger.info('temporary file path:' + file_path)
-        extension = video_file.name.split('.')[-1]
-        base_name = 'videos/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
-        file_name = settings.MEDIA_ROOT + base_name
-        os.rename(file_path, file_name)
-        os.chmod(file_name, 0o755)
-        
-        upload_file_task.delay(file_name, 'videos/', video.id, 'management_video', 'file')
-
-        return video.id
-    
-@login_required 
-@csrf_exempt   
-def upload_apk(request):
-    request.upload_handlers = [TemporaryFileUploadHandler(request)]
-    return _upload_apk(request)
-
-@csrf_protect
-def _upload_apk(request):        
-    if request.is_ajax():
-        apk = ApkFile()
-        apk.save()
-        apk.refresh_from_db()
-        
-        apk_file = request.FILES['apk']
-        file_path = apk_file.temporary_file_path()
-        logger.info('temporary file path:' + file_path)
-        extension = apk_file.name.split('.')[-1]
-        base_name = 'apk/' + ''.join(random.choices(string.ascii_uppercase + string.digits, k=12)) + '.' + extension
-        file_name = settings.MEDIA_ROOT + base_name
-        os.rename(file_path, file_name)
-        os.chmod(file_name, 0o755)
-        upload_file_task.delay(file_name, 'apk/', apk.id, 'management_apkfile', 'file')
-        
-        context = {'apk_id': apk.id}
-        return JsonResponse(context, safe=False)
     
 class BannerListView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'

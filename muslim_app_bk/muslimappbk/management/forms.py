@@ -41,6 +41,16 @@ class BannerForm(ModelForm):
                                     label=_('Select Application as the Link'),
                                     required=False)
     
+    pdf_list = ModelChoiceFieldBeta(queryset=PDFDoc.objects.all(),
+                                    to_field_name="user_link",
+                                    label=_('Select PDF as the Link'),
+                                    required=False)
+    
+    video_list = ModelChoiceFieldBeta(queryset=InspiredVideo.objects.all(),
+                                    to_field_name="userLink",
+                                    label=_('Select Inspired Video as the Link'),
+                                    required=False)
+    
     class Meta:
         model = Banner
         fields = ['title', 'description', 'image', 'link']

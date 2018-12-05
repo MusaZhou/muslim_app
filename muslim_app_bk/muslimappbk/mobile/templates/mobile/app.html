@@ -65,7 +65,7 @@
                 
             </div>
             <div class="row align-items-center mx-0">
-                <div class="rating star-icon value-{{ mobile_app.ratings.last.average|default:'5'|floatformat:'0' }} color-positive">
+                <div class="rating star-icon value-{{ mobile_app.ratings.last.average|default:'5'|floatformat }} color-positive">
                     {% include 'showcase/star.html' %}
                 </div>
             </div>

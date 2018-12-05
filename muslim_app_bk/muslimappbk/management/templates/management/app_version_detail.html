@@ -54,7 +54,7 @@
           <div class="row">
             <span class="col">{% trans 'Statistic(Download, Comment, Average Rate)' %} </span>
             {% get_comment_count for mobile_app as comment_count %}
-            <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.rating.average|default:5 }}</span>
+            <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.ratings.last.average|default:5:floatformat }}</span>
           </div>
           <div class="row">
             <span class="col">{% trans 'Application Activation' %}</span>

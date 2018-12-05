@@ -51,6 +51,14 @@
                         <label>{{ bannerForm.app_list.label }}</label>
                         {% render_field bannerForm.app_list class="form-control" id="app_list" %}
                       </div>
+                      <div class="form-group">
+                        <label>{{ bannerForm.pdf_list.label }}</label>
+                        {% render_field bannerForm.pdf_list class="form-control" id="pdf_list" %}
+                      </div>
+                      <div class="form-group">
+                        <label>{{ bannerForm.video_list.label }}</label>
+                        {% render_field bannerForm.video_list class="form-control" id="video_list" %}
+                      </div>
                       <div class="form-group" style="margin-left: 0">
                           <label>{{ bannerForm.image.label }}</label>
                             {% render_field bannerForm.image id="image_input"%}
@@ -88,7 +96,7 @@
     	displayImage(file, $('#image_img'));
     });
       
-    $('#app_list').change(function(){
+    $('#app_list,#pdf_list,#video_list').change(function(){
        var selected_value = $(this).val();
        $('#banner_link').val(selected_value);
     });
