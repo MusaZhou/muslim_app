@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 {% load i18n %}
 
-{% block title %}Applications Table{% endblock %}
+{% block title %}{% trans 'Applications Table' %}{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
 <style>
@@ -121,6 +121,8 @@
             var row_index = $(this).parents('tr').index();
             $(this).text(page_start_index + row_index);
         });
+        
+        setActiveMenu(1);
     });
 </script>
 {% endblock %}

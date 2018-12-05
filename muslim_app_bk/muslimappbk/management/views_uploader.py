@@ -1,7 +1,7 @@
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic import View
-from management.models import Image, MobileApp, AppVersion
+from management.models import Image, MobileApp, AppVersion, PDFDoc, InspiredVideo, VideoAlbum
 from django.core.paginator import Paginator, Page
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.mixins import PermissionRequiredMixin
@@ -26,3 +26,24 @@ class AppHistoryUploaderView(View):
     
     def post(self, request, *args, **kwargs):
         pass
+
+@method_decorator(login_required, name='dispatch')      
+class PDFListViewUploader(View):
+    def get(self, request, *args, **kwargs):
+        pdf_list = PDFDoc.objects.filter(upload_by=request.user)
+        context = {'pdf_list': pdf_list}
+        return render(request, 'management/uploader/pdf_table_uploader.html', context)
+
+@method_decorator(login_required, name='dispatch')
+class InspiredVideoListUploaderView(View):
+    def get(self, request, *args, **kwargs):
+        video_list = InspiredVideo.objects.filter(upload_by=request.user)
+        context = {'video_list': video_list}
+        return render(request, 'management/uploader/inspired_video_table_uploader.html', context)
+
+@method_decorator(login_required, name='dispatch')
+class VideoAlbumListUploaderView(View):
+    def get(self, request, *args, **kwargs):
+        album_list = VideoAlbum.objects.filter(upload_by=request.user)
+        context = {'album_list': album_list}
+        return render(request, 'management/uploader/inspired_video_table_uploader.html', context)

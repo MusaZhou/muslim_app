@@ -2,7 +2,7 @@
 {% load static %}
 {% load widget_tweaks %}
 {% load i18n %}
-{% block title %}Add Application{% endblock %}
+{% block title %}{% trans 'Add Application' %}{% endblock %}
 {% block stylesheet %}
   {{ block.super }}
   <link href="{% static 'taggit_labels/css/taggit_labels.css' %}" rel="stylesheet">

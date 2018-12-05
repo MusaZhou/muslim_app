@@ -22,6 +22,13 @@
     }
   </style>
 {% endblock %}
+{% block sidebar %}
+    {% if perms.management.can_approve_app %}
+        {% include 'management/sidebar.html' %}
+    {% else %}
+        {% include 'management/uploader/sidebar_uploader.html' %}
+    {% endif %}
+{% endblock %}
 {% block mainContent %}
           {% if not slug %}
             <form id="pdf_form" method="POST" action="{% url 'management:add_pdf' %}" enctype="multipart/form-data">

@@ -91,6 +91,13 @@ class InspiredVideoForm(ModelForm):
     class Meta:
         model = InspiredVideo
         fields = ['video_id', 'image_id', 'title', 'description', 'tags', 'slug', 'upload_by', 'album', 'video_path']
+        
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user', None)
+        super(InspiredVideoForm, self).__init__(*args, **kwargs)
+        
+        if not user.has_perm('management.can_approve_app'):
+            self.fields['album'].queryset = VideoAlbum.objects.filter(upload_by=user)
 
 class VideoAlbumForm(ModelForm):
     image_id = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'id':'image_id'}))

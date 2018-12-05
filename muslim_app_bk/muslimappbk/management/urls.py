@@ -3,7 +3,8 @@ from . import views, views_pdf, views_inspired_video
 # from .views import ImageFieldView
 from .views import UpdateMobileAppView,  AppTableBasicView,\
 AddAppVersionView, AppHistoryView, VersionDetailView
-from .views_uploader import AppTableUploaderView, AppHistoryUploaderView
+from .views_uploader import AppTableUploaderView, AppHistoryUploaderView,\
+PDFListViewUploader, InspiredVideoListUploaderView, VideoAlbumListUploaderView
 from .views import BannerListView, BannerEditView, BannerDeleteView
 from django.views.decorators.cache import cache_page
 from .views_pdf import PDFListView, PDFEditView, PDFDeleteView, PDFDetailView
@@ -15,13 +16,10 @@ app_name = 'management'
 
 urlpatterns = [
     path('add_mobile_app', cache_page(24 * 60 * 60 * 15)(views.add_mobile_app), name='add_mobile_app'),
-#     path('add_app_images', ImageFieldView.as_view(), name='add_app_images'),
     path('update_mobile_app/<str:slug>', UpdateMobileAppView.as_view(), name='update_mobile_app'),
     path('add_app_version/<str:slug>', cache_page(24 * 60 * 60 * 15)(AddAppVersionView.as_view()), name='add_app_version'),
     path('app_table_basic', AppTableBasicView.as_view(), name='app_table_basic'),
     path('app_history/<str:slug>', AppHistoryView.as_view(), name='app_history'),
-    path('app_table_uploader', AppTableUploaderView.as_view(), name='app_table_uploader'),
-    path('app_history_uploader/<str:slug>', AppHistoryUploaderView.as_view(), name='app_history_uploader'),
     path('version_detail/<str:app_slug>-<str:version_number>', cache_page(24 * 60 * 60 * 15)(VersionDetailView.as_view()), name='version_detail'),
     path('update_version_status', views.update_version_status, name="update_version_status"),
     path('update_app_active', views.update_app_active, name="update_app_active"),
@@ -48,4 +46,12 @@ urlpatterns = [
     path('delete_video_album/<str:slug>', VideoAlbumDeleteView.as_view(), name="delete_video_album"),
     path('detail_video_album/<str:slug>', VideoAlbumDetailView.as_view(), name="detail_video_album"),
     path('update_video_album_status', views_inspired_video.update_video_album_status, name="update_video_album_status"),
+    
+    # Uploader path
+    path('app_table_uploader', AppTableUploaderView.as_view(), name='app_table_uploader'),
+    path('app_history_uploader/<str:slug>', AppHistoryUploaderView.as_view(), name='app_history_uploader'),
+    path('pdf_list_uploader', PDFListViewUploader.as_view(), name="pdf_list_uploader"),
+    path('inspired_video_list_uploader', InspiredVideoListUploaderView.as_view(), name="inspired_video_list_uploader"),
+    path('video_album_list_uploader', VideoAlbumListUploaderView.as_view(), name='video_album_list_uploader'),
+
 ]

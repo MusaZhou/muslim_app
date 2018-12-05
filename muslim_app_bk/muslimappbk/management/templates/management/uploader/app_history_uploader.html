@@ -68,3 +68,12 @@
             </div>
           </div>
 {% endblock %}
+{% block javascript %}
+  {{ block.super }}
+<script>
+    $(function(){
+        setActiveMenu(1);
+    });
+</script>
+    
+{% endblock %}

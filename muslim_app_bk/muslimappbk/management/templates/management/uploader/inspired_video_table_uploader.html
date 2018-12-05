@@ -1,7 +1,7 @@
-{% extends "management/index.html" %}
+{% extends "management/uploader/index_uploader.html" %}
 {% load i18n %}
 {% load l10n %}
-{% block title %}{% trans 'PDF Table' %}{% endblock %}
+{% block title %}{% trans 'Inspired Video Table' %}{% endblock %}
 {% block stylesheet %}
     {{ block.super }}
     <style>
@@ -14,9 +14,9 @@
 {% block mainContent %}
     <div class="container-fluid">
             <div class="row">
-                <h4 class="col-auto" style="margin-top: 5px;">{% trans 'PDF List' %}</h4>
-                <a class="btn btn-primary btn-sm cur-p add-new-version" href="{% url 'management:add_pdf' %}">
-                    {% trans 'Upload New PDF' %}
+                <h4 class="col-auto" style="margin-top: 5px;">{% trans 'Video List' %}</h4>
+                <a class="btn btn-primary btn-sm cur-p add-new-version" href="{% url 'management:add_inspired_video' %}">
+                    {% trans 'Upload New Video' %}
                 </a>
             </div>
             
@@ -29,9 +29,9 @@
                   <table id="dataTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                       <tr>
-                        <th>{% trans 'ID' %}</th>
+                        <th>{% trans 'No.' %}</th>
                         <th>{% trans 'Title' %}</th>
-                        <th>{% trans 'Description' %}</th>
+                        <th>{% trans 'Album' %}</th>
                         <th>{% trans 'Approve' %}</th>
                         <th>{% trans 'Remark' %}</th>
                         <th>{% trans 'Detail' %}</th>
@@ -41,9 +41,9 @@
                     </thead>
                     <tfoot>
                       <tr>
-                        <th>{% trans 'ID' %}</th>
+                        <th>{% trans 'No' %}</th>
                         <th>{% trans 'Title' %}</th>
-                        <th>{% trans 'Description' %}</th>
+                        <th>{% trans 'Album' %}</th>
                         <th>{% trans 'Approve' %}</th>
                         <th>{% trans 'Remark' %}</th>
                         <th>{% trans 'Detail' %}</th>
@@ -52,21 +52,21 @@
                       </tr>
                     </tfoot>
                     <tbody>
-                      {% for pdf in pdf_list %}
+                      {% for video in video_list %}
                       <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ pdf.title }}</td>
-                        <td>{{ pdf.description|truncatewords:30 }}</td>
-                        <td>{{ pdf.approve_status }}</td>
-                        <td>{{ pdf.remark }}</td>
+                        <td>{{ video.title }}</td>
+                        <td>{{ video.album.title|default_if_none:"" }}</td>
+                        <td>{{ video.approve_status }}</td>
+                        <td>{{ video.remark }}</td>
                         <td>
-                            <a href="{% url 'management:detail_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
+                            <a href="{% url 'management:detail_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Detail' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:edit_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
+                            <a href="{% url 'management:edit_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:delete_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
+                            <a href="{% url 'management:delete_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
                         </td>
                       </tr>
                       {% endfor %}
@@ -82,7 +82,7 @@
 <script>
     $(function(){
         var dataTable = $('#dataTable').DataTable();       
-        setActiveMenu(2);
+        setActiveMenu(3);
     });
 </script>
 {% endblock %}

@@ -47,10 +47,10 @@ class InspiredVideoEditView(View):
             slug = kwargs['slug']
             inspired_video = get_object_or_404(InspiredVideo, slug=slug)
             self.append_initial_video(inspired_video, initial_data)
-            video_form = InspiredVideoForm(instance=inspired_video, initial=initial_data)
+            video_form = InspiredVideoForm(instance=inspired_video, initial=initial_data, user=request.user)
         else:
             slug = None
-            video_form = InspiredVideoForm(initial=initial_data)
+            video_form = InspiredVideoForm(initial=initial_data, user=request.user)
             
         context = {'video_form': video_form, 
                    'slug': slug}    
@@ -62,10 +62,10 @@ class InspiredVideoEditView(View):
             slug = kwargs['slug']
             inspired_video = get_object_or_404(InspiredVideo, slug=kwargs['slug'])
             self.append_initial_video(inspired_video, initial_data)
-            video_form = InspiredVideoForm(request.POST, instance=inspired_video, initial=initial_data)
+            video_form = InspiredVideoForm(request.POST, instance=inspired_video, initial=initial_data, user=request.user)
         else:
             slug = None
-            video_form = InspiredVideoForm(request.POST, initial=initial_data)
+            video_form = InspiredVideoForm(request.POST, initial=initial_data, user=request.user)
             
         if video_form.is_valid():
             inspired_video = video_form.save()
