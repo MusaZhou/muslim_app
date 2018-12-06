@@ -3,7 +3,6 @@ from django.conf import settings
 from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelation
 from django.contrib.contenttypes.models import ContentType
 from django.core import validators
-from django.core.exceptions import ValidationError
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from .choices import ACTIVE_CHOICES, APPROVE_CHOICES, GENDER_CHOICES
@@ -16,13 +15,43 @@ from ordered_model.models import OrderedModel
 from taggit.managers import TaggableManager
 from django.db.models import Q
 import datetime
+from model_utils.models import SoftDeletableModel
+
+class ApprovableModel(models.Model):
+    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
+                                  verbose_name=_('Uploader'), related_name="%(class)s_uploaded")
+    upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
+    approve_status = models.CharField(max_length=10, choices=APPROVE_CHOICES,
+                                      default='new', verbose_name=_('Approve Status'))
+    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True,
+                                    on_delete=models.CASCADE, related_name="%(class)s_approved",
+                                    verbose_name=_('Approved By'))
+    approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
+    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
+    
+    class Meta:
+        abstract = True
+        ordering = ['-upload_time']
+    
+class CommonActionModel(models.Model):
+    tags = TaggableManager()
+    ratings = GenericRelation(Rating, related_query_name='rating_%(class)s')
+    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
+                            validators=[validators.validate_unicode_slug])
+    
+    class Meta:
+        abstract = True
+    
+class CommonApprovableModel(ApprovableModel, CommonActionModel, SoftDeletableModel):
+    class Meta:
+        abstract = True
 
 class ApprovedManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(approve_status='approved')
     
 # Create your models here.
-class Profile(models.Model):
+class Profile(SoftDeletableModel):
     nick_name = models.CharField(max_length=50, blank=True, null=True, verbose_name=_("Nick Name"))
     gender =models.CharField(max_length=10, verbose_name=_("Gender"),
                              choices=GENDER_CHOICES, default='male')
@@ -50,7 +79,7 @@ def update_user_profile(sender, instance, created, **kwargs):
             Profile.objects.create(user=instance)
         instance.profile.save()
 
-class Image(models.Model):
+class Image(SoftDeletableModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
@@ -63,7 +92,7 @@ class Image(models.Model):
     def __str__(self):
         return self.picture.url
     
-class Video(models.Model):
+class Video(SoftDeletableModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.PositiveIntegerField(null=True)
     content_object = GenericForeignKey()
@@ -73,7 +102,7 @@ class Video(models.Model):
     height = models.PositiveIntegerField(null=True)
     duration = models.PositiveIntegerField(null=True)
 
-class AppCategory(models.Model):
+class AppCategory(SoftDeletableModel):
     name = models.CharField(max_length=100, verbose_name=_('Category'))
 
     def __str__(self):
@@ -93,7 +122,7 @@ class UploadOrderManager(models.Manager):
         return super().get_queryset().order_by('-upload_date')
         
 
-class MobileApp(OrderedModel):
+class MobileApp(SoftDeletableModel, OrderedModel, CommonActionModel):
     name = models.CharField(max_length=100,unique=True,
                             db_index=True, verbose_name=_('App Name'))
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
@@ -103,14 +132,10 @@ class MobileApp(OrderedModel):
     category = models.ForeignKey(AppCategory, on_delete=models.CASCADE)
     comment_count = models.PositiveIntegerField(null=True, verbose_name=_('Comment Count'), default=0)
     download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
-    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
-                            validators=[validators.validate_unicode_slug])
     images = GenericRelation(Image, related_query_name='imaged_app', verbose_name=_('Screenshots'))
-    tags = TaggableManager()
     is_active = models.BooleanField(default=False, verbose_name=_('Active Status'))
     icon = models.ImageField(upload_to="icons")
     developer = models.CharField(max_length=100, blank=True, null=True, verbose_name=_("Developer"))
-    ratings = GenericRelation(Rating, related_query_name='rating_apps')
     videos = GenericRelation(Video, related_query_name='video_app', verbose_name=_('Video Show'))
     
     order_with_respect_to = 'category'
@@ -176,7 +201,7 @@ class MobileApp(OrderedModel):
             return last_rating.average
         return 5.0
            
-class AppVersion(models.Model):
+class AppVersion(SoftDeletableModel):
     version_number = models.CharField(max_length=10,
                                       validators=[validators.RegexValidator("[a-zA-Z0-9\.]*")],
                                       verbose_name=_('Version No.'))
@@ -206,19 +231,19 @@ class AppVersion(models.Model):
     def __str__(self):
         return self.version_number
 
-class ApkFile(models.Model):
+class ApkFile(SoftDeletableModel):
     app_version = models.OneToOneField(AppVersion, on_delete=models.CASCADE, null=True, related_name='apk')
     file = models.FileField(upload_to="apk", blank=True, null=True,verbose_name=_("APK File"), \
                             validators=[validators.FileExtensionValidator(['apk', 'xapk'])])
 
-class Download(models.Model):
+class Download(SoftDeletableModel):
     download_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Download At'))
     os = models.CharField(max_length=100, verbose_name=_('Operating System'))
     mobile = models.CharField(max_length=100, verbose_name=_('Mobile Phone'))
     app = models.ForeignKey(MobileApp,on_delete=models.CASCADE,
                             null=True, verbose_name=_('Application'))
 
-class Banner(models.Model):
+class Banner(SoftDeletableModel):
     title = models.CharField(verbose_name=_('Title'), max_length=100)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
     image = models.ImageField(upload_to='banners', verbose_name=_('Banner Image'), null=True, blank=True)
@@ -233,25 +258,10 @@ class AppCommentModerator(XtdCommentModerator):
 
 moderator.register(MobileApp, AppCommentModerator)
  
-class PDFDoc(models.Model):
+class PDFDoc(CommonApprovableModel):
     title = models.CharField(verbose_name=_('Title'), max_length=200, unique=True)
     description = models.TextField(verbose_name=_('Description'), blank=True, null=True)
-    tags = TaggableManager()
-    upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
-    approve_status = models.CharField(max_length=10,
-                                      choices=APPROVE_CHOICES,
-                                      default='new', verbose_name=_('Approve Status'))
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                    null=True, blank=True, verbose_name=_('Approved By'),\
-                                    related_name='pdf_approved')
-    approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
-    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                  verbose_name=_('Uploader'), related_name='pdf_uploaded')
     download_count = models.PositiveIntegerField(null=True, verbose_name=_('Download Count'), default=0)
-    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
-                            validators=[validators.validate_unicode_slug])
-    ratings = GenericRelation(Rating, related_query_name='rating_pdf')
-    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     author = models.CharField(max_length=100, null=True, blank=True, verbose_name=_('Author'))
     publish_year = models.DateField(null=True, blank=True, verbose_name=_('Publish Year'))
     
@@ -288,22 +298,12 @@ class PDFFile(models.Model):
     file = models.FileField(upload_to="pdf", blank=True, null=True,verbose_name=_("PDF File"), \
                             validators=[validators.FileExtensionValidator(['pdf'])])
     
-class VideoAlbum(models.Model):
+class VideoAlbum(ApprovableModel):
     title = models.CharField(max_length=100, verbose_name=_('Title'), unique=True) 
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
-    upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
-    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
-                                      default='new', verbose_name=_('Approve Status'))
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                    null=True, blank=True, verbose_name=_('Approved By'),\
-                                    related_name='album_approved')
-    approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
-    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                  verbose_name=_('Uploader'), related_name='album_uploaded')
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
                             validators=[validators.validate_unicode_slug])
     images = GenericRelation(Image, related_query_name='imaged_video_album', verbose_name=_('Public Image'))
-    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     
     objects = models.Manager()
     approved_albums = ApprovedManager()
@@ -326,24 +326,10 @@ class ShownInspiredVideoManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(Q(approve_status='approved') & (Q(album__approve_status='approved') | Q(album__isnull=True)))
             
-class InspiredVideo(models.Model):
+class InspiredVideo(CommonApprovableModel):
     video = GenericRelation(Video, related_query_name='video_controller', verbose_name=_('video'))
     title = models.CharField(max_length=100, verbose_name=_('title'), unique=True)
     description = models.TextField(blank=True, null=True, verbose_name=_('description'))
-    tags = TaggableManager()
-    upload_time = models.DateTimeField(auto_now_add=True, verbose_name=_('Upload Time'), db_index=True)
-    approve_status = models.CharField(max_length=10,choices=APPROVE_CHOICES,
-                                      default='new', verbose_name=_('Approve Status'))
-    approved_by = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,
-                                    null=True, blank=True, verbose_name=_('Approved By'),\
-                                    related_name='video_approved')
-    approved_time = models.DateTimeField(null=True, blank=True, verbose_name=_('Approved Time'))
-    upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
-                                  verbose_name=_('Uploader'), related_name='video_uploaded')
-    slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
-                            validators=[validators.validate_unicode_slug])
-    ratings = GenericRelation(Rating, related_query_name='rating_video')
-    remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     album = models.ForeignKey(VideoAlbum, null=True, blank=True, verbose_name=_("Album"),on_delete=models.CASCADE,\
                               related_name='album_videos')
     view_count = models.PositiveIntegerField(verbose_name=_("View Count"), default=0)
