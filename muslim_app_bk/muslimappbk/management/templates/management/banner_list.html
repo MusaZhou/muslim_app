@@ -37,7 +37,7 @@
                             <td>{{ banner.title }}</td>
                             <td>{{ banner.description }}</td>
                             <td>{{ banner.link }}</td>
-                            <td><img src="{{ banner.image.url }}!banner.thumbnail" ></td>
+                            <td>{% if banner.image %}<img src="{{ banner.image.url }}!banner.thumbnail" >{% endif %}</td>
                             <td>
                                 <a class="btn-primary btn" href="{% url 'management:edit_banner' banner.id %}">{% trans 'Edit' %}</a>
                             </td>

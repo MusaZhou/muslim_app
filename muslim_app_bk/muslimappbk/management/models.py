@@ -16,6 +16,7 @@ from taggit.managers import TaggableManager
 from django.db.models import Q
 import datetime
 from model_utils.models import SoftDeletableModel
+from model_utils.managers import SoftDeletableManagerMixin
 
 class ApprovableModel(models.Model):
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
@@ -46,7 +47,7 @@ class CommonApprovableModel(ApprovableModel, CommonActionModel, SoftDeletableMod
     class Meta:
         abstract = True
 
-class ApprovedManager(models.Manager):
+class ApprovedManager(SoftDeletableManagerMixin, models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(approve_status='approved')
     
@@ -108,7 +109,7 @@ class AppCategory(SoftDeletableModel):
     def __str__(self):
         return self.name
     
-class ActiveAppManager(models.Manager):
+class ActiveAppManager(SoftDeletableManagerMixin, models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(is_active=True)
     
@@ -117,7 +118,7 @@ class ShownAppManager(ActiveAppManager):
         qs_appversion = AppVersion.approved_manager.values_list('mobile_app', flat=True).distinct()
         return super().get_queryset().filter(id__in=qs_appversion)
     
-class UploadOrderManager(models.Manager):
+class UploadOrderManager(SoftDeletableManagerMixin, models.Manager):
     def get_queryset(self):
         return super().get_queryset().order_by('-upload_date')
         
@@ -322,7 +323,7 @@ class VideoAlbum(ApprovableModel):
     def get_image(self):
         return self.images.last()
 
-class ShownInspiredVideoManager(models.Manager):
+class ShownInspiredVideoManager(SoftDeletableManagerMixin, models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(Q(approve_status='approved') & (Q(album__approve_status='approved') | Q(album__isnull=True)))
             
@@ -384,13 +385,13 @@ class InspiredVideo(CommonApprovableModel):
 @receiver(post_save, sender=PDFDoc)
 def add_rating(sender, instance, **kwargs):
     if sender.__name__ == 'MobileApp':
-        if not Rating.objects.filter(rating_apps=instance).exists():
+        if not Rating.objects.filter(rating_mobileapp=instance).exists():
             Rating.objects.rate(instance, 5, '127.0.0.1')
             
     if sender.__name__ == 'PDFDoc':
-        if not Rating.objects.filter(rating_pdf=instance).exists():
+        if not Rating.objects.filter(rating_pdfdoc=instance).exists():
             Rating.objects.rate(instance, 5, '127.0.0.1')
     
     if sender.__name__ == 'InspiredVideo':
-        if not Rating.objects.filter(rating_video=instance).exists():
+        if not Rating.objects.filter(rating_inspiredvideo=instance).exists():
             Rating.objects.rate(instance, 5, '127.0.0.1')
