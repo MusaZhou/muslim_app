@@ -1,6 +1,10 @@
 from django.urls import path, include, re_path
 from django.conf import settings
 from . import views
+from rest_framework import routers
+from .app_viewset import AppViewSet
+from .doc_viewset import DocViewSet
+from .video_viewset import VideoViewSet
 
 app_name = 'api'
 
@@ -17,4 +21,11 @@ urlpatterns = [
     path('inspired_video_list', views.InspiredVideoListView.as_view(), name="inspired_video_list"),
     path('get_file_upload_signature', views.get_file_upload_signature, name="get_file_upload_signature")
 ]
+
+router = routers.DefaultRouter()
+router.register('apps', AppViewSet, 'app')
+router.register('docs', DocViewSet, 'doc')
+router.register('videos', VideoViewSet, 'video')
+
+urlpatterns += router.urls
 
