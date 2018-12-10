@@ -47,6 +47,4 @@ def test(request):
     return HttpResponse(slugify('测试', allow_unicode=True))
 
 def test_view(request):
-    upyun = default_storage.up
-    context = {'upyun_url': 'http://%s/%s' % (upyun.endpoint, upyun.service)}
-    return render(request, 'basic/test.html', context)
+    return render(request, 'basic/test.html')

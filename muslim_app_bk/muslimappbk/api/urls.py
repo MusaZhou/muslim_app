@@ -1,6 +1,6 @@
 from django.urls import path, include, re_path
 from django.conf import settings
-from . import views
+from . import views, common_apiview
 from rest_framework import routers
 from .app_viewset import AppViewSet
 from .doc_viewset import DocViewSet
@@ -28,4 +28,17 @@ router.register('docs', DocViewSet, 'doc')
 router.register('videos', VideoViewSet, 'video')
 
 urlpatterns += router.urls
+
+testurlpatterns = [
+    path('test_get_video_upload_signature', common_apiview.get_video_upload_signature, name='test_get_video_upload_signature'),
+    path('test_process_video_notify', common_apiview.process_video_notify, name='test_process_video_notify'),
+    path('test_notify_video_process_task', common_apiview.notify_video_process_task, name='test_notify_video_process_task'),
+    path('test_get_image_upload_signature', common_apiview.get_image_upload_signature, name='test_get_image_upload_signature'),
+    path('test_notify_image_process_task', common_apiview.notify_image_process_task, name='test_notify_image_process_task'),
+    path('test_image_thumbnail_notify', common_apiview.image_thumbnail_notify, name='test_image_thumbnail_notify'),
+    path('test_process_video_thumbnail_notify', common_apiview.process_video_thumbnail_notify, name="test_process_video_thumbnail_notify"),
+    path('test_get_file_upload_signature', common_apiview.get_file_upload_signature, name="test_get_file_upload_signature")
+]
+
+urlpatterns += testurlpatterns
 

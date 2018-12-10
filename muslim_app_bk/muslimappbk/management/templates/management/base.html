@@ -107,7 +107,7 @@
 
         setActiveMenu(1);
         
-        function getImageUploadSignature(fileName, folderName, thumbnail_pattern){
+  function getImageUploadSignature(fileName, folderName, thumbnail_pattern){
       return $.ajax({
                     url: "{% url 'api:get_image_upload_signature' %}",
                     method: 'POST',

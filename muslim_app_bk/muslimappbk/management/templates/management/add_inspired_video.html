@@ -218,7 +218,7 @@
           return $.ajax({
                       url: "{% url 'api:notify_video_process_task' %}",
                       method: 'POST',
-                      data: {'task_ids': JSON.stringify(response.task_ids)}
+                      data: {'task_ids': JSON.stringify(response.task_ids)},
                   });
       }else{
           console.log('notify task failed');
