@@ -1,19 +1,17 @@
-from rest_framework import viewsets, status
-from management.models import PDFDoc
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status, viewsets
+from management.models import VideoAlbum
 from rest_framework.response import Response
+from rest_framework.decorators import action
+import json, logging
+from rest_framework.permissions import IsAuthenticated
 from .permissions import ApproveAppPermission
 from datetime import datetime
-from rest_framework.decorators import action
 
-class DocViewSet(viewsets.ModelViewSet):
-    queryset = PDFDoc.objects.all()   
+logger = logging.getLogger(__name__)
+
+class VideoAlbumViewSet(viewsets.ModelViewSet):
+    queryset = VideoAlbum.objects.all()
     lookup_field = 'slug'
-    
-    def destroy(self, request, slug=None):
-        pdf = self.get_object()
-        pdf.delete()
-        return Response(status=status.HTTP_200_OK)
     
     def get_permissions(self):
         permission_classes = []
@@ -22,11 +20,16 @@ class DocViewSet(viewsets.ModelViewSet):
             
         return [permission() for permission in permission_classes]
     
+    def destroy(self, request, slug=None):
+        album = self.get_object()
+        album.delete()
+        return Response(status=status.HTTP_200_OK)
+    
     @action(detail=True, methods=['post'], permission_classes=[ApproveAppPermission])     
-    def update_pdf_status(self, request, slug=None):
+    def update_video_album_status(self, request, slug=None):
         status = request.data['approve_status']
         remark = request.data['remark']
-        PDFDoc.objects.filter(slug=slug).update(approve_status=status, 
+        VideoAlbum.objects.filter(slug=slug).update(approve_status=status, 
                                                             approved_time=datetime.now(), 
                                                             approved_by=request.user, 
                                                             remark=remark)

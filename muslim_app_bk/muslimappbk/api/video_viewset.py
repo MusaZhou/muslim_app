@@ -6,6 +6,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.db.models import F
 import json, logging
+from rest_framework.permissions import IsAuthenticated
+from .permissions import ApproveAppPermission
+from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +16,13 @@ class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = InspiredVideoSerializer
     queryset = InspiredVideo.objects.all()
     lookup_field = 'slug'
+    
+    def get_permissions(self):
+        permission_classes = []
+        if self.action == 'destroy':
+            permission_classes.append(IsAuthenticated)
+            
+        return [permission() for permission in permission_classes]
     
     def list(self, request):
         page = int(self.request.query_params.get('page', 1))
@@ -38,7 +48,22 @@ class VideoViewSet(viewsets.ModelViewSet):
         
         return Response(serializer.data)
     
+    def destroy(self, request, slug=None):
+        video = self.get_object()
+        video.delete()
+        return Response(status=status.HTTP_200_OK)
+    
     @action(detail=True, methods=['post'])
     def video_view_count(self, request, slug=None):
         InspiredVideo.objects.filter(slug=slug).update(view_count=F('view_count')+1)
         return Response(status=status.HTTP_200_OK)
+    
+    @action(detail=True, methods=['post'], permission_classes=[ApproveAppPermission])     
+    def update_pdf_status(self, request, slug=None):
+        status = request.data['approve_status']
+        remark = request.data['remark']
+        InspiredVideo.objects.filter(slug=slug).update(approve_status=status, 
+                                                            approved_time=datetime.now(), 
+                                                            approved_by=request.user, 
+                                                            remark=remark)
+        return Response({'status': 1})

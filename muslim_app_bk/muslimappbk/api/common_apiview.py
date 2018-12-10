@@ -2,12 +2,12 @@ from management.models import Video, Image
 from rest_framework.response import Response
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.core.files.storage import default_storage
 from upyun.modules import sign
 from upyun.modules.httpipe import cur_dt
 import base64, time, json, logging, os
-from django.urls import reverse
+from rest_framework.permissions import IsAuthenticated
 from django.urls.conf import path
 from management.tasks import update_video_path_task, update_image_path_task, update_video_thumbnail_task
 
@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 # @csrf_exempt
 @api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def get_video_upload_signature(request):
     logger.debug('---------------')
     logger.debug(request.data)
@@ -95,6 +96,7 @@ def process_video_notify(request):
 
 @csrf_exempt
 @api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def process_video_thumbnail_notify(request):
     logger.info('process_video_thumbnail_notify:')
     logger.info(request.data)
@@ -127,6 +129,7 @@ def _image_tasks(request, save_key, thumbnail_pattern):
 # @csrf_exempt
 # folder_name: such folder name will be composed into picutre/{folder_name}/original/....
 @api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def get_image_upload_signature(request):
     file_name, ext = os.path.splitext(request.data['file_name'])
     folder_name = request.POST['folder_name']
@@ -160,6 +163,7 @@ def get_image_upload_signature(request):
     return Response(data)
 
 @api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def notify_image_process_task(request):
     task_id = request.data['task_id']
     original_path = request.data['original_path'].replace(settings.MEDIA_URL, '', 1)
@@ -189,6 +193,7 @@ def image_thumbnail_notify(request):
 
 # @csrf_exempt
 @api_view(['POST'])
+@permission_classes((IsAuthenticated, ))
 def get_file_upload_signature(request):
     file_name, ext = os.path.splitext(request.data['file_name'])
     folder_name = request.data['folder_name']

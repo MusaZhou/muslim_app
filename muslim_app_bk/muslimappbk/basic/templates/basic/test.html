@@ -11,6 +11,7 @@
           <div class="container-fluid">
             <div class="row">
                 <input type="file" onchange="fileChanged(this)">
+                <button type="button" onclick="callFunction()">Call Function</button>
             </div>
           </div>
 {% endblock %}
@@ -133,6 +134,15 @@
           console.log('notify task failed');
           throw "notify task failed";
       } 
+  }
+    
+  function callFunction(){
+      $.ajax({
+          url: '{% url "api:doc-detail" "test7" %}',
+          method: 'DELETE',
+      }).done(function(response){
+          console.log(response);
+      });
   }
 </script>
 {% endblock %}

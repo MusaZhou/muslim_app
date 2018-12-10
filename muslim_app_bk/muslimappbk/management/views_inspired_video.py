@@ -3,19 +3,10 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.views.generic import View
 from management.models import InspiredVideo, VideoAlbum, Video, Image
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.mixins import PermissionRequiredMixin
 from management.forms import InspiredVideoForm, VideoAlbumForm
-from django.core.files.uploadhandler import TemporaryFileUploadHandler
-from django.views.decorators.csrf import csrf_exempt, csrf_protect 
-from django.conf import settings
-from management.tasks import upload_file_task
 from django.http import JsonResponse
 from datetime import datetime
-from django.core.files.storage import default_storage
-from upyun.modules import sign
-from upyun.modules.httpipe import cur_dt
-import base64, time, json, logging, os, random, string
-from django.db.models.fields import related
+import logging
 
 logger = logging.getLogger(__name__)
 

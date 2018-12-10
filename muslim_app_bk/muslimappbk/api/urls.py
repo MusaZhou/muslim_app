@@ -5,6 +5,7 @@ from rest_framework import routers
 from .app_viewset import AppViewSet
 from .doc_viewset import DocViewSet
 from .video_viewset import VideoViewSet
+from .video_album_viewset import VideoAlbumViewSet
 
 app_name = 'api'
 
@@ -26,6 +27,7 @@ router = routers.DefaultRouter()
 router.register('apps', AppViewSet, 'app')
 router.register('docs', DocViewSet, 'doc')
 router.register('videos', VideoViewSet, 'video')
+router.register('video_albums', VideoAlbumViewSet, 'video-album')
 
 urlpatterns += router.urls
 
