@@ -68,7 +68,7 @@
                       <div class="form-group row pl-3">
                         <button type="button" class="button btn-primary btn col-md-2" id="video_input_btn">{% trans 'Video Upload' %}</button>
                         <input type="file" id="video_input" accept="video/*" style="display:none">
-                        <div class="col-md-10 d-none" id="progress-div">
+                        <div class="col-md-10 d-none progress-div">
                           <div class="progress" style="height:90%; width:100%">
                            <div id="video_upload_progress" class="progress-bar bg-success" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
                           </div>
@@ -137,10 +137,10 @@
         var file = this.files[0];
         var fileSize = file.size;
         var fileName = file.name;
-        getUploadSignature(fileSize, fileName).then(function(response){
-            return uploadVideo(response, file);
+        getVideoUploadSignature(fileSize, fileName).then(function(response){
+            return uploadFile(response, '#video_upload_progress',  file);
         }).then(function(response){
-            return notifyTask(response);
+            return notifyVideoTask(response);
         }).then(function(response){
             var video_id = response.video_id;
             var image_id = response.image_id;
@@ -160,70 +160,5 @@
       });
     setActiveMenu(4);
   });
-      
-  function getUploadSignature(fileSize, fileName){
-      return $.ajax({
-                url: "{% url 'api:get_video_upload_signature' %}",
-                method: 'POST',
-                data: {'file_size': fileSize, 
-                       'file_name': fileName},
-            });
-  }
-      
-  function uploadVideo(response, file){
-      $('#progress-div').removeClass('d-none');
-      var policy = response.policy;
-      var authorization = response.authorization;
-      var formData = new FormData();
-      formData.append('policy', policy);
-      formData.append('authorization', authorization);
-      formData.append('file', file);
-      return $.ajax({
-                  url: "{{ upyun_url }}",
-                  type: 'POST',
-                  data: formData,
-                  cache: false,
-                  processData: false, // Don't process the files
-                  contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-                  dataType: 'json',
-                  xhr: function()
-                  {
-                    var xhr = new window.XMLHttpRequest();
-                    //Upload progress
-                    xhr.upload.addEventListener("progress", function(evt){
-                      if (evt.lengthComputable) {
-                        var percentComplete = (evt.loaded / evt.total*100).toFixed(0) + '%';
-                        //Do something with upload progress
-                        console.log(percentComplete);
-                        $('#video_upload_progress').css('width', percentComplete);
-                        $('#video_upload_progress').text(percentComplete);
-                      }
-                    }, false);
-                    //Download progress
-                    xhr.addEventListener("progress", function(evt){
-                      if (evt.lengthComputable) {
-                        var percentComplete = evt.loaded / evt.total;
-                        //Do something with download progress
-                        console.log(percentComplete);
-                      }
-                    }, false);
-                    return xhr;
-                  },
-              });
-  }
-      
-  function notifyTask(response){
-      console.log(response);
-      if(response.code == 200){
-          return $.ajax({
-                      url: "{% url 'api:notify_video_process_task' %}",
-                      method: 'POST',
-                      data: {'task_ids': JSON.stringify(response.task_ids)},
-                  });
-      }else{
-          console.log('notify task failed');
-          throw "notify task failed";
-      }
-  }
   </script>
 {% endblock %}

@@ -17,7 +17,6 @@ logger = logging.getLogger(__name__)
 @api_view(['POST'])
 @permission_classes((IsAuthenticated, ))
 def get_video_upload_signature(request):
-    logger.debug('---------------')
     logger.debug(request.data)
     file_name, ext = os.path.splitext(request.data['file_name'])
     file_size = request.data['file_size']

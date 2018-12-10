@@ -116,6 +116,15 @@
                             'thumbnail_pattern': thumbnail_pattern},
                 });
   }
+        
+  function getVideoUploadSignature(fileSize, fileName){
+      return $.ajax({
+                url: "{% url 'api:get_video_upload_signature' %}",
+                method: 'POST',
+                data: {'file_size': fileSize, 
+                       'file_name': fileName},
+            });
+  }
 
   function getFileUploadSignature(fileName, folderName, big, fileSize){
       return $.ajax({
@@ -192,6 +201,20 @@
           console.log('notify task failed');
           throw "notify task failed";
       } 
+  }
+        
+  function notifyVideoTask(response){
+      console.log(response);
+      if(response.code == 200){
+          return $.ajax({
+                      url: "{% url 'api:notify_video_process_task' %}",
+                      method: 'POST',
+                      data: {'task_ids': JSON.stringify(response.task_ids)},
+                  });
+      }else{
+          console.log('notify task failed');
+          throw "notify task failed";
+      }
   }
     </script>
     {% endblock %}
