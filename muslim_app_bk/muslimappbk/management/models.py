@@ -16,7 +16,7 @@ from taggit.managers import TaggableManager
 from django.db.models import Q
 import datetime
 from model_utils.models import SoftDeletableModel
-from model_utils.managers import SoftDeletableManagerMixin
+from model_utils.managers import SoftDeletableManagerMixin, SoftDeletableManager
 
 class ApprovableModel(models.Model):
     upload_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True,
@@ -142,6 +142,7 @@ class MobileApp(SoftDeletableModel, OrderedModel, CommonActionModel):
     order_with_respect_to = 'category'
     
     objects = models.Manager()
+    exist_objects = SoftDeletableManager()
     active_apps = ActiveAppManager()
     shown_apps = ShownAppManager()
     upload_order = UploadOrderManager()
@@ -222,6 +223,7 @@ class AppVersion(SoftDeletableModel):
     remark = models.CharField(max_length=200, null=True, blank=True, verbose_name=_("Remark"))
     
     objects = models.Manager()
+    exist_objects = SoftDeletableManager()
     approved_manager = ApprovedManager()
     
     class Meta:
@@ -267,6 +269,7 @@ class PDFDoc(CommonApprovableModel):
     publish_year = models.DateField(null=True, blank=True, verbose_name=_('Publish Year'))
     
     objects = models.Manager()
+    exist_objects = SoftDeletableManager()
     approved_pdf = ApprovedManager()
     
     class Meta:
@@ -299,7 +302,7 @@ class PDFFile(models.Model):
     file = models.FileField(upload_to="pdf", blank=True, null=True,verbose_name=_("PDF File"), \
                             validators=[validators.FileExtensionValidator(['pdf'])])
     
-class VideoAlbum(ApprovableModel):
+class VideoAlbum(ApprovableModel, SoftDeletableModel):
     title = models.CharField(max_length=100, verbose_name=_('Title'), unique=True) 
     description = models.TextField(blank=True, null=True, verbose_name=_('Description'))
     slug = models.CharField(unique=True, null=True, blank=True, db_index=True, max_length=100, \
@@ -307,6 +310,7 @@ class VideoAlbum(ApprovableModel):
     images = GenericRelation(Image, related_query_name='imaged_video_album', verbose_name=_('Public Image'))
     
     objects = models.Manager()
+    exist_objects = SoftDeletableManager()
     approved_albums = ApprovedManager()
     
     class Meta:
@@ -337,6 +341,7 @@ class InspiredVideo(CommonApprovableModel):
     images = GenericRelation(Image, related_query_name='thumnail_video')
     
     objects = models.Manager()
+    exist_objects = SoftDeletableManager()
     approved_videos = ApprovedManager()
     shown_videos = ShownInspiredVideoManager()
     

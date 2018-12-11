@@ -7,11 +7,20 @@ from rest_framework.decorators import action
 from django.db.models import F
 from .permissions import ApproveAppPermission
 from datetime import datetime
+from rest_framework.permissions import IsAuthenticated
 
 class AppViewSet(viewsets.ModelViewSet):
     serializer_class = AppSerializer
     queryset = MobileApp.objects.all()
     lookup_field = 'slug'
+    safe_actions = ['list', 'app_download_count']
+    
+    def get_permissions(self):
+        permission_classes = []
+        if self.action not in self.safe_actions:
+            permission_classes.append(IsAuthenticated)
+            
+        return [permission() for permission in permission_classes]
     
     def list(self, request):
         category_id = int(request.query_params.get('cate_id', 9999))
@@ -42,17 +51,13 @@ class AppViewSet(viewsets.ModelViewSet):
         status = request.data['approve_status']
         remark = request.data['remark']
         app = self.get_object()
+        now = datetime.now()
+        checker = request.user
         
         AppVersion.objects.filter(mobile_app=app, version_number=app_version_number)\
         .update(approve_status=status, 
-                approved_time=datetime.now(), 
-                approved_by=request.user, 
+                approved_time=now, 
+                approved_by=checker, 
                 remark=remark)
-        return Response({'status': 1})
-    
-    @action(detail=True, methods=['post'], permission_classes=[ApproveAppPermission])    
-    def update_app_active(self, request, slug=None):
-        app = self.get_object()
-        app.is_active = True if int(request.data['status']) == 1 else False
-        app.save()
-        return Response({'status': 1})
+        data = {'time': now.strftime('%m-%d-%Y %H:%M'), 'checker': checker.username, 'status': status}
+        return Response(data)

@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 @method_decorator(login_required, name='dispatch')    
 class InspiredVideoListView(View):
     def get(self, request, *args, **kwargs):
-        video_list = InspiredVideo.objects.all()
+        video_list = InspiredVideo.exist_objects.all()
         context = {'video_list': video_list}
         return render(request, 'management/inspired_video_table.html', context)
  
@@ -113,7 +113,7 @@ def update_inspired_video_status(request):
 @method_decorator(login_required, name='dispatch')    
 class VideoAlbumListView(View):
     def get(self, request, *args, **kwargs):
-        album_list = VideoAlbum.objects.all()
+        album_list = VideoAlbum.exist_objects.all()
         context = {'album_list': album_list}
         return render(request, 'management/video_album_list.html', context)
     
@@ -124,7 +124,7 @@ class VideoAlbumEditView(View):
     
     def append_initial_image(self, video_album, initial_data):
         image = video_album.get_image()
-        if image:
+        if image and image.thumbnail_picture:
             initial_data['image_id'] = image.id
             initial_data['image_path'] = image.thumbnail_picture.url
         

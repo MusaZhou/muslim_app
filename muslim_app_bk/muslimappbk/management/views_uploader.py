@@ -19,7 +19,7 @@ class AppTableUploaderView(View):
 @method_decorator(login_required, name='dispatch')    
 class AppHistoryUploaderView(View):
     def get(self, request, *args, **kwargs):
-        mobile_app = get_object_or_404(MobileApp, slug=kwargs['slug'])
+        mobile_app = get_object_or_404(MobileApp.exist_objects, slug=kwargs['slug'])
         app_version_list = mobile_app.versions.all()
         context = {'mobile_app': mobile_app, 'app_version_list': app_version_list}
         return render(request, 'management/uploader/app_history_uploader.html', context)
@@ -30,20 +30,20 @@ class AppHistoryUploaderView(View):
 @method_decorator(login_required, name='dispatch')      
 class PDFListViewUploader(View):
     def get(self, request, *args, **kwargs):
-        pdf_list = PDFDoc.objects.filter(upload_by=request.user)
+        pdf_list = PDFDoc.exist_objects.filter(upload_by=request.user)
         context = {'pdf_list': pdf_list}
         return render(request, 'management/uploader/pdf_table_uploader.html', context)
 
 @method_decorator(login_required, name='dispatch')
 class InspiredVideoListUploaderView(View):
     def get(self, request, *args, **kwargs):
-        video_list = InspiredVideo.objects.filter(upload_by=request.user)
+        video_list = InspiredVideo.exist_objects.filter(upload_by=request.user)
         context = {'video_list': video_list}
         return render(request, 'management/uploader/inspired_video_table_uploader.html', context)
 
 @method_decorator(login_required, name='dispatch')
 class VideoAlbumListUploaderView(View):
     def get(self, request, *args, **kwargs):
-        album_list = VideoAlbum.objects.filter(upload_by=request.user)
+        album_list = VideoAlbum.exist_objects.filter(upload_by=request.user)
         context = {'album_list': album_list}
         return render(request, 'management/uploader/inspired_video_table_uploader.html', context)

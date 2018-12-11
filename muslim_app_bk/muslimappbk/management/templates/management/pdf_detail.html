@@ -56,7 +56,7 @@
           </div>
           <div class="row">
             <span class="col">{{ pdfdoc|verbose_name:'approve_status' }}</span>
-            <span class="col attr-val">{{ pdfdoc.get_approve_status_display }}</span>
+            <span class="col attr-val doc-approve-status">{{ pdfdoc.get_approve_status_display }}</span>
           </div>
           <div class="row">
             <span class="col">{{ pdfdoc|verbose_name:'description'}}</span>
@@ -84,7 +84,7 @@
           </div>
           <div class="row">
             <span class="col">{% trans 'Checked By' %}</span>
-            <span class="col attr-val">{{ pdfdoc.approved_by }} {% trans 'at' %} {{ pdfdoc.approved_time }}</span>
+            <span class="col attr-val doc-checker">{{ pdfdoc.approved_by }} {% trans 'at' %} {{ pdfdoc.approved_time }}</span>
           </div>
           <div class="row justify-content-md-center align-items-center mt-2">
             {% if perms.management.can_approve_app %}
@@ -137,15 +137,13 @@
 {% block javascript %}
   {{ block.super }}
   <script>
-  var pdf_slug = "{{ pdfdoc.slug }}";
-  
   $(function(){
       $('#remarkModal').on('show.bs.modal', function (event) {
           var button = $(event.relatedTarget); // Button that triggered the modal
           var result = button.data('result');           
           var modal = $(this)
           modal.find('.modal-title span').text(result);
-          
+          $('#modal-btn-confirm').off('click');
           $('#modal-btn-confirm').on('click', function(){
               var remark = $('#modal-remark').val().trim();
               updateApprove(result, remark);
@@ -161,22 +159,21 @@
   });
 
   function updateApprove(approve_status, remark){
-	  $.ajax({
-          url: "{% url 'management:update_pdf_status' %}",
-          method: 'POST',
-          data: {
-              'pdf_slug': pdf_slug,
+      var data = {
               'approve_status': approve_status,
               'remark': remark,
-          }
-      }).done(function(response){
-          if (response.status = 1){
-              location.reload();
-          }else{
-              alert("{% trans 'server error' %}");
-          }
-          
+          };
+      var url = "{% url 'api:doc-update-pdf-status' pdfdoc.slug %}";
+	  callModelAction(url, data, 'POST').then(function(response){
+            updateUI(response);
       });
+  }
+      
+  function updateUI(response){
+      console.log(response);
+      $('.doc-approve-status').text(response.status);
+      $('.doc-checker').text(response.checker + ' updated at:' + response.time);
+      $('#remarkModal').modal('hide');
   }
   </script>
 {% endblock %}

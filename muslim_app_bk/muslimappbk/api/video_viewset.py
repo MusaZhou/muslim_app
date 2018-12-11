@@ -16,10 +16,11 @@ class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = InspiredVideoSerializer
     queryset = InspiredVideo.objects.all()
     lookup_field = 'slug'
+    safe_actions = ['list', 'video_view_count']
     
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'destroy':
+        if self.action not in self.safe_actions:
             permission_classes.append(IsAuthenticated)
             
         return [permission() for permission in permission_classes]
@@ -59,11 +60,14 @@ class VideoViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_200_OK)
     
     @action(detail=True, methods=['post'], permission_classes=[ApproveAppPermission])     
-    def update_pdf_status(self, request, slug=None):
+    def update_video_status(self, request, slug=None):
         status = request.data['approve_status']
         remark = request.data['remark']
+        now = datetime.now()
+        checker = request.user
         InspiredVideo.objects.filter(slug=slug).update(approve_status=status, 
-                                                            approved_time=datetime.now(), 
-                                                            approved_by=request.user, 
+                                                            approved_time=now, 
+                                                            approved_by=checker, 
                                                             remark=remark)
-        return Response({'status': 1})
+        data = {'time': now.strftime('%m-%d-%Y %H:%M'), 'checker': checker.username, 'status': status}
+        return Response(data)

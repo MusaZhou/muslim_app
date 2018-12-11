@@ -12,10 +12,11 @@ logger = logging.getLogger(__name__)
 class VideoAlbumViewSet(viewsets.ModelViewSet):
     queryset = VideoAlbum.objects.all()
     lookup_field = 'slug'
+    safe_actions = []
     
     def get_permissions(self):
         permission_classes = []
-        if self.action == 'destroy':
+        if self.action not in self.safe_actions:
             permission_classes.append(IsAuthenticated)
             
         return [permission() for permission in permission_classes]
@@ -29,8 +30,11 @@ class VideoAlbumViewSet(viewsets.ModelViewSet):
     def update_video_album_status(self, request, slug=None):
         status = request.data['approve_status']
         remark = request.data['remark']
+        now = datetime.now()
+        checker = request.user
         VideoAlbum.objects.filter(slug=slug).update(approve_status=status, 
-                                                            approved_time=datetime.now(), 
-                                                            approved_by=request.user, 
+                                                            approved_time=now, 
+                                                            approved_by=checker, 
                                                             remark=remark)
-        return Response({'status': 1})
+        data = {'time': now.strftime('%m-%d-%Y %H:%M'), 'checker': checker.username, 'status': status}
+        return Response(data)

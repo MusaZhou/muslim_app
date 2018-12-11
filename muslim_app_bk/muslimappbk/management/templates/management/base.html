@@ -216,6 +216,29 @@
           throw "notify task failed";
       }
   }
+        
+  function deleteModelObject(url){
+      return $.ajax({
+          url: url,
+          method: 'DELETE'
+      });
+  }
+        
+  function patialUpdateModelObject(url, data){
+      return $.ajax({
+          url: url,
+          method: 'PATCH',
+          data: data
+      });
+  }
+  
+  function callModelAction(url, data, method){
+      return $.ajax({
+          url: url,
+          method: method,
+          data: data
+      });
+  }
     </script>
     {% endblock %}
   </body>

@@ -19,7 +19,7 @@ logger = logging.getLogger(__name__)
 @method_decorator(login_required, name='dispatch')    
 class PDFListView(View):
     def get(self, request, *args, **kwargs):
-        pdf_list = PDFDoc.objects.all()
+        pdf_list = PDFDoc.exist_objects.all()
         context = {'pdf_list': pdf_list}
         return render(request, 'management/pdf_table.html', context)
  

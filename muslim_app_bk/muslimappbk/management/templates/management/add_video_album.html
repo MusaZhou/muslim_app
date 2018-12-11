@@ -125,7 +125,7 @@
         file = this.files[0];
         var fileName = file.name;
         getImageUploadSignature(fileName, 'album', 'videoalbum').then(function(response){
-            return uploadFile(response);
+            return uploadFile(response, '#image_upload_progress', file);
         }).then(function(response){
             return notifyImageTask(response);
         }).then(function(response){

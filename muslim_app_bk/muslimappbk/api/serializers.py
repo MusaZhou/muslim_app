@@ -9,7 +9,7 @@ class AppSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = MobileApp
-        fields = ('name', 'description', 'icon', 'slug', 'apk', 'url', 'url_mobile', 'avg_rate', 'time')
+        fields = ('name', 'description', 'icon', 'slug', 'apk', 'url', 'url_mobile', 'avg_rate', 'time', 'is_active')
         
 class InspiredVideoSerializer(serializers.ModelSerializer):
     url = serializers.CharField(source='userLink', read_only=True)

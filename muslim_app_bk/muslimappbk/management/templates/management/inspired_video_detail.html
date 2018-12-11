@@ -57,7 +57,7 @@
           </div>
           <div class="row">
             <span class="col">{{ inspired_video|verbose_name:'approve_status' }}</span>
-            <span class="col attr-val">{{ inspired_video.get_approve_status_display }}</span>
+            <span class="col attr-val video-approve-status">{{ inspired_video.get_approve_status_display }}</span>
           </div>
           <div class="row">
             <span class="col">{{ inspired_video|verbose_name:'description'}}</span>
@@ -81,7 +81,7 @@
           </div>
           <div class="row">
             <span class="col">{% trans 'Checked By' %}</span>
-            <span class="col attr-val">{{ inspired_video.approved_by }} {% trans 'at' %} {{ inspired_video.approved_time }}</span>
+            <span class="col attr-val video-checker">{{ inspired_video.approved_by }} {% trans 'at' %} {{ inspired_video.approved_time }}</span>
           </div>
           <div class="row justify-content-md-center align-items-center mt-2">
             {% if perms.management.can_approve_app %}
@@ -126,16 +126,14 @@
 {% endblock %}
 {% block javascript %}
   {{ block.super }}
-  <script>
-  var inspired_video_slug = "{{ inspired_video.slug }}";
-  
+  <script>  
   $(function(){
       $('#remarkModal').on('show.bs.modal', function (event) {
           var button = $(event.relatedTarget); // Button that triggered the modal
           var result = button.data('result');           
           var modal = $(this)
           modal.find('.modal-title span').text(result);
-          
+          $('#modal-btn-confirm').off('click');
           $('#modal-btn-confirm').on('click', function(){
               var remark = $('#modal-remark').val().trim();
               updateApprove(result, remark);
@@ -146,22 +144,22 @@
   });
 
   function updateApprove(approve_status, remark){
-	  $.ajax({
-          url: "{% url 'management:update_inspired_video_status' %}",
-          method: 'POST',
-          data: {
-              'inspired_video_slug': inspired_video_slug,
-              'approve_status': approve_status,
-              'remark': remark,
-          }
-      }).done(function(response){
-          if (response.status = 1){
-              location.reload();
-          }else{
-              alert("{% trans 'server error' %}");
-          }
-          
+      var data = {
+          'approve_status': approve_status,
+          'remark': remark,
+      };
+      var url = "{% url 'api:video-update-video-status' inspired_video.slug %}";
+      
+	  callModelAction(url, data, 'POST').then(function(response){
+          updateUI(response);
       });
+  }
+      
+  function updateUI(response){
+      console.log(response);
+      $('.video-approve-status').text(response.status);
+      $('.video-checker').text(response.checker + ' updated at:' + response.time);
+      $('#remarkModal').modal('hide');
   }
   </script>
 {% endblock %}

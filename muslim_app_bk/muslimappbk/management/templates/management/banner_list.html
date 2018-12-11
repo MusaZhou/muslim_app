@@ -42,7 +42,8 @@
                                 <a class="btn-primary btn" href="{% url 'management:edit_banner' banner.id %}">{% trans 'Edit' %}</a>
                             </td>
                             <td>
-                                <a class="btn-primary btn" href="{% url 'management:delete_banner' banner.id %}">{% trans 'Delete' %}</a>
+                                <a class="btn-primary btn" href="javascript:void(0);" 
+                               onclick="deleteBanner('{% url 'api:banner-detail' banner.id %}', this)">{% trans 'Delete' %}</a>
                             </td>
                           </tr>
                         {% empty %}
@@ -110,6 +111,12 @@
         
         setActiveMenu(3);
     });
+    
+    function deleteBanner(url, element){
+        deleteModelObject(url).then(function(response){
+            $(element).parents('tr').remove();
+        });
+    }
 </script>
 {% endblock %}
 

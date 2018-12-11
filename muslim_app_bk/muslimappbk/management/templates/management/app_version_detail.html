@@ -54,7 +54,7 @@
           <div class="row">
             <span class="col">{% trans 'Statistic(Download, Comment, Average Rate)' %} </span>
             {% get_comment_count for mobile_app as comment_count %}
-            <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.ratings.last.average|default:5:floatformat }}</span>
+            <span class="col attr-val">{{ mobile_app.download_count }}, {{ comment_count }}, {{ mobile_app.ratings.last.average|default:5|floatformat }}</span>
           </div>
           <div class="row">
             <span class="col">{% trans 'Application Activation' %}</span>
@@ -98,11 +98,11 @@
           </div>
           <div class="row">
             <span class="col">{{ app_version|verbose_name:'approve_status' }}</span>
-            <span class="col attr-val">{{ app_version.get_approve_status_display }}</span>
+            <span class="col attr-val app-approve-status">{{ app_version.get_approve_status_display }}</span>
           </div>
           <div class="row">
             <span class="col">{% trans 'Checked By' %}</span>
-            <span class="col attr-val">{{ app_version.approved_by }} {% trans 'at' %} {{ app_version.approved_time }}</span>
+            <span class="col attr-val app-checker">{{ app_version.approved_by }} {% trans 'at' %} {{ app_version.approved_time }}</span>
           </div>
       </div>
     </div>
@@ -122,8 +122,8 @@
           </video>
             <a type="button" href="{{ app_version.apk.file.url }}" class="btn button btn-secondary" style="margin-top:50px;" >{% trans 'Download' %}</a>
             {% if perms.management.can_approve_app %}
-                <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'approved' %}" data-slug="{{ mobile_app.slug }}" data-version="{{ app_version.version_number }}" class="btn button btn-success" style="margin-top:50px;" >{% trans 'Approve' %}</button>
-                <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'rejected' %}" data-slug="{{ mobile_app.slug }}" data-version="{{ app_version.version_number }}" class="btn button btn-warning" style="margin-top:50px;" >{% trans 'Reject' %}</button>
+                <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'approved' %}" data-version="{{ app_version.version_number }}" class="btn button btn-success" style="margin-top:50px;" >{% trans 'Approve' %}</button>
+                <button type="button" data-toggle="modal" data-target="#remarkModal" data-result="{% trans 'rejected' %}" data-version="{{ app_version.version_number }}" class="btn button btn-warning" style="margin-top:50px;" >{% trans 'Reject' %}</button>
             {% endif %}
       </div>
     </div>
@@ -162,44 +162,41 @@
 {% block javascript %}
   {{ block.super }}
   <script>
-  var app_slug = "{{ mobile_app.slug }}";
   var version_number = "{{ app_version.version_number }}";
   
   $(function(){
       $('#remarkModal').on('show.bs.modal', function (event) {
           var button = $(event.relatedTarget); // Button that triggered the modal
           var result = button.data('result'); 
-          var slug = button.data('slug');
           var version_number = button.data('version');
           
           var modal = $(this)
           modal.find('.modal-title span').text(result);
-          
+          $('#modal-btn-confirm').off('click');
           $('#modal-btn-confirm').on('click', function(){
               var remark = $('#modal-remark').val().trim();
-              updateApprove(slug, version_number, result, remark);
+              updateApprove(version_number, result, remark);
           });
         });
   });
 
-  function updateApprove(app_slug, version_number, approve_status, remark){
-	  $.ajax({
-          url: "{% url 'management:update_version_status' %}",
-          method: 'POST',
-          data: {
-              'app_slug': app_slug,
+  function updateApprove(version_number, approve_status, remark){
+      var data = {
               'version_number': version_number,
               'approve_status': approve_status,
               'remark': remark,
-          }
-      }).done(function(response){
-          if (response.status = 1){
-              location.reload();
-          }else{
-              alert("{% trans 'server error' %}");
-          }
-          
+          };
+      var url = "{% url 'api:app-update-version-status' mobile_app.slug %}";
+	  callModelAction(url, data, 'POST').then(function(response){
+            updateUI(response);
       });
+  }
+      
+  function updateUI(response){
+      console.log(response);
+      $('.app-approve-status').text(response.status);
+      $('.app-checker').text(response.checker + ' updated at:' + response.time);
+      $('#remarkModal').modal('hide');
   }
   </script>
 {% endblock %}

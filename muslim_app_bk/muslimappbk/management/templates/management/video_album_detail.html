@@ -31,13 +31,13 @@
   </h4>
   <div class="row" style="font-size: 1.2em">
     <span class="col-auto attr-prop">{{ video_album|verbose_name:'approve_status' }}:</span>
-    <span class="col-auto attr-val">{{ video_album.get_approve_status_display }}</span>
+    <span class="col-auto attr-val album-approve-status">{{ video_album.get_approve_status_display }}</span>
     <span class="col-auto attr-prop">{{ video_album|verbose_name:'upload_by' }}:</span>
     <span class="col-auto attr-val">{{ video_album.upload_by }}</span>
     <span class="col-auto attr-prop">{{ video_album|verbose_name:'upload_time' }}:</span>
     <span class="col-auto attr-val">{{ video_album.upload_time }}</span>
     <span class="col-auto attr-prop">{% trans 'Checked By' %}:</span>
-    <span class="col-auto attr-val">{{ video_album.approved_by }} {% trans 'at' %} {{ video_album.approved_time }}</span>
+    <span class="col-auto attr-val album-checker">{{ video_album.approved_by }} {% trans 'at' %} {{ video_album.approved_time }}</span>
   </div>
   <div class="row mt-2 mb-2" style="font-size: 1.2em;">
     <span class="col-auto attr-prop">{{ video_album|verbose_name:'description'}}:</span>
@@ -110,7 +110,8 @@
                 <a href="{% url 'management:edit_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
             </td>
             <td>
-                <a href="{% url 'management:delete_inspired_video' video.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
+                <a href="javascript:void(0);" 
+                   onclick="deleteVideo('{% url 'api:video-detail' video.slug %}', this)" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
             </td>
             <td class="play-item" style="vertical-align: middle; font-size: 2em"><i class="far fa-play-circle" style="cursor: pointer" data-url='{{ video.latest_valid_video.file.url }}' onclick="playVideo(this)"></i></td>
           </tr>
@@ -143,7 +144,6 @@
 {% block javascript %}
   {{ block.super }}
   <script>
-  var album_slug = "{{ video_album.slug }}";
   
   $(function(){
       $('#remarkModal').on('show.bs.modal', function (event) {
@@ -151,7 +151,7 @@
           var result = button.data('result');           
           var modal = $(this)
           modal.find('.modal-title span').text(result);
-          
+          $('#modal-btn-confirm').off('click');
           $('#modal-btn-confirm').on('click', function(){
               var remark = $('#modal-remark').val().trim();
               updateApprove(result, remark);
@@ -166,23 +166,29 @@
   });
 
   function updateApprove(approve_status, remark){
-	  $.ajax({
-          url: "{% url 'management:update_video_album_status' %}",
-          method: 'POST',
-          data: {
-              'video_album_slug': album_slug,
-              'approve_status': approve_status,
-              'remark': remark,
-          }
-      }).done(function(response){
-          if (response.status = 1){
-              location.reload();
-          }else{
-              alert("{% trans 'server error' %}");
-          }
-          
+      var data = {
+          'approve_status': approve_status,
+          'remark': remark,
+      };
+      var url = "{% url 'api:video-album-update-video-album-status' video_album.slug %}";
+      
+	  callModelAction(url, data, 'POST').then(function(response){
+          updateUI(response);
       });
   }
+      
+  function updateUI(response){
+      console.log(response);
+      $('.album-approve-status').text(response.status);
+      $('.album-checker').text(response.checker + ' updated at:' + response.time);
+      $('#remarkModal').modal('hide');
+  }
+      
+  function deleteVideo(url, element){
+        deleteModelObject(url).then(function(response){
+            $(element).parents('tr').remove();
+        });
+    }
       
   function playVideo(url){
       $('#video_source').prop('src', $(this).data('url'));

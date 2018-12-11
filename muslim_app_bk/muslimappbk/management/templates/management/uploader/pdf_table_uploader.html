@@ -66,7 +66,8 @@
                             <a href="{% url 'management:edit_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Edit' %}</a>
                         </td>
                         <td>
-                            <a href="{% url 'management:delete_pdf' pdf.slug %}" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
+                            <a href="javascript:void(0);" 
+                               onclick="deleteDoc('{% url 'api:doc-detail' pdf.slug %}', this)" class="btn btn-primary btn-sm">{% trans 'Delete' %}</a>
                         </td>
                       </tr>
                       {% endfor %}
@@ -84,5 +85,11 @@
         var dataTable = $('#dataTable').DataTable();       
         setActiveMenu(2);
     });
+
+    function deleteDoc(url, element){
+        deleteModelObject(url).then(function(response){
+            $(element).parents('tr').remove();
+        });
+    }
 </script>
 {% endblock %}
