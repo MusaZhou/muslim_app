@@ -91,7 +91,7 @@ class Image(SoftDeletableModel):
     thumbnail_picture = models.ImageField(upload_to="pictures",blank=True, max_length=150, null=True)
 
     def __str__(self):
-        return self.picture.url
+        return self.picture.url if self.picture else ''
     
 class Video(SoftDeletableModel):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
@@ -326,6 +326,9 @@ class VideoAlbum(ApprovableModel, SoftDeletableModel):
     
     def get_image(self):
         return self.images.last()
+    
+    def exist_videos(self):
+        return self.album_videos.filter(is_removed=0)
 
 class ShownInspiredVideoManager(SoftDeletableManagerMixin, models.Manager):
     def get_queryset(self):
@@ -375,11 +378,12 @@ class InspiredVideo(CommonApprovableModel):
         return reverse('showcase:detail_inspired_video', args=[self.slug])
 
     def video_duration(self):
-        return self.latest_valid_video().duration
+        latest_video = self.latest_valid_video()
+        return latest_video.duration if latest_video else 0
     
     @property
     def video_duration_str(self):
-        seconds = self.video_duration() or 0
+        seconds = self.video_duration()
         return str(datetime.timedelta(seconds=seconds))
     
     def get_absolute_url(self):

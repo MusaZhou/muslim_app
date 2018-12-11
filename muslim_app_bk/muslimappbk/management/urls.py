@@ -10,7 +10,7 @@ from django.views.decorators.cache import cache_page
 from .views_pdf import PDFListView, PDFEditView, PDFDeleteView, PDFDetailView
 from .views_inspired_video import InspiredVideoListView, InspiredVideoEditView,\
 InspiredVideoDeleteView, InspiredVideoDetailView, VideoAlbumListView,\
-VideoAlbumEditView, VideoAlbumDeleteView, VideoAlbumDetailView
+VideoAlbumEditView, VideoAlbumDetailView
 
 app_name = 'management'
 
@@ -43,9 +43,7 @@ urlpatterns = [
     path('video_album_list', VideoAlbumListView.as_view(), name='video_album_list'),
     path('add_video_album', cache_page(24 * 60 * 60 * 15)(VideoAlbumEditView.as_view()), name='add_video_album'),
     path('edit_video_album/<str:slug>', VideoAlbumEditView.as_view(), name="edit_video_album"),
-    path('delete_video_album/<str:slug>', VideoAlbumDeleteView.as_view(), name="delete_video_album"),
     path('detail_video_album/<str:slug>', VideoAlbumDetailView.as_view(), name="detail_video_album"),
-    path('update_video_album_status', views_inspired_video.update_video_album_status, name="update_video_album_status"),
     
     # Uploader path
     path('app_table_uploader', AppTableUploaderView.as_view(), name='app_table_uploader'),

@@ -44,7 +44,7 @@
           <label class="form-check-label" for="pdf_file_radio{{ forloop.counter0 }}">
                 {{ pdf_file_name_list|get_item:forloop.counter0 }}
           </label>
-          <a type="button" class="btn btn-sm btn-primary float-right" href="{{ pdf_file.file.url }}">{% trans 'Download' %}</a>
+          <a type="button" class="btn btn-sm btn-primary float-right" href="{{ pdf_file.file.url }}" onclick="downloadCount('{% url 'api:doc-download-count' pdfdoc.slug %}')">{% trans 'Download' %}</a>
         </div>
       {% endfor %}    
     </div>

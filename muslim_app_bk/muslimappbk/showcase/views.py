@@ -63,13 +63,9 @@ def index_inspired_video(request):
 
 def detail_inspired_video(request, slug):
     inspired_video = get_object_or_404(InspiredVideo.shown_videos.prefetch_related('ratings', 'tags'), slug=slug)
-    inspired_video.view_count = F('view_count') + 1
-    inspired_video.save()
-    inspired_video.refresh_from_db()
-    
     album = inspired_video.album
     if album:
-        related_video_list = album.album_videos.exclude(slug=inspired_video.slug)
+        related_video_list = album.album_videos.exclude(Q(slug=inspired_video.slug) | Q(is_removed=1))
     else:
         tags = inspired_video.tags.all()
         related_video_list = InspiredVideo.shown_videos.filter(tags__id__in=tags.values_list('id', flat=True)).exclude(id=inspired_video.id)

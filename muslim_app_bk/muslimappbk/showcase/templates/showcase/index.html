@@ -133,6 +133,7 @@ var emptyPage = false;
 var cateid = 9999;
 var blockPagination = false;
 var tabPane;
+var downloadUrlTemplate = "{% url 'api:app-download-count' 'test' %}"
     
 $(function(){
     $('#nav-tab a').on('click', function(){
@@ -161,7 +162,7 @@ function getAppList(){
         blockPagination = true;
         
         $.ajax({
-           url: '{% url "api:app_list" %}',
+           url: '{% url "api:app-list" %}',
            method: 'GET',
            data: {
                     'cate_id': cateid,
@@ -174,6 +175,7 @@ function getAppList(){
             }else{
                 console.log(response);
                 response.forEach(function(data, index){
+                    appDownloadUrl = downloadUrlTemplate.replace('/test/', '/' + data.slug + '/');
                     var appCard = $('.app-card-template').clone().removeClass('app-card-template').addClass('app-card');
                     appCard.find('img').prop('src', data.icon);
                     appCard.find('.img-a').prop('href', data.url);
@@ -184,7 +186,7 @@ function getAppList(){
                     appCard.find('.card-text').text(data.description);
                     appCard.find('.download-btn').prop('href', data.apk);
                     appCard.find('.download-btn').on('click', function(){
-                       downloadCount(data.slug); 
+                       downloadCount(appDownloadUrl); 
                     });
                     appCard.find('.created_time').text(data.time);
     //                console.log(appCard.html());

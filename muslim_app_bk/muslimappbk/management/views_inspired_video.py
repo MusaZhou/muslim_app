@@ -170,27 +170,9 @@ class VideoAlbumEditView(View):
         return render(request, 'management/add_video_album.html', context)
     
 @method_decorator(login_required, name='dispatch')     
-class VideoAlbumDeleteView(View):    
-    def get(self, request, *args, **kwargs):
-        video_album = get_object_or_404(VideoAlbum, slug=kwargs['slug'])
-        video_album.delete()
-        return redirect('management:video_album_list')
-    
-@method_decorator(login_required, name='dispatch')     
 class VideoAlbumDetailView(View):    
     def get(self, request, *args, **kwargs):
         video_album = get_object_or_404(VideoAlbum, slug=kwargs['slug'])
         context = {'video_album': video_album}
         return render(request, 'management/video_album_detail.html', context)
     
-@permission_required('management.can_approve_app')    
-def update_video_album_status(request):
-    if request.is_ajax():
-        video_album_slug = request.POST['video_album_slug']
-        status = request.POST['approve_status']
-        remark = request.POST['remark']
-        VideoAlbum.objects.filter(slug=video_album_slug).update(approve_status=status, 
-                                                                approved_time=datetime.now(), 
-                                                                approved_by=request.user, 
-                                                                remark=remark)
-        return JsonResponse({'status': 1}, safe=False)

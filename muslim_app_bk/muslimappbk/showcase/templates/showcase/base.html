@@ -136,12 +136,17 @@
         text: 'Thumbnail'
       });
         
-    function downloadCount(appSlug){
+    function downloadCount(url){
         $.ajax({
-            url: '{% url "api:app_download_count" %}',
+            url: url,
             method: 'GET',
-            data: { 'app_slug': appSlug},
-            contentType: 'application/json'
+        });
+    }
+        
+    function viewCount(url){
+        $.ajax({
+            url: url,
+            method: 'GET',
         });
     }
         

@@ -80,53 +80,10 @@ var redirect_after_comment = $('<input type="hidden" name="next" value="{% url '
 $(function(){
     $('.comment .card form').append(redirect_after_comment);
     $('.comment .card').wrapInner($('<div class="card-body">'));
-//    $(window).scroll(function(){
-//        var margin = $(document).height() - $(window).height() - 200;
-//        if ($(window).scrollTop() > margin){
-//            getVideoList();
-//        }
-//    });
     
     setActiveMenu(3);
-//    getVideoList();
+    viewCount('{% url "api:video-view-count" inspired_video.slug %}');
 });
-    
-function getVideoList(){
-    if(!emptyPage && !blockPagination){
-        blockPagination = true;
-        
-        $.ajax({
-           url: '{% url "api:inspired_video_list" %}',
-           method: 'GET',
-           data: {
-                    'page': page,
-                    'tags': JSON.stringify(tags),
-                    'album': album
-                 },
-           contentType: 'application/json'
-        }).done(function(response){
-            if(response == ''){
-                emptyPage = true;
-            }else{
-                console.log(response);
-                response.forEach(function(data, index){
-                    var videoCard = $('.inspired-video-template').clone().removeClass('inspired-video-template');
-                    videoCard.find('.video-image').prop('src', data.thumbnail_path);
-//                    videoCard.data('detail-url', data.url);
-                    videoCard.data('detail-url', data.url);
-                    videoCard.find('.video-title').text(data.title);
-                    videoCard.find('.video-views').text(data.view_count);
-                    videoCard.find('.video-duration').text(data.video_duration);
-                    $('.video-grid').append(videoCard);
-                    videoCard.removeClass('d-none');
-                });
-                page++;
-            }
-        }).always(function(){
-            blockPagination = false;
-        });
-    }
-}
     
 function goToDetail(element){
     window.location.href = $(element).data('detail-url');

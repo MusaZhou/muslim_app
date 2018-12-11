@@ -13,7 +13,7 @@ class AppViewSet(viewsets.ModelViewSet):
     serializer_class = AppSerializer
     queryset = MobileApp.objects.all()
     lookup_field = 'slug'
-    safe_actions = ['list', 'app_download_count']
+    safe_actions = ['list', 'download_count']
     
     def get_permissions(self):
         permission_classes = []
@@ -40,8 +40,8 @@ class AppViewSet(viewsets.ModelViewSet):
         
         return Response(serializer.data)
     
-    @action(detail=True, methods=['post'])
-    def app_download_count(self, request, slug=None):
+    @action(detail=True, methods=['GET'])
+    def download_count(self, request, slug=None):
         MobileApp.objects.filter(slug=slug).update(download_count=F('download_count')+1)
         return Response(status=status.HTTP_200_OK)
     

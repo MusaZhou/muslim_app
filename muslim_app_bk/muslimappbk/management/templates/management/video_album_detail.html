@@ -96,7 +96,7 @@
           </tr>
         </tfoot>
         <tbody>
-          {% for video in video_album.album_videos.all %}
+          {% for video in video_album.exist_videos %}
           <tr>
             <td>{{ forloop.counter }}</td>
             <td>{{ video.title }}</td>

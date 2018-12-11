@@ -74,7 +74,7 @@
                     <span>{% trans 'Download' %} {{ mobile_app.download_count|default_if_none:0 }}</span>
                 </div>
                 <div class="col-3">
-                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.file.url }}" onclick="downloadCount('{{ mobile_app.slug }}')" id="download_btn" >{% trans 'Download' %} ({{ app_version.apk.file.size|filesizeformat }})</a>
+                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.file.url }}" onclick="downloadCount('{% url 'api:app-download-count' mobile_app.slug %}')" id="download_btn" >{% trans 'Download' %} ({{ app_version.apk.file.size|filesizeformat }})</a>
                 </div>
             </div>
         </div>

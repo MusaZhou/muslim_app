@@ -16,7 +16,7 @@ class VideoViewSet(viewsets.ModelViewSet):
     serializer_class = InspiredVideoSerializer
     queryset = InspiredVideo.objects.all()
     lookup_field = 'slug'
-    safe_actions = ['list', 'video_view_count']
+    safe_actions = ['list', 'view_count']
     
     def get_permissions(self):
         permission_classes = []
@@ -54,8 +54,8 @@ class VideoViewSet(viewsets.ModelViewSet):
         video.delete()
         return Response(status=status.HTTP_200_OK)
     
-    @action(detail=True, methods=['post'])
-    def video_view_count(self, request, slug=None):
+    @action(detail=True, methods=['GET'])
+    def view_count(self, request, slug=None):
         InspiredVideo.objects.filter(slug=slug).update(view_count=F('view_count')+1)
         return Response(status=status.HTTP_200_OK)
     

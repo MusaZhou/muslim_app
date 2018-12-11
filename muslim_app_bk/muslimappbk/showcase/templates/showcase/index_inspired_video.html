@@ -116,7 +116,7 @@ function getVideoList(){
         blockPagination = true;
         
         $.ajax({
-           url: '{% url "api:inspired_video_list" %}',
+           url: '{% url "api:video-list" %}',
            method: 'GET',
            data: {
                     'page': page,

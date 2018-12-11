@@ -5,11 +5,12 @@ from rest_framework.response import Response
 from .permissions import ApproveAppPermission
 from datetime import datetime
 from rest_framework.decorators import action
+from django.db.models import F
 
 class DocViewSet(viewsets.ModelViewSet):
     queryset = PDFDoc.objects.all()   
     lookup_field = 'slug'
-    safe_actions = []
+    safe_actions = ['download_count']
     
     def get_permissions(self):
         permission_classes = []
@@ -23,7 +24,10 @@ class DocViewSet(viewsets.ModelViewSet):
         pdf.delete()
         return Response(status=status.HTTP_200_OK)
     
-    
+    @action(detail=True, methods=['GET'])
+    def download_count(self, request, slug=None):
+        PDFDoc.objects.filter(slug=slug).update(download_count=F('download_count')+1)
+        return Response(status=status.HTTP_200_OK)
     
     @action(detail=True, methods=['post'], permission_classes=[ApproveAppPermission])     
     def update_pdf_status(self, request, slug=None):
