@@ -227,30 +227,6 @@ class VersionDetailView(LoginRequiredMixin, View):
         app_version = get_object_or_404(AppVersion.objects.select_related('apk'), mobile_app=app, version_number=kwargs['version_number'])
         context = {'app_version': app_version, 'mobile_app': app}
         return render(request, 'management/app_version_detail.html', context)
-
-@permission_required('management.can_approve_app')    
-def update_version_status(request):
-    if request.is_ajax():
-        app_slug = request.POST['app_slug']
-        app_version_number = request.POST['version_number']
-        status = request.POST['approve_status']
-        remark = request.POST['remark']
-        app = MobileApp.objects.get(slug=app_slug)
-        
-        AppVersion.objects.filter(mobile_app=app, version_number=app_version_number)\
-        .update(approve_status=status, 
-                approved_time=datetime.now(), 
-                approved_by=request.user, 
-                remark=remark)
-        return JsonResponse({'status': 1}, safe=False)
-
-@permission_required('management.can_approve_app')    
-def update_app_active(request):
-    if request.is_ajax():
-        app = get_object_or_404(MobileApp, slug=request.POST['app_slug'])
-        app.is_active = True if int(request.POST['status']) == 1 else False
-        app.save()
-        return JsonResponse({'status': 1}, safe=False)
     
 class BannerListView(PermissionRequiredMixin, View):
     permission_required = 'management.can_approve_app'
@@ -287,14 +263,6 @@ class BannerEditView(PermissionRequiredMixin, View):
             bannerForm.save()
             return redirect('management:banner_list')
         return render(request, 'management/add_banner.html', {'bannerForm': bannerForm})
-    
-class BannerDeleteView(PermissionRequiredMixin, View):
-    permission_required = 'management.can_approve_app'
-    
-    def get(self, request, *args, **kwargs):
-        banner = get_object_or_404(Banner, id=kwargs['id'])
-        banner.delete()
-        return redirect('management:banner_list')
     
 def index(request):
     if request.user.has_perm('management.can_approve_app'):
