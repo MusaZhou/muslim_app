@@ -3,19 +3,7 @@ from management.models import MobileApp, Banner, AppCategory, PDFDoc, VideoAlbum
 from taggit.models import Tag
 from django.db.models import Q, F
 import os
-
-# Create your views here.
-def blog_template(request):
-    return render(request, 'showcase/blog_template.html')
-
-def dashboard_template(request):
-    return render(request, 'showcase/dashboard_template.html')
-
-def carousel_template(request):
-    return render(request, 'showcase/carousel_template.html')
-
-def album_template(request):
-    return render(request, 'showcase/album_template.html')
+from .forms import SearchForm
 
 def index(request):
     banner_list = Banner.objects.all()
@@ -30,12 +18,22 @@ def app(request, slug):
     return render(request, 'showcase/app.html', context)
 
 def search(request):
-    search_word = request.POST.get('search_word', 'Quran')
-    app_list = MobileApp.shown_apps.filter(Q(name__icontains=search_word)|\
-                                           Q(description__icontains=search_word)|\
-                                           Q(category__name__icontains=search_word))
-    context = {'app_list': app_list}
-    return render(request, 'showcase/search.html', context)
+    if request.method == 'GET':
+        search_form = SearchForm(request.GET)
+        if search_form.is_valid():
+            search_key = search_form.cleaned_data['search_key']
+            search_type = search_form.cleaned_data['search_type']
+            if search_type == 'app':
+                data_list = MobileApp.shown_apps.filter(Q(name__icontains=search_key)|\
+                                           Q(description__icontains=search_key)|\
+                                           Q(category__name__icontains=search_key))
+                template_name = 'showcase/app_result.html'
+            elif search_type == 'doc':
+                pass
+            elif search_key == 'video':
+                pass
+    context = {'data_list': data_list}
+    return render(request, template_name, context)
 
 def disqus(request):
     return render(request, 'showcase/disqus.html')

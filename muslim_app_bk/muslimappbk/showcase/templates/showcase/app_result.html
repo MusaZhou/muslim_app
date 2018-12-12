@@ -1,0 +1,98 @@
+{% extends 'showcase/base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+{% block stylesheet %}
+    {{ block.super }}
+<style>
+    .app-attr {
+        color: black; 
+    }
+    
+    .app-item {
+        border: 1px solid gray;
+        border-radius: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block mainContent %}
+<div class="container">
+    {% for mobile_app in data_list %}
+    {% with mobile_app.latest_version as app_version %}
+    <div class="row align-items-center mb-2 pb-1 app-item">
+        <div class="col-auto">
+            <a href="{% url 'showcase:app' mobile_app.slug %}">
+                <img src="{{ mobile_app.icon.url }}" width="128px" height="128px">
+            </a>
+        </div>
+        <div class="col">
+            <div class="row" style="font-size: 1.3em; margin-bottom: 10px; font-weight: bold; color: cornflowerblue; padding-top: 5px; padding-left: 10px">
+                {{ mobile_app.name }}
+            </div>
+            <div class="row" style="font-size: 0.9em; color: gray; height:130px">
+                <div class="col-5">{{ mobile_app.description }}</div>
+                <div calss="col-7" style="width:400px">
+                    <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'version_number' }}</div>
+                        <div class="col">{{ app_version.version_number }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col app-attr">{{ mobile_app|verbose_name:'developer' }}</div>
+                        <div class="col">{{ mobile_app.developer|default_if_none:'' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'translator' }}</div>
+                        <div class="col">{{ app_version.translator|default_if_none:'' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'android_version' }}</div>
+                        <div class="col">{{ app_version.android_version|default_if_none:'' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col app-attr">{{ app_version|verbose_name:'created_time' }}</div>
+                        <div class="col">{{ app_version.created_time|date:'Y/m/d' }}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-3">
+                {% for app_tag in mobile_app.tags.all %}
+                <span class="badge badge-info mr-1">{{ app_tag }}</span>
+                {% endfor %}
+                </div>
+                
+                <div class="col-2" style="padding-left: 0px">
+                    <div class="rating star-icon value-{{ mobile_app.ratings.last.average|default:'5'|floatformat:'0' }} color-positive label-right">
+                        <div class="label-value" style="color:orange">{{ mobile_app.ratings.last.average|default:'5'|floatformat }}</div>
+                        {% include 'showcase/star.html' %}
+                    </div>
+                </div>
+                <div class="col-2" style="color:cornflowerblue">
+                    <span>{% trans 'Download' %} {{ mobile_app.download_count|default_if_none:0 }}</span>
+                </div>
+                <div class="col-1"></div>
+                <div class="col-4">
+                    <a class="button btn btn-primary" style="width:100%" href="{{ app_version.apk.file.url }}" onclick="downloadCount('{% url 'api:app-download-count' mobile_app.slug %}')" id="download_btn" >{% trans 'Download' %} ({{ app_version.apk.file.size|filesizeformat }})</a>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    {% endwith %}
+    {% endfor %}
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+
+<script>
+    
+$(function(){
+    
+})
+ 
+</script>
+{% endblock %}

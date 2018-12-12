@@ -8,3 +8,5 @@ APPROVE_CHOICES = (
 ACTIVE_CHOICES = (('active', _('active')), ('inactive', _('inactive')))
 
 GENDER_CHOICES = (('male', _('male')), ('female', _('female')))
+
+SEARCH_TYPE_CHOICES = (('app', _('app')), ('doc', _('doc')), ('video', _('video')))
