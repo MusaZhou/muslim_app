@@ -24,12 +24,14 @@
         <p>{{ pdfdoc.description }}</p>
     </div>
     <div class="row">
+        <div class="col-auto">{{ pdfdoc|verbose_name:'author' }} : {{ pdfdoc.author }}</div>
+        <div class="col-auto">{{ pdfdoc|verbose_name:'publish_year' }} : {{ pdfdoc.publish_year }}</div>
         <div class="rating star-icon value-{{ pdfdoc.ratings.last.average|default:'5'|floatformat:'0' }} color-positive label-right col-auto">
             <div class="label-value" style="color:orange">{{ pdfdoc.ratings.last.average|default:'5'|floatformat }}</div>
             {% include 'showcase/star.html' %}
         </div>
         <div class="col">
-            {% for app_tag in pdfdoc.tags.all %}
+            {% for app_tag in pdfdoc.tags.names %}
             <span class="badge badge-info mr-1">{{ app_tag }}</span>
             {% endfor %}
         </div>
@@ -44,7 +46,7 @@
           <label class="form-check-label" for="pdf_file_radio{{ forloop.counter0 }}">
                 {{ pdf_file_name_list|get_item:forloop.counter0 }}
           </label>
-          <a type="button" class="btn btn-sm btn-primary float-right" href="{{ pdf_file.file.url }}" onclick="downloadCount('{% url 'api:doc-download-count' pdfdoc.slug %}')">{% trans 'Download' %}</a>
+          <a type="button" class="btn btn-sm btn-primary float-right" href="{{ pdf_file.file.url }}" onclick="downloadCount('{% url 'api:doc-download-count' pdfdoc.slug %}')">{% trans 'Download' %}({{ pdf_file.file.size|filesizeformat }})</a>
         </div>
       {% endfor %}    
     </div>

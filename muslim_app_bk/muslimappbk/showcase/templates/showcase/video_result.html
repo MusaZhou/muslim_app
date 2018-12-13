@@ -1,0 +1,86 @@
+{% extends 'showcase/base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+{% block stylesheet %}
+    {{ block.super }}
+<style>
+    .app-attr {
+        color: black; 
+    }
+    
+    .app-item {
+        border: 1px solid gray;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block mainContent %}
+<div class="container">
+    {% for i_video in data_list %}
+    <div class="row align-items-center mb-2 pb-1 app-item" onclick="javascript:window.location.href='{% url 'showcase:detail_inspired_video' i_video.slug %}';">
+        <div class="col-auto">
+            <img src="{{ i_video.thumbnail_path }}" width="220px" height="130px">
+        </div>
+        <div class="col">
+            <div class="row" style="font-size: 1.3em; margin-bottom: 10px; font-weight: bold; color: cornflowerblue; padding-top: 5px; padding-left: 10px">
+                {{ i_video.title }}
+            </div>
+            <div class="row" style="font-size: 0.9em; color: gray; height:130px">
+                <div class="col-5">{{ i_video.description }}</div>
+                <div calss="col-7" style="width:400px">
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ i_video|verbose_name:'ratings' }}</div>
+                        <div class="col-8 rating star-icon value-{{ i_video.ratings.last.average|default:'5'|floatformat:'0' }} color-positive label-right" style="justify-content: flex-end">
+                            <div class="label-value" style="color:orange">{{ i_video.ratings.last.average|default:'5'|floatformat }}</div>
+                            {% include 'showcase/star.html' %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ i_video|verbose_name:'album' }}</div>
+                        <div class="col-8">
+                            {{ i_video.album|default:'-'}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ i_video|verbose_name:'tags' }}</div>
+                        <div class="col-8">
+                            {% for video_tag in i_video.tags.names %}
+                            <span class="badge badge-info mr-1">{{ video_tag }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ i_video|verbose_name:'upload_by' }}</div>
+                        <div class="col-8">{{ i_video.upload_by }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{% trans 'Duration' %}</div>
+                        <div class="col-8">{{ i_video.video_duration_str }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ i_video|verbose_name:'upload_time' }}</div>
+                        <div class="col-8">{{ i_video.upload_time|date:'Y/m/d' }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+
+<script>
+    
+$(function(){
+    
+})
+ 
+</script>
+{% endblock %}

@@ -1,0 +1,82 @@
+{% extends 'showcase/base.html' %}
+{% load static %}
+{% load custom_tags %}
+{% load i18n %}
+{% block stylesheet %}
+    {{ block.super }}
+<style>
+    .app-attr {
+        color: black; 
+    }
+    
+    .app-item {
+        border: 1px solid gray;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+</style>
+{% endblock %}
+
+{% block mainContent %}
+<div class="container">
+    {% for pdfdoc in data_list %}
+    <div class="row align-items-center mb-2 pb-1 app-item" onclick="javascript:window.location.href='{% url 'showcase:detail_pdf' pdfdoc.slug %}';">
+        <div class="col">
+            <div class="row" style="font-size: 1.3em; margin-bottom: 10px; font-weight: bold; color: cornflowerblue; padding-top: 5px; padding-left: 10px">
+                {{ pdfdoc.title }}
+            </div>
+            <div class="row" style="font-size: 0.9em; color: gray; height:130px">
+                <div class="col-5">{{ pdfdoc.description }}</div>
+                <div calss="col-7" style="width:400px">
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ pdfdoc|verbose_name:'author' }}</div>
+                        <div class="col-8">{{ pdfdoc.author }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ pdfdoc|verbose_name:'publish_year' }}</div>
+                        <div class="col-8">{{ pdfdoc.publish_year }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ pdfdoc|verbose_name:'upload_by' }}</div>
+                        <div class="col-8">{{ pdfdoc.upload_by }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ pdfdoc|verbose_name:'upload_time' }}</div>
+                        <div class="col-8">{{ pdfdoc.upload_time|date:'Y/m/d' }}</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ pdfdoc|verbose_name:'tags' }}</div>
+                        <div class="col-8">
+                            {% for doc_tag in pdfdoc.tags.names %}
+                    <span class="badge badge-info mr-1">{{ doc_tag }}</span>
+                    {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-4 app-attr">{{ pdfdoc|verbose_name:'ratings' }}</div>
+                        <div class="col-8">
+                            <div class="rating star-icon value-{{ pdfdoc.ratings.last.average|default:'5'|floatformat:'0' }} color-positive label-right" style="justify-content: flex-end">
+                            <div class="label-value" style="color:orange">{{ pdfdoc.ratings.last.average|default:'5'|floatformat }}</div>
+                            {% include 'showcase/star.html' %}
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+{% block javascript %}
+    {{ block.super }}
+
+<script>
+    
+$(function(){
+    
+})
+ 
+</script>
+{% endblock %}

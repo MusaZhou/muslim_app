@@ -26,12 +26,20 @@ def search(request):
             if search_type == 'app':
                 data_list = MobileApp.shown_apps.filter(Q(name__icontains=search_key)|\
                                            Q(description__icontains=search_key)|\
-                                           Q(category__name__icontains=search_key))
+                                           Q(category__name__icontains=search_key)|\
+                                            Q(tags__name__icontains=search_key))
                 template_name = 'showcase/app_result.html'
             elif search_type == 'doc':
-                pass
-            elif search_key == 'video':
-                pass
+                data_list = PDFDoc.approved_pdf.filter(Q(title__icontains=search_key)|\
+                                            Q(description__icontains=search_key)|\
+                                            Q(tags__name__icontains=search_key))
+                template_name = 'showcase/doc_result.html'
+            elif search_type == 'video':
+                data_list = InspiredVideo.approved_videos.filter(Q(title__icontains=search_key)|\
+                                            Q(description__icontains=search_key)|\
+                                            Q(tags__name__icontains=search_key)|\
+                                            Q(album__title__icontains=search_key))
+                template_name = 'showcase/video_result.html'
     context = {'data_list': data_list}
     return render(request, template_name, context)
 
